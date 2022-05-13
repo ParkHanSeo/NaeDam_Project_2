@@ -15,12 +15,12 @@
 	<!-- 로그인 성공 후 커스텀을 위한 빈 생성 -->
 	<beans:bean 
 		id="loginSuccessHandler"
-		class="com.naedam.mir9.member.LoginSuccessHandler"></beans:bean>
+		class="com.naedam.admin.member.LoginSuccessHandler"></beans:bean>
 	 
 	 <!-- 로그아웃 성공 후 커스텀을 위한 빈 생성 -->
 	<beans:bean 
 		id="logoutSuccessHandler"
-		class="com.naedam.mir9.member.LogoutSuccessHandler"></beans:bean>
+		class="com.naedam.admin.member.LogoutSuccessHandler"></beans:bean>
 	 
 	<!-- #8.3 인증/권한 검사 설정 -->
 	<!-- security에 의한 인증/권한 검사에서 제외 -->
@@ -44,7 +44,7 @@
 		<!-- 인덱스 페이지에 대한 접근권한을 모두에게 준다. -->
 		<intercept-url pattern="/" access="permitAll"/>
 		<!-- 포워딩되는 인덱스 페이지에 대한 접근권한을 모두에게 준다. -->
-		<intercept-url pattern="/index.jsp" access="permitAll"/>
+		<intercept-url pattern="/admin/index.jsp" access="permitAll"/>
 		
 		<!-- 유광현 작업영역 -->
 <!--         <intercept-url pattern="/product/**" access="permitAll"/>
@@ -72,7 +72,7 @@
 		<!-- login-processing-url : security가 인증을 처리할 주소. loginForm이 제출(POST)될 주소. 핸들러 작성 불필요. -->
 		<form-login
 			login-page="/" 
-			login-processing-url="/member/memberLogin.do"			
+			login-processing-url="/admin/member/memberLogin.do"			
 			username-parameter="id"
 			password-parameter="password"
 			default-target-url="/dashBoard"
@@ -101,6 +101,6 @@
 		</authentication-provider>
 	</authentication-manager>
 	
-	<context:component-scan base-package="com.naedam.security"/>
+	<context:component-scan base-package="com.naedam.admin.security"/>
 	
 </beans:beans>
