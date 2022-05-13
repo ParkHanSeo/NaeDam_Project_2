@@ -13,12 +13,12 @@
   
   
   <typeAliases>
-  	<package name="com.naedam.mir9"/>
+  	<package name="com.naedam"/>
   </typeAliases>
   
   <typeHandlers>
   	<!-- <typeHandler handler="com.naedam.mir9.common.typehandler.StringArrayTypeHandler"/> -->
-  	<package name="com.naedam.mir9.common.typehandler"/>
+  	<package name="com.naedam.common.typehandler"/>
   </typeHandlers>
 
 </configuration>

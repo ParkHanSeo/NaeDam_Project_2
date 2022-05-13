@@ -24,14 +24,14 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="com.naedam.mir9" />
+	<context:component-scan base-package="com.naedam" />
 	
 	<!-- #9. HandlerInterceptor 등록 -->
 	<interceptors>
 		<interceptor>
 		<!-- /** level 수 상관없이 모든 요청 -->
 			<mapping path="/**"/>
-			<beans:bean  class="com.naedam.mir9.common.interceptor.LogInterceptor"/>
+			<beans:bean  class="com.naedam.admin.common.interceptor.LogInterceptor"/>
 		</interceptor>
 
 	</interceptors>
