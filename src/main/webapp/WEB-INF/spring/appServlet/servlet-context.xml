@@ -56,7 +56,14 @@
 	<resources mapping="/robots.txt" location="/robots.txt" order="0"/>
 	<resources mapping="/navere87e8e3d598c2bc9ac9d60c18ae9e53c.html" location="/navere87e8e3d598c2bc9ac9d60c18ae9e53c.html" order="0"/>
 	<resources mapping="/sitemap.xml" location="/sitemap.xml" order="0"/>
-
+	
+	
+	<beans:bean id="chattingHandler" class="com.naedam.admin.chat.handler.ChattingHandler"/>
+	<websocket:handlers>
+		<websocket:mapping handler="chattingHandler" path="/chatting"/>
+		<websocket:sockjs></websocket:sockjs>
+	</websocket:handlers>
+	
 	    <!-- 
 	    #15.1 @Responsebody사용을 위한 의존 : 빈등록 (스프링 5.x => MappingJackson2HttpMessageConverter) 
 	    3.1 이후는 mvc:annotation-driven태그에서 아래 설정을 대신함. 

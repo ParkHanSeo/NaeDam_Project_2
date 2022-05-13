@@ -69,16 +69,14 @@
 			
 			var postArr = new Array();
 			var boardNo = $("input[name='boardNo']").val();
-			
+						
+			$("input[class='postNo']:checked").each(function(){
+				postArr.push($(this).val());
+			});
 			if(postArr.length == 0){
 				alert("항목을 선택하셔야 합니다.");
 				return;
 			}
-			
-			$("input[class='postNo']:checked").each(function(){
-				postArr.push($(this).val());
-			});
-			
 			if(!confirm("해당 자료를 정말 삭제 하시겠습니까?")){
 				alert("취소 되었습니다.");
 				return;
@@ -103,13 +101,9 @@
 			alert(a)
 			var b = $("input:radio[name='order_code']");
 			alert(b)
-			
 			for(var i = 0; i < b.length; i++){
 				alert(b[i])
 			}
-			
-			
-			
 		})
 		
 	})
@@ -164,7 +158,7 @@
                     <label style="margin-top:5px;">총 ${resultPage.totalCount} 건</label>
                     
                     <div class="box-tools pull-right" style="margin-bottom:5px;">
-                    <form name="searchForm" method="post" action="/admin/board/postList">
+                    <form name="searchForm" method="post" action="/admin/board/postList?${_csrf.parameterName}=${_csrf.token}">
                     	<input type="hidden" name="boardNo" value="${board.boardNo}">
                         <div class="has-feedback">
                         <span>
@@ -314,8 +308,8 @@
                     <br>
                     <button type="button" id="deleteChoicePost" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
                     <button type="button" onclick="fncPost()" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalContent"><i class="fa fa-plus-square"></i> 글 등록</button>
-                    <button type="button" onclick="fncBoardTitle2()" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalContent2"><i class="fa fa-random"></i> 게시물 복사</button>
-                    <button type="button" onclick="fncBoardTitle()" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalContent3"><i class="fa fa-random"></i> 게시물 이전</button>
+                    <button type="button" onclick="fncBoardTitle2()" class="btn btn-warning btn-sm"><i class="fa fa-random"></i> 게시물 복사</button>
+                    <button type="button" onclick="fncBoardTitle()" class="btn btn-warning btn-sm"><i class="fa fa-random"></i> 게시물 이전</button>
 
                     <div style="text-align:right;">
                                             </div>
@@ -344,6 +338,6 @@
 <div class="pull-right hidden-xs">
     <b>Version</b> 2.7.4
 </div>
-<strong>Copyright &copy; 2017 <a href="/admin">MIR9 SHOP</a>.</strong> All rights reserved.
+<strong>NDC&C<a href="/admin">  Since:2017  </a> Phone 031-712-8315 | Fax 031-789-3545</strong>
 </footer>
 </div>

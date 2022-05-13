@@ -9,58 +9,54 @@
 	console.log(postArr)
 	
 	function fncBoardTitle(){
-			
-			$.ajax({
-				url : "/admin/board/json/listBoard",
-				method : "GET" ,
-				dataType : "json" ,
-				headers : {
-					"Accept" : "application/json",
-					"Content-Type" : "application/json"
-				},
-				success : function(Data, status){
-					var display = '';
-					if(Data.length > 0){
-						for(var i = 0; i < Data.length; i++){
-							display = "<option value="+Data[i].boardNo+">"+Data[i].boardTitle+"</option>"
-							$('#boardNoChange').append(display);
-							
-						}
-					}
-					
-				}
-			})
-		
-	}
-	
-	function funPostChange(){
-		
-		
-		
 		var postArr = new Array();
-		var boardNo = $("select[name='boardNoChange']").val();
-		
 		$("input[class='postNo']:checked").each(function(){
 			postArr.push($(this).val());
 		});
-		
+		if(postArr.length == 0){
+			alert("항목을 선택하여야 합니다.");
+			return;
+		}
+		$('#modalContent3').modal('show');		
+		$.ajax({
+			url : "/admin/board/json/listBoard",
+			method : "GET" ,
+			dataType : "json" ,
+			headers : {
+				"Accept" : "application/json",
+				"Content-Type" : "application/json"
+			},
+			success : function(Data, status){
+				var display = '';
+				if(Data.length > 0){
+					for(var i = 0; i < Data.length; i++){
+						display = "<option value="+Data[i].boardNo+">"+Data[i].boardTitle+"</option>"
+						$('#boardNoChange').append(display);				
+					}
+				}		
+			}
+		})
+	}
+	
+	function funPostChange(){
+		var postArr = new Array();
+		var boardNo = $("select[name='boardNoChange']").val();
+		$("input[class='postNo']:checked").each(function(){
+			postArr.push($(this).val());
+		});
   		$.ajax({
-			 	 url : "/admin/board/addPostChange",
+			 	 url : "/admin/board/addPostChange?${_csrf.parameterName}=${_csrf.token}",
   		  	 	 type : "POST",
 		  	 	 data : { 
 		  	 		 postArr : postArr, 
 		  	 		 boardNo
 		  	 	 },
-		 		 success : function(result){
-		   	 		
-		  	 	 }
-		  	 	 
+		 		 success : function(result){   	 		
+		  	 	 }  	 	 
   		});		
-  		alert("게시물 이전가 완료되었습니다.")
+  		alert("게시물 이전이 완료되었습니다.")
   		location.href = "/admin/board/postList?boardNo="+boardNo;
-		
-	
-}	
+	}	
 	
 	
 	

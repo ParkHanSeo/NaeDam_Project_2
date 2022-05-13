@@ -90,7 +90,16 @@
 		
 		if("${board2.option.optionMass}" != "y"){
 			var postFile = $("input[id='postName']").length;
+			var postTitle = $("input[id='postTitle']").val();
+			var postContents = CKEDITOR.instances.editor.getData();
 			var postName = new Array(postFile);
+			if(postTitle == null || postTitle == ''){
+				alert("제목을 입력하셔야 합니다.");
+				return;
+			}else if(postContents == null || postContents == ''){
+				alert("내용을 입력하셔야 합니다.");
+				return;
+			}
 			
 			for(var i = 0; i < postFile; i++){
 				postName[i] = $("input[id='postName']")[i].value;
@@ -100,7 +109,17 @@
 			$("form[name='addPostForm']").attr("method", "POST").attr("action", "/admin/board/addPost?${_csrf.parameterName}=${_csrf.token}").submit();
 		}else if("${board2.option.optionMass}" == "y"){
 			var postFile = $("input[id='postName']").length;
+			var postTitle = $("input[id='postTitle']").val();
+			var postContents = CKEDITOR.instances.editor.getData();
 			var postName = new Array(postFile);
+			if(postTitle == null || postTitle == ''){
+				alert("제목을 입력하셔야 합니다.");
+				return;
+			}else if(postContents == null || postContents == ''){
+				alert("내용을 입력하셔야 합니다.");
+				return;
+			}
+			
 			
 			for(var i = 0; i < postFile; i++){
 				postName[i] = $("input[id='postName']")[i].value;

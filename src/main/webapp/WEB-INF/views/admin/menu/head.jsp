@@ -403,7 +403,10 @@
 			$("input[class='headNo']:checked").each(function(){
 				headArr.push($(this).val());
  			});
-			
+			if(menuArr.length == 0){
+				alert("항목을 선택하셔야 합니다.");
+				return;
+			}
 			if(!confirm("해당 자료를 정말 삭제 하시겠습니까?")){
 				alert("취소 되었습니다.");
 				return;
