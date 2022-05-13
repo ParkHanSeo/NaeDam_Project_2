@@ -127,7 +127,7 @@ var tree_tpl = {
 					<tr>
 						<td nowrap="">
 							<img src="${pageContext.request.contextPath}/resources/imgs/tree/joinbottom.gif" border="0" align="absbottom">
-								<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/menu/menu2?code=${menu.code}&originNo=${menu.originNo}&ord=${menu.ord}');"class="t0i" id="i_txt0_1">
+								<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu.code}&originNo=${menu.originNo}&ord=${menu.ord}');"class="t0i" id="i_txt0_1">
 							<img src="${pageContext.request.contextPath}/resources/imgs/tree/page.gif" border="0" align="absbottom" name="i_img0_1" class="t0im">메인페이지</a>
 						</td>
 					</tr>
@@ -139,7 +139,7 @@ var tree_tpl = {
 								<a>
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/minusbottom.gif" border="0" align="absbottom" name="j_img${menu.code}" onclick="displayTree(${menu.code})">
 								</a>
-								<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/menu/menu2?code=${menu.code}&originNo=${menu.originNo}&ord=${menu.ord}');">
+								<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu.code}&originNo=${menu.originNo}&ord=${menu.ord}');">
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif" border="0" align="absbottom" name="i_img0_2" class="t0im">${menu.title}
 								</a>
 							</td>
@@ -149,7 +149,7 @@ var tree_tpl = {
 								<a>
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/minus.gif" border="0" align="absbottom" name="j_img${menu.code}" onclick="displayTree(${menu.code})">
 								</a>
-								<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/menu/menu2?code=${menu.code}&originNo=${menu.originNo}&ord=${menu.ord}');">
+								<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu.code}&originNo=${menu.originNo}&ord=${menu.ord}');">
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif" border="0" align="absbottom" name="i_img0_2" class="t0im">${menu.title}
 								</a>
 							</td>
@@ -169,7 +169,7 @@ var tree_tpl = {
 								<td nowrap="">
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/line.gif" border="0" align="absbottom">
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/join.gif" border="0" align="absbottom">
-										<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/menu/menu2?code=${menu2.code}&originNo=${menu2.originNo}&ord=${menu2.ord}');" >
+										<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu2.code}&originNo=${menu2.originNo}&ord=${menu2.ord}');" >
 											<img src="${pageContext.request.contextPath}/resources/imgs/tree/page.gif" border="0" align="absbottom" name="i_img0_3" class="t0im">${menu2.title}
 										</a>
 								</td>
@@ -178,7 +178,7 @@ var tree_tpl = {
 								<td nowrap="">
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/empty.gif" border="0" align="absbottom">
 									<img src="${pageContext.request.contextPath}/resources/imgs/tree/join.gif" border="0" align="absbottom">
-										<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/menu/menu2?code=${menu2.code}&originNo=${menu2.originNo}&ord=${menu2.ord}');" >
+										<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu2.code}&originNo=${menu2.originNo}&ord=${menu2.ord}');" >
 											<img src="${pageContext.request.contextPath}/resources/imgs/tree/page.gif" border="0" align="absbottom" name="i_img0_3" class="t0im">${menu2.title}
 										</a>
 								</td>

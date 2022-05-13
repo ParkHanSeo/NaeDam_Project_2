@@ -12,7 +12,13 @@
 			var boardType = $("select[name='boardType']").val();
 			var boardCategory = $("input[name='boardCategory']").val();
 			var	boardEmail = $("input[name='boardEmail']").val();
-			
+			if(boardTitle == null || boardTitle == ''){
+				alert("제목이 입력되지 않았습니다.");
+				return;
+			}else if(boardCategory == null || boardCategory == ''){
+				alert("카테고리가 입력되지 않았습니다.");
+				return;
+			}
 			alert("게시판이 등록 되었습니다.")
 			$("form[name='addBoard']").attr("method", "POST").attr("action", "/admin/board/addBoard?${_csrf.parameterName}=${_csrf.token}").submit();
 			

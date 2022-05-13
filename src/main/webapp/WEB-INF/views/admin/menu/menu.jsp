@@ -44,11 +44,11 @@ body.modal-open {
 	            <div class="box">
 	                <div class="box-body">
 	                <div class="col-xs-3" style="padding:0 5px 0 0;">
-	                <iframe name="tree" id="iframe_tree" src="${pageContext.request.contextPath}/menu/tree" width="100%" scrolling="auto" frameborder="1" height="769"></iframe>
+	                <iframe name="tree" id="iframe_tree" src="${pageContext.request.contextPath}/admin/menu/tree" width="100%" scrolling="auto" frameborder="1" height="769"></iframe>
 	                </div>
 	
 	                <div class="col-xs-9" style="padding:0 5px 0 0;">
-	                <iframe name="list" id="iframe_list" src="${pageContext.request.contextPath}/menu/menuList" width="100%" scrolling="auto" frameborder="1" height="769"></iframe>
+	                <iframe name="list" id="iframe_list" src="${pageContext.request.contextPath}/admin/menu/menuList" width="100%" scrolling="auto" frameborder="1" height="769"></iframe>
 	                </div>
 	                </div><!-- /.box-body -->
 	            </div><!-- /.box -->
@@ -509,23 +509,33 @@ body.modal-open {
             console.log(':'+$('[name=code]').val()+':'+revision_code);
         }
         function register() {
-            // if(form_register.title.value == '') { alert('메뉴명이 입력되지 않았습니다.'); form_register.title.focus(); return false;}
-            // if(form_register.url.value == '') { alert('url이 입력되지 않았습니다.'); form_register.url.focus(); return false;}
+            if(form_register.title.value == '') { 
+            	alert('메뉴명이 입력되지 않았습니다.');
+            	return;
+            }else if(form_register.url.value == ''){
+            	alert('url이 입력되지 않았습니다.');
+            	return;
+            }
             form_register.target = 'iframe_process';
             form_register.submit();
             alert("등록 완료")
-            $('#iframe_tree').attr('src', '${pageContext.request.contextPath}/menu/tree');
-			$('#iframe_list').attr('src', '${pageContext.request.contextPath}/menu/menuList');
-            //location.reload();
+            //$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
+			//$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');
+            location.reload();
         }
         function register2() {
-            // if(form_register.title.value == '') { alert('메뉴명이 입력되지 않았습니다.'); form_register.title.focus(); return false;}
-            // if(form_register.url.value == '') { alert('url이 입력되지 않았습니다.'); form_register.url.focus(); return false;}
+            if(form_register2.title.value == '') { 
+            	alert('메뉴명이 입력되지 않았습니다.');
+            	return;
+            }else if(form_register2.url.value == ''){
+            	alert('url이 입력되지 않았습니다.');
+            	return;
+            }
             form_register2.target = 'iframe_process';
             form_register2.submit();
             alert("메뉴가 수정되었습니다.")
-			$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/menu/tree');
-			$('#iframe_list').attr('src', '${pageContext.request.contextPath}/menu/menuList');            
+			$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
+			$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');            
             //location.reload();
         }        
         function onclickManual() {
@@ -662,8 +672,8 @@ body.modal-open {
         			} ,
         			success : function(result){
         				alert("해당 메뉴가 삭제 되었습니다.")
-        				$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/menu/tree');
-    					$('#iframe_list').attr('src', '${pageContext.request.contextPath}/menu/menuList');
+        				$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
+    					$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');
         				$(obj).parents('tr').remove();
         			}
         			
@@ -688,8 +698,8 @@ body.modal-open {
     				$('#restoreButton').attr("id", "displayButton2");
     				$('#displayButton2').html('저장하기');
             		$('#displayButton2').attr("onclick", "register2()");
-    				$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/menu/tree');
-    				$('#iframe_list').attr('src', '${pageContext.request.contextPath}/menu/menuList');
+    				$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
+    				$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');
     			}
     			
     		})

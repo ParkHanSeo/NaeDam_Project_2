@@ -44,7 +44,10 @@
 			$("input[class='boardNo']:checked").each(function(){
 				boardArr.push($(this).val());
  			});
-			
+			if(boardArr.length == 0){
+				alert("항목을 선택하셔야 합니다.");
+				return;
+			}
 			if(!confirm("해당 자료를 정말 삭제 하시겠습니까?")){
 				alert("취소 되었습니다.");
 				return;
@@ -137,6 +140,15 @@
 	function fncUpdateBoard(){
 		
 		var boardNo2 = $("#boardNo2").val()
+		var boardTitle = $("input[id='boardTitle2']").val();
+		var boardCategory = $("input[id='boardCategory2']").val();
+		if(boardTitle == null || boardTitle == ''){
+			alert("제목이 입력되지 않았습니다.");
+			return;
+		}else if(boardCategory == null || boardCategory == ''){
+			alert("카테고리가 입력되지 않았습니다.");
+			return;
+		}
 		
 		alert("게시판이 수정 되었습니다.")
 		$("form[name='updateBoardForm']").attr("method", "POST").attr("action", "/admin/board/updateBoard?${_csrf.parameterName}=${_csrf.token}").submit();

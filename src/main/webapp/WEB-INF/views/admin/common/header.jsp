@@ -503,6 +503,19 @@ function logoutSubmit(){
 							</li>
 						</ul>
 					</li>
+					<li class="treeview">
+						<a href="#" name="chat"> 
+							<i class="fa fa-list-alt"></i> <span>채팅 테스트</span> 
+							<i class="fa fa-angle-left pull-right"></i>
+						</a>
+						<ul class="treeview-menu">
+							<li>
+								<a href="/admin/chat/chat">
+									<i class="fa fa-circle-o"></i> 채팅
+								</a>
+							</li>
+						</ul>
+					</li>					
 					<li>
 						<a href="${pageContext.request.contextPath}/admin/setting/version"> 
 							<i class="fa fa-exclamation-circle"></i> <span>Version</span> 

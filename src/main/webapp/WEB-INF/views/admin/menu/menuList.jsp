@@ -201,7 +201,7 @@
                     if (json_data.list != null) {
                         parent.$('#revisionTitle').html(json_data.title);
                         $.each(json_data.list, function(index, value) {
-                            html_tag += '<tr>';
+                            html_tag += '<tr id="revisionDelete'+value['code']+'">';
                             html_tag += '   <td>'+value['title']+'</td>';
                             html_tag += '   <td>'+value['menuDate']+'</td>';
                             html_tag += '   <td>';
@@ -288,6 +288,10 @@
 			$("input[class='code']:checked").each(function(){
 				menuArr.push($(this).val());
  			});
+			if(menuArr.length == 0){
+				alert("항목을 선택하셔야 합니다.");
+				return;
+			}
 			
 			if(!confirm("해당 자료를 정말 삭제 하시겠습니까?")){
 				alert("취소 되었습니다.");
@@ -306,8 +310,9 @@
   		  	 	 
 	  		});		
 				alert("해당 자료가 삭제 되었습니다.")
-				$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/menu/tree');
-				$('#iframe_list').attr('src', '${pageContext.request.contextPath}/menu/menuList');
+				//$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
+				//$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');
+				location.reload();
 			}
         }
         
