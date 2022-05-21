@@ -437,6 +437,7 @@
 <div class="pull-right hidden-xs">
     <b>Version</b> 2.7.4
 </div>
-<strong>Copyright &copy; 2017 <a href="/admin">MIR9 SHOP</a>.</strong> All rights reserved.
+<strong>NDC&C<a href="/admin">  Since:2017  </a> Phone 031-712-8315 | Fax 031-789-3545</strong>
 </footer>
+</div>
 

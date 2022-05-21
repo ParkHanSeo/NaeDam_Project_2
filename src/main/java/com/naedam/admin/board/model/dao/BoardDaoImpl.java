@@ -3,6 +3,7 @@ package com.naedam.admin.board.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -100,7 +101,15 @@ public class BoardDaoImpl implements BoardDao {
 	
 	//게시글 목록
 	@Override
-	public List<Post> getPostList(Map<String, Object> map) throws Exception {
+	public List<Post> getPostList(Map<String, Object> map, int offset, int limit) throws Exception {
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		return sqlSession.selectList("board.getPostList", map, rowBounds);
+	}
+	
+	//대쉬보드 게시글 목록
+	@Override
+	public List<Post> getPostList2(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
 		return sqlSession.selectList("board.getPostList", map);
 	}
 	
@@ -223,62 +232,7 @@ public class BoardDaoImpl implements BoardDao {
 	public int updatePostReply(Post post) throws Exception {
 		return sqlSession.update("board.updatePostReply", post);
 	}
-	
-	
 
 	
-
-	
-
-	
-
-	
-
-	
-	
-
-	
-
-
-
-
-
-
-
-
-
-
-
-	
-
-	
-	
-	
-
-	
-
-	
-
-
-
-
-	
-
-
-
-
-	
-
-
-
-
-
-
-
-
 }
-
-
-
-
 

@@ -30,8 +30,6 @@ import com.naedam.admin.setting.model.vo.PGs.NaverShoppingSetting;
 import com.naedam.admin.setting.model.vo.PGs.NaverpaySetting;
 import com.naedam.admin.setting.model.vo.PGs.XpaySetting;
 
-
-
 public interface SettingDao {
 
 	List<DeliveryCompany> selectDeliveryCompanyList();
@@ -134,9 +132,7 @@ public interface SettingDao {
 
 	int updateStaff(Staff staff);
 
-
 	int updateChangeOrderDown(int staffNo);
-
 
 	Staff selectMaxOrder();
 
@@ -152,7 +148,7 @@ public interface SettingDao {
 
 	int updateChangeOrderDownNext(Staff paramStaff);
 
-
+	int updateChangeOrderUpNext(int input_row_order);
 
 
 }

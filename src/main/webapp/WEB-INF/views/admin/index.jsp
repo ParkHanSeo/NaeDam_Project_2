@@ -77,7 +77,7 @@
 		<div style="width: 400px;">
 			<div class="box box-primary">
 				<div class="box-body box-profile">
-					<img src="http://demoshop.mir9.kr/user/banner/8"
+					<img src="${pageContext.request.contextPath}/resources/imgs/imageBoard/neadam_logo.png"
 						style="height: 50px; margin: 20px;">
 
 					<h3 class="profile-username text-center">웹사이트 운영을 위한 관리자
@@ -107,7 +107,7 @@
 							class="btn btn-primary btn-block"><b>로그인</b></a>
 						&nbsp;
 						<a href="#none"
-							onclick="location.href='${pageContext.request.contextPath}/admin/member/memberEnroll.do';"
+							onclick="location.href='${pageContext.request.contextPath}/user/user/userEnroll.do';"
 							class="btn btn-primary btn-block"><b>회원가입</b></a>
 					</form:form>
 				</div>

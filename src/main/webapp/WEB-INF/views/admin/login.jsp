@@ -54,7 +54,7 @@
 		<div style="width: 400px;">
 			<div class="box box-primary">
 				<div class="box-body box-profile">
-					<img src="http://demoshop.mir9.kr/user/banner/8"
+					<img src="${pageContext.request.contextPath}/resources/imgs/imageBoard/neadam_logo.png"
 						style="height: 50px; margin: 20px;">
 
 					<h3 class="profile-username text-center">웹사이트 운영을 위한 관리자

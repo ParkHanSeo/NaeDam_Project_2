@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 	<jsp:param value="등급 관리" name="title" />
@@ -13,11 +14,9 @@
 
 <!-- content-wrapper -->
 <div class="content-wrapper">
+	
 	<section class="content-header">
-	<h1>
-		등급 관리 <small>grade list</small>
-	</h1>
-
+	<h1>등급 관리 <small>grade list</small></h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
 		<li>회원 관리</li>
@@ -30,12 +29,8 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-body">
-				
-					<form:form
-						id="memberGradeUpdateFrm" 
-						name="memberGradeUpdateFrm">
-						<table class="table table-bordered table-hover"
-							style="width: 30%;">
+					<form:form id="memberGradeUpdateFrm" name="memberGradeUpdateFrm">
+						<table class="table table-bordered table-hover" style="width: 30%;">
 							<thead>
 								<tr>
 									<td style="width: 60px;">등급</td>
@@ -44,7 +39,7 @@
 								</tr>
 							</thead>
 							<tbody id = "tbody">
-								<c:forEach items="${memberGradeList}" var="memberGrade" varStatus="status"  >
+								<c:forEach items="${memberGradeList}" var="memberGrade" varStatus="status">
 									<tr>
 										<td>${memberGrade.memberGradeNo}
 										<td>
@@ -57,11 +52,8 @@
 								</c:forEach>
 							</tbody>		
 						</table>
-
 						<br>
-
-						<button type="button" onclick="memberGradeUpdate()"
-							class="btn btn-primary btn-sm">
+						<button type="button" onclick="memberGradeUpdate()" class="btn btn-primary btn-sm">
 							<i class="fa fa-gear"></i> 등급 수정
 						</button>
 					</form:form>
@@ -77,12 +69,8 @@
 <!-- /.content-wrapper -->
 
 <script>
-
 // 등급 수정
-
-function memberGradeUpdate(){
-	console.log("등급수정(memberGradeUpdate()) 동작");
-	
+function memberGradeUpdate(){	
 	var token = $("meta[name='_csrf']").attr("content");
 	var header = $("meta[name='_csrf_header']").attr("content");
 	
@@ -91,29 +79,21 @@ function memberGradeUpdate(){
 	$("input[name=memberGradeNo]").each(function(index, item){
 		memberGradeNoList.push($(item).val());
 	});
-	console.log("memberGradeNoList = ");
-	console.log(memberGradeNoList);
 	
 	// memberGradeName 배열
 	var memberGradeNameList = new Array();
 	$("input[name=memberGradeName]").each(function(index, item){
 		memberGradeNameList.push($(item).val());
 	});
-	console.log("memberGradeNameList = ");
-	console.log(memberGradeNameList);
 	
 	const keys = memberGradeNoList;
 	const values = memberGradeNameList;
-	 
 	const result = keys.reduce((acc, curr, idx) => {
 		acc[curr] = values[idx];
 		return acc;
 	}, new Object);
 	
-	console.log(result);
-	
 	const data = JSON.stringify(result);
-	console.log(data);
 	
 	$.ajax({
 		url : `${pageContext.request.contextPath}/admin/member/memberGradeUpdate.do`,
@@ -132,13 +112,9 @@ function memberGradeUpdate(){
 	});
 };
 
-
-
 // 첫번 째 input 태그 readonly로 설정
 document.getElementById('memberGradeName_1').readOnly = true;
 // 두번 째 input 태그 readonly로 설정
 document.getElementById('memberGradeName_2').readOnly = true;
 </script>
-
-
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

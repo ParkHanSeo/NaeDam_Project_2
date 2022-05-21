@@ -17,7 +17,7 @@ public interface PointService {
 
 	int updatePointUse(PointUse pointUse);
 
-	List<MemberPointExcelForm> selectMemberPointExcelForm();
+	List<MemberPointExcelForm> selectMemberPointExcelForm(String memberId);
 
 	int insertMemberPoint(MemberPoint memberPoint);
 

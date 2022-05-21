@@ -345,13 +345,13 @@
 								FROM	board b, post p, member m
 								WHERE	b.board_no = p.board_no
 								AND		m.member_no = p.member_no
-								AND		b.board_no = #{board.boardNo}
+								AND		b.board_no = #{boardNo}
 								<if test="search.searchType != null">
 									<if test="search.searchType == 1 and search.searchKeyword !='' ">
-									AND		(p.post_title like '%'||#{search.searchKeyword}||'%')
+									AND		p.post_title like concat ('%',#{search.searchKeyword},'%')
 									</if>
 									<if test="search.searchType == 2 and search.searchKeyword !='' ">
-									AND		(p.member_name like '%'||#{search.searchKeyword}||'%')
+									AND		p.member_name like concat ('%',#{search.searchKeyword},'%')
 									</if>
 								</if>
 								ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC) countTable
@@ -460,13 +460,13 @@
 		FROM	board b, post p, member m
 		WHERE	b.board_no = p.board_no
 		AND		m.member_no = p.member_no
-		AND		b.board_no = #{board.boardNo}
+		AND		b.board_no = #{boardNo}
 		<if test="search.searchType != null">
 			<if test="search.searchType == 1 and search.searchKeyword !='' ">
-			AND		(p.post_title like '%'||#{search.searchKeyword}||'%')
+			AND		p.post_title like concat ('%',#{search.searchKeyword},'%')
 			</if>
 			<if test="search.searchType == 2 and search.searchKeyword !='' ">
-			AND		(p.member_name like '%'||#{search.searchKeyword}||'%')
+			AND		p.member_name like concat ('%',#{search.searchKeyword},'%')
 			</if>
 		</if>
 		ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC

@@ -48,31 +48,53 @@
 		select *
 		  from email_setting
 	</select>	
-	<select id="selectEmailList" parameterType="hashmap" resultType="email">
-		select email_code,
-			   receive_code,
-			   request_id,
-			   receive_email,
-			   receive_title,
-			   receive_content,
-			   email_point,
-			   date_format(receive_date, '%Y-%m-%d %T') as reDate
+	<select id="totalEmailCount" parameterType="hashmap" resultType="int">
+		select COUNT(*)
 		  from tb_email
-		 <where>
-			<if test="keyword != '' and keyword != null">
-				<choose>
-					<when test="field eq 'total'">
-						receive_title LIKE CONCAT('%', #{keyword}, '%') || 
-						receive_content LIKE CONCAT('%', #{keyword}, '%') || 
-						receive_email LIKE CONCAT('%', #{keyword}, '%')
-					</when>
-					<otherwise>
-						${field} LIKE CONCAT('%', #{keyword}, '%')
-					</otherwise>
-				</choose>
-			</if>
-		</where>
-		order by reDate DESC, email_code DESC
+		  <where>
+				<if test="keyword != '' and keyword != null">
+					<choose>
+						<when test="field eq 'total'">
+							receive_title LIKE CONCAT('%', #{keyword}, '%') || 
+							receive_content LIKE CONCAT('%', #{keyword}, '%') || 
+							receive_email LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<otherwise>
+							${field} LIKE CONCAT('%', #{keyword}, '%')
+						</otherwise>
+					</choose>
+				</if>
+			</where>
+	</select>
+	<select id="selectEmailList" parameterType="hashmap" resultType="email">
+		select b.*
+		  from (select @ROWNUM:=@ROWNUM+1 as rowNum, a.* 
+				  from (select @ROWNUM:=0,
+				  			   email_code,
+							   receive_code,
+							   request_id,
+							   receive_email,
+							   receive_title,
+							   receive_content,
+							   email_point,
+							   date_format(receive_date, '%Y-%m-%d %T') as reDate
+						  from tb_email
+						 <where>
+							<if test="keyword != '' and keyword != null">
+								<choose>
+									<when test="field eq 'total'">
+										receive_title LIKE CONCAT('%', #{keyword}, '%') || 
+										receive_content LIKE CONCAT('%', #{keyword}, '%') || 
+										receive_email LIKE CONCAT('%', #{keyword}, '%')
+									</when>
+									<otherwise>
+										${field} LIKE CONCAT('%', #{keyword}, '%')
+									</otherwise>
+								</choose>
+							</if>
+						</where>
+						 order by reDate DESC, email_code DESC) as a) as b
+		 where b.rowNum BETWEEN #{startRow} AND #{endRow}
 	</select>	
   
 </mapper>

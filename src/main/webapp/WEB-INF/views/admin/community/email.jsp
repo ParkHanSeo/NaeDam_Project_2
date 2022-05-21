@@ -390,7 +390,7 @@ textarea {
 	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width:1000px;">
 	        <div class="modal-content">
-	            <form name="formContent" id="formContent" method="post" action="${pageContext.request.contextPath}/admin/comm/email_madal" enctype="multipart/form-data">
+	            <form name="formContent" id="formContent" method="post" action="${pageContext.request.contextPath}/admin/comm/email_modal" enctype="multipart/form-data">
 		            <input type="hidden" name="mode" id="mode" value="updateEmail">
 		            <input type="hidden" name="action" id="action">
 		            <input type="hidden" name="locale" id="locale" value="ko">
@@ -532,7 +532,7 @@ textarea {
 	    };
 	    
 	    var jsonStr = JSON.stringify(data);
-	
+
 	    $.ajax({
 			url: "${pageContext.request.contextPath}/admin/comm/email_modal",
 			method: "POST",
@@ -691,7 +691,6 @@ textarea {
 		
 		return return_txt;
 	}
-
 </script>
 
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

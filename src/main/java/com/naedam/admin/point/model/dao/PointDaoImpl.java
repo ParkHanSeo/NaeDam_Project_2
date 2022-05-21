@@ -36,9 +36,9 @@ public class PointDaoImpl implements PointDao {
 	}
 
 	@Override
-	public List<MemberPointExcelForm> selectMemberPointExcelForm() {
+	public List<MemberPointExcelForm> selectMemberPointExcelForm(String memberId) {
 		// TODO Auto-generated method stub
-		return session.selectList("point.selectMemberPointExcelForm");
+		return session.selectList("point.selectMemberPointExcelForm", memberId);
 	}
 
 	@Override

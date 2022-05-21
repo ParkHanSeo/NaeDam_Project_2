@@ -41,7 +41,7 @@
 	                    <div class="box-tools pull-right" style="margin-bottom:5px;">
 	                        <div class="has-feedback">
 	                            <select name="field" class="form-control input-sm" style="float:left; width:130px;">
-	      							<option value="writer">작성자</option>      
+	      							<option value="a.writer">작성자</option>      
 	      							<option value="productName">제품명</option>                            
 	      						</select>
 	                        </div>
@@ -92,19 +92,11 @@
 	                       	</form>
 	                    </table>
 	                    <br>
-						
 	                    <button type="button" onclick="selectDelete();" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
-	
 						<!-- 페이징 -->
-	                    <div style="text-align:right;">
-	                    	<a href="${pageContext.request.contextPath}/admin/comm/review?page=1">1</a>
-	                    	
-	                    	<!-- 
-	                    		제품명 키워드 검색 시
-	                    		<a href="?tpf=admin/community/review&amp;keyword=%ED%95%98%EB%A3%A8&amp;field=product_name&amp;page=1">1</a>	
-	                    	-->
-	                    	
-	                    </div>
+                        <div id="pagebarContainer" style="text-align: right;">
+							${pagebar}
+						</div>
 	                </div><!-- /.box-body -->
 	            </div><!-- /.box -->
 	        </div><!-- /.col-xs-12 -->

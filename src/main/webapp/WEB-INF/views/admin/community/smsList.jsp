@@ -96,18 +96,9 @@
 	                    	</tbody>
 	                    </table>
 	                    <br>
-	
 						<!-- 페이징 -->
-	                    <div style="text-align:right;">
-	                        <ul class="pagination" style="margin:0;">
-								<li class="active"><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=1">1</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=2">2</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=3">3</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=4">4</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=5">5</a></li>
-								<li class="next"><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=6">Next → </a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=6">Last → </a></li>
-							</ul>                    
+                        <div id="pagebarContainer" style="text-align: right;">
+							${pagebar}
 						</div>
 	                </div><!-- /.box-body -->
 	            </div><!-- /.box -->

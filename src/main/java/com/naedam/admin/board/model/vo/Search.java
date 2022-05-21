@@ -12,14 +12,10 @@ public class Search {
 	private String searchCondition;
 	private String searchKeyword;
 	private String searchType;
-	private String searchDate;
-	private String start_date;
-	private String end_date;
-	private Date startDate;
-	private Date endDate;
-	private int categoryCode;
+	private int searchSort;
 	private int pageSize;
-	private int searchBoardNo;
+	private int endRowNum;
+	private int startRowNum;
 	
 	
 	public int getEndRowNum() {

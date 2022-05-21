@@ -77,7 +77,7 @@
 										</div>
 			                        </td>
 			                        <td>${i}</td>
-			                        <c:set var="ex" value="${fn:split(formPost.itemData,'/')}"/>
+			                        <c:set var="ex" value="${fn:split(formPost.itemData,'&')}"/>
 			                          <c:set var="j" value="0"/>
 			                          <c:set var="k" value="0"/>
 			                          <c:forEach var="exNum" items="${ex}" varStatus="g">
@@ -101,7 +101,6 @@
 	
 	                    <button type="button" onclick="deleteChoiceFormPost(${formNo});" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
 	                    <button type="button" onclick="onclickInsert();" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 등록</button>
-	                    <button type="button" onclick="onclickCopyContent();" class="btn btn-warning btn-sm" style="margin-left:20px;"><i class="fa fa-copy"></i> 리스트 복사</button>
 	                    <button type="button" onclick="excelDownload();" class="btn btn-warning btn-sm"><i class="fa fa-file-excel-o"></i> Excel 다운로드</button>
 	                    
 	                    <form name="form_download" method="post" action="${pageContext.request.contextPath }/excel/download.do?${_csrf.parameterName}=${_csrf.token}">
@@ -112,11 +111,9 @@
 	                    </form>
 	                    
 						<!-- page -->
-	                    <div style="text-align:right;">
-	                        <ul class="pagination" style="margin:0;">
-								<li class="active"><a href="?tpf=admin/form/list&amp;form_code=1&amp;locale=ko&amp;code=1&amp;page=1">1</a></li>
-							</ul>                    
-						</div><!-- /.page -->
+	                    <div style="text-align: right;">
+							${pagebar}
+						</div>
 	                </div><!-- /.box-body -->
 	            </div><!-- /.box -->
 	        </div><!-- /.col-xs-12 -->
@@ -155,13 +152,13 @@
 			                        </c:if>
 			                        <c:if test="${item.input_type == 'webeditor'}">
 			                        	<td align="left">
-			                        		<textarea id="content18" name="data${item.itemNo}" placeholder="${item.placeholder}" style="padding: 5px; line-height: 20px; width: 100%; height: 200px;"></textarea>
+			                        		<textarea id="content18" name="data${item.itemNo}" id="ckEditor" placeholder="${item.placeholder}" style="padding: 5px; line-height: 20px; width: 100%; height: 200px;"></textarea>
 			                        	</td>
 			                        </c:if>
 			                        <c:if test="${item.input_type == 'select'}">
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'/')}"/>
+				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
 				                        		<select name="data${item.itemNo}" class="form-control input-sm">
 				                        			<option value="">선택하세요</option>
 				                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
@@ -174,7 +171,7 @@
 			                        <c:if test="${item.input_type == 'radio'}">
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'/')}"/>
+				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
 				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
 												  <p>
 							                        <input type="radio" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
@@ -187,7 +184,7 @@
 			                        <c:if test="${item.input_type == 'checkbox'}">
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'/')}"/>
+				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
 				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
 												  <p>
 							                        <input type="checkbox" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
@@ -220,6 +217,104 @@
 	        </div><!-- /.modal-content -->
 	    </div><!-- /.modal-dialog -->
 	</div><!-- /.modal .fade -->
+	
+	<div class="modal fade" id="modalContent2" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+	    <div class="modal-dialog" style="width:800px;">
+	        <div class="modal-content">
+	            <form name="formRegister2" method="post" onsubmit="return false;" action="/admin/form/updateFormPost?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
+		            <input type="hidden" name="mode" id="mode" value="insertReply">
+		            <input type="hidden" name="formNo" id="formNo" value="${formNo}">
+		            <input type="hidden" name="code" id="code">
+		            
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		                <h4 class="modal-title" id="myModalLabelPortfolio">정보 수정</h4>
+		            </div><!-- /.modal-header -->
+		            
+		            <div class="modal-body">
+		            	<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 정보 수정</p></h4>
+		            	<table class="table table-bordered">
+		      				<tbody>
+		      				  <c:forEach var="item" items="${tr}" varStatus="status" >
+			      				<tr>
+			                        <td class="menu">${item.label}</td>
+			                        <c:if test="${item.input_type == 'text' || item.input_type == 'tel' || item.input_type == 'email'}">
+				                        <td align="left">
+											<input type="${item.input_type}" name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm">          
+				                        </td>
+			                        </c:if>
+			                        <c:if test="${item.input_type == 'textarea'}">
+			                        	<td align="left">
+			                        		<textarea name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>
+			                        	</td>
+			                        </c:if>
+			                        <c:if test="${item.input_type == 'webeditor'}">
+			                        	<td align="left">
+			                        		<textarea id="content19" name="data${item.itemNo}" id="ckEditor2" placeholder="${item.placeholder}" style="padding: 5px; line-height: 20px; width: 100%; height: 200px;"></textarea>
+			                        	</td>
+			                        </c:if>
+			                        <c:if test="${item.input_type == 'select'}">
+			                        	<td align="left">
+				                          <c:if test="${!empty item.input_example}">
+				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
+				                        		<select name="data${item.itemNo}" class="form-control input-sm">
+				                        			<option value="">선택하세요</option>
+				                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
+				                        				<option value="${exNum}">${exNum}</option>
+				                        			</c:forEach>
+				                        		</select>
+				                          </c:if>			                        		
+			                        	</td>
+			                        </c:if>
+			                        <c:if test="${item.input_type == 'radio'}">
+			                        	<td align="left">
+				                          <c:if test="${!empty item.input_example}">
+				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
+				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
+												  <p>
+							                        <input type="radio" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+							                        <label>${exNum}</label>
+							                      </p>		
+				                        		</c:forEach>
+				                          </c:if>			                        		
+			                        	</td>
+			                        </c:if>	
+			                        <c:if test="${item.input_type == 'checkbox'}">
+			                        	<td align="left">
+				                          <c:if test="${!empty item.input_example}">
+				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
+				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
+												  <p>
+							                        <input type="checkbox" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+							                        <label>${exNum}</label>
+							                      </p>		
+				                        		</c:forEach>
+				                          </c:if>			                        		
+			                        	</td>
+			                        </c:if>
+									<c:if test="${item.input_type == 'date'}">
+										<td align="left">
+											<input type="text" id="datepicker" name="data${item.itemNo}" readonly="" style="width:100px;" class="hasDatepicker">
+										</td>
+									</c:if>	
+									<c:if test="${item.input_type == 'file'}">
+										<td align="left">
+											<input type="file" id="${item.itemNo}" name="file[]" style="width:80%; float:left;">
+										</td>
+									</c:if>
+			                    </tr>
+			                  </c:forEach>               
+		                    </tbody>
+		            	</table>
+		            </div><!-- /.modal-body -->
+		            
+		            <div class="modal-footer">
+		            	<button type="button" onclick="registerForm2();" class="btn btn-primary">저장하기</button>
+		            </div><!-- /.modal-footer -->
+	            </form><!-- /.formRegister -->
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal .fade -->	
 
 	<div class="modal fade" id="modalCopyList" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width:400px;">
@@ -268,6 +363,8 @@
 
 <script>
 	
+	var a = $("input[id='ckEditor']").val();
+	
 	if (window.CKEDITOR) {  // CKEDITOR loading 여부 체크 (Web 버젼에서만 사용)
 	    var objEditor18 = CKEDITOR.replace('content18', {
 	        height: 300,
@@ -299,6 +396,37 @@
 	        autoFormatOnStart: false,
 	    };
 	}
+	if (window.CKEDITOR) {  // CKEDITOR loading 여부 체크 (Web 버젼에서만 사용)
+	    var objEditor19 = CKEDITOR.replace('content19', {
+	        height: 300,
+	        extraPlugins : 'tableresize',
+	        extraPlugins: 'codemirror',
+	        filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+	        filebrowserImageUploadUrl: '/daemon/ckeditor_upload.php?command=QuickUpload&type=Images',
+	        fillEmptyBlocks : true
+	    });
+	    CKEDITOR.on('dialogDefinition', function (ev) {
+	        var dialogName = ev.data.name;
+	        var dialog = ev.data.definition.dialog;
+	        var dialogDefinition = ev.data.definition;
+	
+	        if (dialogName == 'image') {
+	            dialog.on('show', function (obj) {
+	                this.selectPage('Upload'); //업로드텝으로 시작
+	            });
+	            dialogDefinition.removeContents('advanced'); // 자세히탭 제거
+	            dialogDefinition.removeContents('Link'); // 링크탭 제거
+	        }
+	    });
+	    CKEDITOR.config.allowedContent = true;
+	    CKEDITOR.config.codemirror = {
+	        // Set this to the theme you wish to use (codemirror themes)
+	        theme: '3024-night',
+	
+	        // Whether or not to automatically format code should be done when the editor is loaded
+	        autoFormatOnStart: false,
+	    };
+	}	
 	$.fn.modal.Constructor.prototype.enforceFocus = function () {   // bootstrap & ckEdiotr 소스 방지 코드
 	    modal_this = this
 	    $(document).on('focusin.modal', function (e) {
@@ -320,14 +448,30 @@
         formRegister.locale.value = "ko";
         $("[id^='displayFile']").css("display","none");
     }	
+    // 수정 버튼
+    function onclickInsert() {
+        $("#modalContent2").modal({backdrop:"static", show:true});
+        formRegister2.reset();
+        formRegister2.mode.value = "insertReply";
+        //formRegister.form_code.value = "1";
+        formRegister2.locale.value = "ko";
+        $("[id^='displayFile']").css("display","none");
+    }    
 	
     // 등록 모달 저장
     function registerForm() {
-        
         formRegister.target = 'iframe_process';
         formRegister.submit();
-        
+        alert("등록 되었습니다.");
+        location.reload();
     }
+    // 등록 모달 저장
+    function registerForm2() {
+        formRegister2.target = 'iframe_process';
+        formRegister2.submit();
+        alert("수정 되었습니다.");
+        location.reload();
+    }    
     $(function(){
 	    /* datepicker */
 	    $('[id^=datepicker]').datepicker({
@@ -359,35 +503,24 @@
 			success:function(data, textStatus, jqXHR) {
 		                 var json_data = data;
 		                 var formData = new Array();
-		                 formData = data.itemData.split("/");
-		                 for(var i = 0; i < formData.length; i++){
-		                	 console.log(formData[i])
-		                 }
+		                 var itemNoArr = new Array();
+		                 var itemInputArr = new Array();
 		                 
-		                 $("form[name='formRegister'] #mode").val("updateReply");
-		                 $("#code").val(code);
-		                 $("#form_code").val(json_data.form_code);
-		                 var find_text = "";
-		                 $.each(formData, function(index, value) {
-		                     find_text = String(index);
-		                     if ($.inArray(find_text, json_data.arrRadio) >= 0) {
-		                         $("input[name=data" + index + "][value='" + value + "']").prop("checked", true);
-		                     }
-		                     else if ($.inArray(find_text, json_data.arrCheckbox) >= 0) {
-		                         var arrCheckbox = value.toString().split(",");
-		                         $.each(arrCheckbox, function(index2, value2) {
-		                             $("[id^=label" + index + "_][value='" + value2 + "']").prop("checked", true);
-		                         });
-		                     }
-		                     else {
-		                         if ($.inArray(find_text, ) >= 0) {
-		                             var objEditor = eval("objEditor" + find_text);
-		                             console.log(objEditor);
-		                             objEditor.setData(value);
-		                         }
-		                         else $("[name=data" + index).val(value);
-		                     }
-		                 });
+		                 formData = data.itemData.split("&");
+		                 itemNoArr = data.itemNo.split("&");
+		                 itemInputArr = data.itemInput.split("&");
+		                 for(var i = 0; i < formData.length; i++){
+		                	 
+		                	 if(itemInputArr[i] == "select" || itemInputArr[i] == "radio" || itemInputArr[i] == "checkbox"){
+		                		 $("input[name='data"+itemNoArr[i]+"'][value='"+formData[i]+"']").prop("checked", true);
+		                	 }else if(itemInputArr[i] == "webeditor"){
+		                		 var objEditor = eval("objEditor19");
+		                		 objEditor.setData(formData[i]);
+		                	 }
+		                	 $("input[name='data"+itemNoArr[i]+"']").val(formData[i]);
+		                 }
+		                 $("input[name='code']").val(data.code);
+		                 
 		                 $("[id^='displayFile']").css("display","none");
 		                 if (json_data.files != null && json_data.files.length > 0) {
 		                     $.each(json_data.files, function(index, value) {
@@ -407,8 +540,8 @@
     
     // 수정하기 버튼
     function onclickUpdate(code) {
-        $("#modalContent").modal({backdrop:"static", show:true});
-        formRegister.reset();
+        $("#modalContent2").modal({backdrop:"static", show:true});
+        formRegister2.reset();
         
         setData(code);
     }    
@@ -524,7 +657,7 @@
 		
 	};
 	
-	//리스트 복사
+	//선택 삭제
 	function deleteChoiceFormPost(formNo) {
 		
 		var formNo = ${formNo};
@@ -559,6 +692,9 @@
 		
 	};
 
+	const paging = (cPage) => {
+		location.href = '/admin/form/formPostList?cPage='+cPage+'&formNo='+${formNo};
+	}
       
     /* 
     datepicker 

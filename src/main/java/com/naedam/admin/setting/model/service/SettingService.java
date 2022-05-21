@@ -135,11 +135,6 @@ public interface SettingService {
 
 	int updateStaff(Staff staff);
 
-	
-
-
-
-
 	Staff selectMaxOrder();
 
 	int updateChangeOrderUp(Staff paramStaff);
@@ -154,9 +149,7 @@ public interface SettingService {
 
 	int updateChangeOrderDownNext(Staff paramStaff);
 
+	int updateChangeOrderUpNext(int input_row_order);
 
-
-
-
-
+	
 }

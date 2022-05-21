@@ -5,31 +5,58 @@
 <mapper namespace="review">
   
 	<!-- 리뷰 조회 + 검색 --> 
-  	<select id="reviewList" parameterType="map" resultType="review">
-		SELECT A.*
-		FROM (
-				SELECT DISTINCT R.REVIEW_CODE
-					 , R.ORDER_NO
-					 , R.MEMBER_NO 
-					 , R.PRODUCT_NO
-					 , R.REVIEW_CATEGORY_NO
-					 , REVIEW_TITLE
-					 , REVIEW_CONTENT
-					 , REVIEW_DATE
-					 , CONCAT(M.LAST_NAME, M.FIRST_NAME) AS WRITER
-					 , P.PRODUCT_NAME AS PRODUCTNAME
-					 , C.REVIEW_CATEGORY_NAME AS REVIEWCATEGORYNAME
-				  FROM TB_REVIEW R
-				  JOIN TB_ORDER O ON R.ORDER_NO = O.ORDER_NO
-				  JOIN MEMBER M ON R.MEMBER_NO = M.MEMBER_NO
-				  JOIN PRODUCT P ON R.PRODUCT_NO = P.PRODUCT_NO
-				  JOIN REVIEW_CATEGORY C ON R.REVIEW_CATEGORY_NO = C.REVIEW_CATEGORY_NO
-				 ORDER BY R.REVIEW_CODE ASC) A
+	<select id="totalReviewCount" parameterType="hashmap" resultType="int">
+		select COUNT(*)
+		  from (select r.review_code,
+					   r.order_no,
+			 		   r.member_no,
+			 		   r.product_no,
+			 		   r.review_category_no,
+			 		   review_title,
+			 		   review_content,
+			 		   review_date,
+			 		   CONCAT(m.last_name, m.first_name) as writer,
+			 		   p.product_name as productName,
+			 		   c.review_category_name as reviewCategoryName
+				  from tb_review r
+				  join tb_order as o on r.order_no = o.order_no 
+				  join member as m on r.member_no = m.member_no
+				  join product as p on r.product_no = p.product_no
+				  join review_category as c on r.review_category_no = c.review_category_no
+				 order by r.review_code ASC) as a
 		<where>
 			<if test="keyword != '' and keyword != null">
 				${field} LIKE CONCAT('%', #{keyword}, '%')
 			</if>
 		</where>
+	</select>	
+  	<select id="reviewList" parameterType="map" resultType="review">
+		select c.*
+		  from (select @ROWNUM:=@ROWNUM+1 as rowNum, b.* 
+				  from (select @ROWNUM:=0, a.*
+				  		  from (select r.review_code,
+									   r.order_no,
+							 		   r.member_no,
+							 		   r.product_no,
+							 		   r.review_category_no,
+							 		   review_title,
+							 		   review_content,
+							 		   review_date,
+							 		   CONCAT(m.last_name, m.first_name) as writer,
+							 		   p.product_name as productName,
+							 		   c.review_category_name as reviewCategoryName
+								  from tb_review r
+								  join tb_order as o on r.order_no = o.order_no 
+								  join member as m on r.member_no = m.member_no
+								  join product as p on r.product_no = p.product_no
+								  join review_category as c on r.review_category_no = c.review_category_no
+								 order by r.review_code ASC) as a
+						 <where>
+							<if test="keyword != '' and keyword != null">
+								${field} LIKE CONCAT('%', #{keyword}, '%')
+							</if>
+						</where>) as b) as c
+		 where c.rowNum BETWEEN #{startRow} AND #{endRow}
 	</select> 
   	 
   	<!-- 리뷰 모달 정보 불러오기 -->

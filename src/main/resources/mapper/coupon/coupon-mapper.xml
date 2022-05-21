@@ -29,7 +29,7 @@
   </delete>
   
   <select id="getCoupon" resultType="coupon">
-  	select * 
+  	select *
   	  from coupon 
   	 where coupon_no = #{code}
   </select>
