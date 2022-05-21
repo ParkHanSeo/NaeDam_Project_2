@@ -24,7 +24,7 @@
 
 	<!-- #3.servlet-context 설정관련 : mvc관련 빈 관리 -->
 	<!-- Processes application requests --> 
-	<servlet>
+	<servlet>  
 		<servlet-name>appServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
