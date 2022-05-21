@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="security">
+	<select id="loadUserByUsername" resultMap="memberMap">
+		select
+		    *
+		from
+		    member m left join authorities a
+		        on m.member_no = a.member_no
+		where
+		    m.id = #{username}	
+	</select>
+	
+	<resultMap type="member" id="memberMap">
+		<id column="id" property="id"/>
+		<result column="member_no" property="memberNo"/>
+		<result column="first_name" property="firstName"/>
+		<result column="last_name" property="lastName"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="password" property="password"/>
+		<result column="profile_img" property="profileImg"/>
+		<result column="upate_date" property="updateDate"/>
+		<result column="login_date" property="loginDate"/>
+		
+		<collection 
+			property="authorities" 
+			ofType="org.springframework.security.core.authority.SimpleGrantedAuthority">
+			<constructor>
+				<arg column="authority" javaType="string"/>
+			</constructor>	
+		</collection>
+	</resultMap>
+	
+	<update id="insertLoginDate">
+		UPDATE 
+			member 
+		SET 
+			login_date = NOW() 
+		WHERE 
+			id = #{username}
+		<selectKey keyProperty="loginDate" resultType="date" order="AFTER">
+			SELECT
+				login_date
+			FROM
+				member
+			WHERE
+				id = #{username}
+		</selectKey>
+	</update>
+	
+	<insert id="insertAccessHistoryByLogin">
+		INSERT INTO 
+			member_access_history(
+				access_history_no,
+				access_history_id,
+				access_history_name,
+				access_history_ip,
+				access_history_status,
+				login_date)
+		VALUES
+			(NEXTVAL(seq_member_access_history),
+			#{accessHistoryId},
+			#{accessHistoryName},
+			#{accessHistoryIp},
+			#{accessHistoryStatus},
+			#{loginDate})
+	</insert>
+
+	<insert id="insertAccessHistoryByLogout">
+		INSERT INTO 
+			member_access_history(
+				access_history_no,
+				access_history_id,
+				access_history_name,
+				access_history_ip,
+				access_history_status,
+				login_date)
+		VALUES
+			(NEXTVAL(seq_member_access_history),
+			#{accessHistoryId},
+			#{accessHistoryName},
+			#{accessHistoryIp},
+			#{accessHistoryStatus},
+			NOW())
+	</insert>
+</mapper>

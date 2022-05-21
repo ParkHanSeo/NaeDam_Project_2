@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sms">
+
+	<!-- 주문 정보 조회 -->
+	<select id="msgInfo" resultType="msgInfo">
+		select * 
+		  from v_msg_info
+		 where order_no = #{orderNo}
+	</select>
+	
+	<!-- 특정 설정값 조회 -->
+	<select id="smsCheck" resultType="smsSetting">
+		select *
+		  from sms_setting
+		 where template_id = #{templateId}
+	</select>
+	
+	<!-- 자동 발송 여부 수정 -->	
+	<update id="autoSend" parameterType="hashmap">
+		update sms_setting
+		   set is_send = #{send}
+			 , is_send_admin = #{sendAdmin}
+		 where template_id = #{templateId}
+	</update>
+		
+	<!-- sms 저장 -->
+	<insert id="insertSms" parameterType="hashmap">
+		insert into tb_sms (
+							sms_code,
+							receive_code,
+							send_phone,
+							request_id,
+							receive_phone,
+							receive_title,
+							receive_content,
+							sms_point,
+							receive_date)
+		values(
+				NEXTVAL(seq_sms_code),
+				#{type},
+				#{send},
+				#{requestId},
+				#{phone},
+				#{title},
+				#{content},
+				default,
+				#{date})
+	</insert>	
+	
+	<!-- 설정 정보 조회 -->
+	<select id="selectSmsSetting" resultType="smsSetting">
+		select *
+		  from sms_setting
+	</select>
+	<select id="totalSmsCount" parameterType="hashmap" resultType="int">
+		select COUNT(*)
+		  from tb_sms
+		 <where>
+			<if test="keyword != '' and keyword != null">
+				<choose>
+					<when test="field eq 'total'">
+						receive_title LIKE CONCAT('%', #{keyword}, '%') || 
+						receive_content LIKE CONCAT('%', #{keyword}, '%') || 
+						receive_phone LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<otherwise>
+						${field} LIKE CONCAT('%', #{keyword}, '%')
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</select>
+	<select id="selectSmsList" parameterType="hashmap" resultType="sms">
+		select b.*
+		  from (select @ROWNUM:=@ROWNUM+1 as rowNum, a.* 
+				  from (select @ROWNUM:=0,
+							   sms_code,
+							   receive_code,
+							   request_id,
+							   receive_phone,
+							   receive_title,
+							   receive_content,
+							   sms_point,
+							   date_format(receive_date, '%Y-%m-%d %T') as reDate
+						  from tb_sms
+						 <where>
+							<if test="keyword != '' and keyword != null">
+								<choose>
+									<when test="field eq 'total'">
+										receive_title LIKE CONCAT('%', #{keyword}, '%') || 
+										receive_content LIKE CONCAT('%', #{keyword}, '%') || 
+										receive_phone LIKE CONCAT('%', #{keyword}, '%')
+									</when>
+									<otherwise>
+										${field} LIKE CONCAT('%', #{keyword}, '%')
+									</otherwise>
+								</choose>
+							</if>
+						</where>
+						order by reDate DESC, sms_code DESC) as a) as b
+		 where b.rowNum BETWEEN #{startRow} AND #{endRow}
+	</select>	
+	
+	<!-- sms 이용 요금 조회 -->
+	<select id="countBySendPhone" resultType="int">
+		select COUNT(*)
+		  from tb_sms
+		 where send_phone = #{phone}
+	</select>	
+	  
+</mapper>

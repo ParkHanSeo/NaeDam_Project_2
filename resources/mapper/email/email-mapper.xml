@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="email">
+
+	<!-- 특정 설정값 조회 -->
+	<select id="emailCheck" resultType="emailSetting">
+		select *
+		  from email_setting
+		 where template_id = #{templateId}
+	</select>
+
+	<!-- 자동 발송 여부 수정 -->
+	<update id="autoSend" parameterType="hashmap">
+		update email_setting
+		   set is_send = #{send}
+			 , is_send_admin = #{sendAdmin}
+		 where template_id = #{templateId}
+	</update>
+
+	<!-- email 저장 -->
+	<insert id="insertEmail" parameterType="hashmap">
+		insert into tb_email (
+							email_code,
+							receive_code,
+							send_email,
+							request_id,
+							receive_email,
+							receive_title,
+							receive_content,
+							email_point,
+							receive_date)
+		values(
+				NEXTVAL(seq_email_code),
+				default,
+				#{send},
+				#{requestId},
+				#{email},
+				#{title},
+				#{content},
+				default,
+				#{date})
+	</insert>	
+	
+	<!-- 설정 정보 조회 -->	
+	<select id="selectEmailSetting" resultType="emailSetting">
+		select *
+		  from email_setting
+	</select>	
+	<select id="totalEmailCount" parameterType="hashmap" resultType="int">
+		select COUNT(*)
+		  from tb_email
+		  <where>
+				<if test="keyword != '' and keyword != null">
+					<choose>
+						<when test="field eq 'total'">
+							receive_title LIKE CONCAT('%', #{keyword}, '%') || 
+							receive_content LIKE CONCAT('%', #{keyword}, '%') || 
+							receive_email LIKE CONCAT('%', #{keyword}, '%')
+						</when>
+						<otherwise>
+							${field} LIKE CONCAT('%', #{keyword}, '%')
+						</otherwise>
+					</choose>
+				</if>
+			</where>
+	</select>
+	<select id="selectEmailList" parameterType="hashmap" resultType="email">
+		select b.*
+		  from (select @ROWNUM:=@ROWNUM+1 as rowNum, a.* 
+				  from (select @ROWNUM:=0,
+				  			   email_code,
+							   receive_code,
+							   request_id,
+							   receive_email,
+							   receive_title,
+							   receive_content,
+							   email_point,
+							   date_format(receive_date, '%Y-%m-%d %T') as reDate
+						  from tb_email
+						 <where>
+							<if test="keyword != '' and keyword != null">
+								<choose>
+									<when test="field eq 'total'">
+										receive_title LIKE CONCAT('%', #{keyword}, '%') || 
+										receive_content LIKE CONCAT('%', #{keyword}, '%') || 
+										receive_email LIKE CONCAT('%', #{keyword}, '%')
+									</when>
+									<otherwise>
+										${field} LIKE CONCAT('%', #{keyword}, '%')
+									</otherwise>
+								</choose>
+							</if>
+						</where>
+						 order by reDate DESC, email_code DESC) as a) as b
+		 where b.rowNum BETWEEN #{startRow} AND #{endRow}
+	</select>	
+  
+</mapper>

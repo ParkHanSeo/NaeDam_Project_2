@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="banner">
+  <select id="selectOneBannerByBannerNo" resultType="banner">
+  	select * from banner where banner_no = #{bannerNo}
+  </select>
+  
+  <insert id="insertBanner">
+  	insert into banner values(nextval(seq_banner_no), #{categoryNo}, #{imgUrl}, #{bannerName}, #{linkUrl}, sysdate(), #{status}, #{targetNo}, #{tag})
+  </insert>
+  
+  <update id="updateBanner">
+  	update banner set category_no=#{categoryNo}, img_url=#{imgUrl}, banner_name = #{bannerName}, link_url = #{linkUrl}, reg_date = sysdate(), status = #{status}, target_no = #{targetNo}, tag=#{tag}
+  		where banner_no = #{bannerNo}
+  </update>
+  
+  
+  <delete id="deleteBanner">
+  	delete from banner where banner_no = #{bannerNo}
+  </delete>
+</mapper>

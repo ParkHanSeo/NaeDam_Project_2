@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="coupon">
+  <select id="selectOneCouponByCouponNo" resultType="coupon">
+  	select * from coupon where coupon_no = #{couponNo}
+  </select>
+  
+  <select id="selectCouponList" resultType="coupon">
+    select * from coupon order by coupon_no
+  </select>
+  
+  <insert id="insertCoupon">
+  	insert into coupon values(nextval(seq_coupon_no), #{couponName}, #{provideType}, #{benefitType}, #{discountType}, #{discount}, #{useLimit}, #{useMax}, #{expiryType}, #{expiryStartDate}, #{expiryEndDate}, #{couponStatus}, sysdate())
+  </insert>
+  
+  <insert id="insertMemberCoupon">
+  	insert into member_coupon values(nextval(seq_member_coupon_no), #{memberNo}, #{couponNo}, sysdate())
+  </insert>
+  
+  <update id="updateCoupon">
+  	update coupon set coupon_name = #{couponName}, provide_type = #{provideType}, benefit_type = #{benefitType}, discount_type = #{discountType}, discount = #{discount}, use_limit = #{useLimit}, use_max = #{useMax}, expiry_type = #{expiryType}, expiry_start_date = #{expiryStartDate}, expiry_end_date = #{expiryEndDate}, coupon_status = #{couponStatus}, reg_date = sysdate()
+  		where coupon_no = #{couponNo}
+  </update>
+  
+  <delete id="deleteCoupon">
+  	delete from coupon where coupon_no = #{couponNo}
+  </delete>
+  
+  <select id="getCoupon" resultType="coupon">
+  	select *
+  	  from coupon 
+  	 where coupon_no = #{code}
+  </select>
+  
+</mapper>

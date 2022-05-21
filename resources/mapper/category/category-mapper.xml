@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category">
+  <select id="selectProductCategory" resultType="category">
+  	WITH recursive cte AS (
+
+	SELECT 
+		category_no, 
+		category_name, 
+		parent_no,
+		1 AS level
+	FROM category
+	WHERE parent_no IS NULL AND category_type = #{type}
+	
+	UNION ALL
+	
+	SELECT 
+		c.category_no,
+		c.category_name,
+		c.parent_no,
+		1+level AS level
+	FROM category c 
+	INNER JOIN cte
+	ON c.parent_no = cte.category_no
+	)
+	
+	SELECT category_no, IFNULL(parent_no, 0) AS parent_no, category_name, level FROM cte
+  </select>
+  
+  <select id="selectProductCategoryChildByParentNo" resultType="category">
+    WITH recursive cte AS (
+
+	SELECT 
+		category_no, 
+		category_name, 
+		parent_no,
+		STATUS,
+		1 AS level
+	FROM category
+	WHERE parent_no IS NULL AND category_type = 'product'
+	
+	UNION ALL
+	
+	SELECT 
+		c.category_no,
+		c.category_name,
+		c.parent_no,
+		c.status,
+		1+level AS level
+	FROM category c 
+	INNER JOIN cte
+	ON c.parent_no = cte.category_no
+	)
+	
+	SELECT category_no, IFNULL(parent_no, 0) AS parent_no, category_name, STATUS, level FROM cte
+	WHERE parent_no = #{cteNo}
+	ORDER BY category_no
+  </select>
+  
+  <select id="selectProductCategoryByLevel" resultType="category">
+    WITH recursive cte AS (
+
+	SELECT 
+		category_no, 
+		category_name, 
+		parent_no,
+		STATUS,
+		1 AS level
+	FROM category
+	WHERE parent_no IS NULL AND category_type = 'product'
+	
+	UNION ALL
+	
+	SELECT 
+		c.category_no,
+		c.category_name,
+		c.parent_no,
+		c.status,
+		1+level AS level
+	FROM category c 
+	INNER JOIN cte
+	ON c.parent_no = cte.category_no
+	)
+	
+	SELECT category_no, IFNULL(parent_no, 0) AS parent_no, category_name, STATUS, level FROM cte
+	WHERE level = #{level}
+	ORDER BY category_no
+  </select>
+  
+  <select id="selectOneProductCategoryByCteNo" resultType="category">
+  	select * from category where category_no = #{cteNo}
+  </select>
+  
+  <select id="selectCategoryLevel" resultType="_int">
+  	WITH recursive cte AS (
+
+	SELECT 
+		category_no, 
+		category_name, 
+		parent_no,
+		STATUS,
+		1 AS level
+	FROM category
+	WHERE parent_no IS NULL AND category_type = 'product'
+	
+	UNION ALL
+	
+	SELECT 
+		c.category_no,
+		c.category_name,
+		c.parent_no,
+		c.status,
+		1+level AS level
+	FROM category c 
+	INNER JOIN cte
+	ON c.parent_no = cte.category_no
+	)
+	
+	SELECT level FROM cte
+	WHERE category_no = #{cteNo}
+  </select>
+  
+  <select id="selectRelatedCtegoryByCteNo" resultType="Category">
+    WITH recursive cte AS (
+
+	SELECT 
+		category_no, 
+		category_name, 
+		parent_no,
+		STATUS,
+		1 AS level
+	FROM category
+	WHERE parent_no IS NULL AND category_type = 'product'
+	
+	UNION ALL
+	
+	SELECT 
+		c.category_no,
+		c.category_name,
+		c.parent_no,
+		c.status,
+		1+level AS level
+	FROM category c 
+	INNER JOIN cte
+	ON c.parent_no = cte.category_no
+	)
+	
+	SELECT category_no, IFNULL(parent_no, 0) AS parent_no, category_name, STATUS, level FROM cte
+	WHERE category_no IN
+		(SELECT parent_no FROM category WHERE category_no IN (SELECT category_no FROM category WHERE category_no IN (SELECT parent_no FROM category WHERE category_no = #{cteNo}) OR category_no = #{cteNo})) OR category_no = #{cteNo}
+	ORDER BY category_no
+  </select>
+  
+  <select id="selectCategoryNamesByCteLv" resultType="category">
+    WITH recursive cte AS (
+
+	SELECT 
+		category_no, 
+		category_name, 
+		parent_no,
+		STATUS,
+		1 AS level
+	FROM category
+	WHERE parent_no IS NULL AND category_type = 'product'
+	
+	UNION ALL
+	
+	SELECT 
+		c.category_no,
+		c.category_name,
+		c.parent_no,
+		c.status,
+		1+level AS level
+	FROM category c 
+	INNER JOIN cte
+	ON c.parent_no = cte.category_no
+	)
+	
+	SELECT category_no, IFNULL(parent_no, 0) AS parent_no, category_name, STATUS, level FROM cte
+	WHERE LEVEL = #{level}
+	ORDER BY category_no
+  </select>
+  
+  <insert id="insertProductCategoryByParam">
+	  <choose>
+		  <when test="parent_no == 0 ">
+		  	insert into category values(nextval(seq_category_no), #{title}, null, 'product', #{status})
+		  </when>
+		  <otherwise>
+		    insert into category values(nextval(seq_category_no), #{title}, #{parent_no}, 'product', #{status})
+		  </otherwise>
+	  </choose>
+  </insert>
+  
+  
+  <update id="updateProductCategoryByParam">
+  	update category set category_name = #{title}, status = #{status} where category_no = #{code}
+  </update>
+  
+  <delete id="deleteCategoryByCteNo">
+  	delete from category where category_no = #{cteNo} or parent_no = #{cteNo}
+  </delete>
+</mapper>

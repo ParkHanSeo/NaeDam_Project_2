@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="setting">
+
+	<select id="selectDeliveryCompanyList" resultType="deliveryCompany">
+		select * from delivery_company
+	</select>
+	
+	<select id="selectOneDeliverySetting" resultType="deliverySetting">
+		select * from delivery_setting
+	</select>
+	
+	<select id="selectDoseosanganList" resultType="doseosangan">
+		select * from doseosangan
+	</select>
+	
+	<select id="selectMapList" resultType="maps">
+		SELECT a.*, b.map_api_name
+		FROM map a, map_api b
+		WHERE a.map_api_no = b.map_api_no
+	</select>
+	
+	<select id="selectHistoryList" resultType="history">
+		select * from history
+	</select>
+	
+	<select id="selectBannerList" resultType="banner">
+		SELECT 
+			a.*,
+			b.CATEGORY_NAME 
+		FROM banner a 
+			JOIN category b ON(a.category_no = b.CATEGORY_NO)
+	</select>
+	
+	<select id="selectMenuCteList" resultType="category">
+		select * from category where category_type = 'menu' order by category_no
+	</select>
+	
+	<select id="selectPopupList" resultType="popup">
+		select * from popup 
+		<where>
+			<if test="field != null and keyword != ''">
+				${field} like concat('%',#{keyword},'%')
+			</if>
+			<if test="start_date != null and end_date != null">
+				<if test="start_date != '' and end_date == ''">
+					and start_date <![CDATA[>=]]> #{start_date} 
+				</if>
+				<if test="start_date != '' and end_date != ''">
+					and start_date <![CDATA[>=]]> #{start_date} 
+					and end_date <![CDATA[<=]]> #{end_date}
+				</if>
+				<if test="start_date == '' and end_date != ''">
+					and end_date <![CDATA[<=]]> #{end_date}
+				</if>
+			</if>
+		</where>
+		
+		order by code
+	</select>
+	
+	<select id="selectCouponListByParam" resultType="coupon">
+	 select * from coupon
+	 	<where>
+			<if test="field != null and keyword != ''">
+				${field} like concat('%',#{keyword},'%')
+			</if>
+			<if test="expiry_start_date != null and expiry_end_date != null">
+				<if test="expiry_start_date != '' and expiry_end_date == ''">
+					and expiry_start_date <![CDATA[>=]]> #{expiry_start_date} 
+				</if>
+				<if test="expiry_start_date != '' and expiry_end_date != ''">
+					and expiry_start_date <![CDATA[>=]]> #{expiry_start_date} 
+					and expiry_end_date <![CDATA[<=]]> #{expiry_end_date}
+				</if>
+				<if test="expiry_start_date == '' and expiry_end_date != ''">
+					and expiry_end_date <![CDATA[<=]]> #{expiry_end_date}
+				</if>
+				or expiry_type = 'unlimited'
+			</if>
+		</where>
+	 order by coupon_no
+	</select>
+  	
+  	<select id="selectPoint" resultType="point">
+  		select * from point
+  	</select>
+  	<select id="selectPointUse" resultType="pointUse">
+ 		select * from point_use 	
+  	</select>
+  	<select id="selectPointSave" resultType="pointSave">
+  		select * from point_save
+  	</select>
+  	
+  	<select id="selectAdminMenuList" resultType="adminMenu">
+  		select * from admin_menu
+  	</select>
+  	
+  	<select id="selectLocaleList" resultType="locale">
+  		select * from locale ORDER BY locale_name desc
+  	</select>
+  	
+  	<select id="selectAdminSetting" resultType="adminSetting">
+  		select * from admin_setting
+  	</select>
+  	
+  	<select id="selectOneDeliveryNotice" resultType="deliveryNotice">
+  		select * from delivery_notice where locale = #{locale}
+  	</select>
+  	
+  	<select id="selectSeoSetting" resultType="seoSetting">
+  		select * from seo_setting
+  	</select>
+  	
+  	<select id="selectPgSetting" resultType="billingPgSetting">
+  		select * from billing_pg_setting
+  	</select>
+  	
+  	<select id="selectKgIniSetting" resultType="kgIniSetting">
+  		select * from kg_ini_setting
+  	</select>
+  	
+  	<select id="selectEximbaySetting" resultType="eximbaySetting">
+  		select * from eximbay_setting
+  	</select>
+  	
+  	<select id="selectNaverShoppingSetting" resultType="naverShoppingSetting">
+  		select * from naver_shopping_setting
+  	</select>
+  	
+  	<select id="selectNaverpaySetting" resultType="naverpaySetting">
+  		select * from naverpay_setting
+  	</select>
+  	
+  	<select id="selectXpaySetting" resultType="xpaySetting">
+  		select * from xpay_setting
+  	</select>
+  	
+  	<select id="selectKcpSetting" resultType="kcpSetting">
+  		select * from kcp_setting
+  	</select>
+  	
+  	<select id="selectSnsSetting" resultType="snsSetting">
+  		select * from sns_setting
+  	</select>
+  	
+  	<update id="updateAdminSetting">
+  		update admin_setting set email = #{email}, phone = #{phone}, caller_id = #{callerId}, 
+			<if test="thumbnailImg != null and thumbnailImg != ''">
+	  			thumbnail_img = #{thumbnailImg}, 
+			</if>
+			<if test="faviconImg != null and faviconImg != ''">
+	  			favicon_img = #{faviconImg}, 
+			</if>
+  			is_discount = #{isDiscount}, history_layout_no = #{historyLayoutNo}, history_view_type = #{historyViewType} 
+  	</update>
+  	
+  	<update id="updateDeliveryNotice">
+  		update delivery_notice set content = #{content} where locale = #{locale}
+  	</update>
+  	
+  	<update id="updateAdminMenuAllN">
+  		update admin_menu set status = 'N'
+  	</update>
+  	
+  	<update id="updateLocaleAllN">
+  		update locale set is_default = 'N', is_choosen = 'N'
+  	</update>
+  	
+  	<update id="updateAdminMenu">
+  		update admin_menu set status = 'Y' where menu_no = #{menuNo}
+  	</update>
+  	
+  	<update id="updateLocaleChoosen">
+  		update locale set is_choosen = 'Y' where locale_code = #{localeCode}
+  	</update>
+  	
+  	<update id="updateLocaleDefault">
+  		update locale set is_default = 'Y' where locale_code = #{localeCode}
+  	</update>
+  	
+  	<update id="updateSeoSetting">
+  		update seo_setting set robots = #{robots}, rich_snippet = #{richSnippet}, naver_file_name = #{naverFileName}, google_file_name = #{googleFileName}, bing_file_name = #{bingFileName}
+  	</update>
+  	
+  	<update id="updateKgIniSetting">
+  		update kg_ini_setting set use_ini = #{useIni}, use_credit_ini = #{useCreditIni}, use_bank_ini = #{useBankIni}, use_v_bank_ini = #{useVBankIni}, pg_mode_ini = #{pgModeIni}, store_id_ini = #{storeIdIni}, sign_key = #{signKey}
+  	</update>
+  	
+  	<update id="updateXpaySetting">
+  		update xpay_setting set use_xpay = #{useXpay}, use_credit_xpay = #{useCreditXpay}, use_bank_xpay = #{useBankXpay}, use_v_bank_xpay = #{useVBankXpay}, pg_mode_xpay = #{pgModeXpay}, store_id_xpay = #{storeIdXpay}, mert_key = #{mertKey}
+  	</update>
+  	
+  	<update id="updateKcpSetting">
+  		update kcp_setting set use_kcp = #{useKcp}, use_credit_kcp = #{useCreditKcp}, use_bank_kcp = #{useBankKcp}, use_v_bank_kcp = #{useVBankKcp}, pg_mode_kcp = #{pgModeKcp}, site_cd = #{siteCd}, site_key = #{siteKey}
+  	</update>
+  	
+  	<update id="updateBillingPgSetting">
+  		update billing_pg_setting set is_domestic = #{isDomestic}, is_foreigne = #{isForeigne}, card_pg = #{cardPg}, naverpay_use = #{naverpayUse}
+  	</update>
+  	
+  	<update id="updateNaverpaySetting">
+  		update naverpay_setting set store_id_naver = #{storeIdNaver}, store_key_naver = #{storeKeyNaver}, btn_key = #{btnKey}, pg_mode_naver = #{pgModeNaver}
+  	</update>
+  	
+  	<update id="updateNaverShoppingSetting">
+  		update naver_shopping_setting set tsv_url = #{tsvUrl}, product_db_url = #{productDbUrl}
+  	</update>
+
+  	<update id="updateSnsSetting" parameterType="snsSetting">
+  		update sns_setting
+  		<set>
+  			mode = #{mode},
+  			NONE_MEMBER_USE = #{noneMemberUse},
+  			KAKAO_USE = #{kakaoUse},
+  			KAKAO_SNS_KEY = #{kakaoSnsKey},
+  			NAVER_USE = #{naverUse},
+  			NAVER_SNS_ID = #{naverSnsId},
+  			NAVER_SNS_KEY = #{naverSnsKey},
+  			GOOGLE_USE = #{googleUse},
+  			GOOGLE_SNS_ID = #{googleSnsId},
+  			GOOGLE_SNS_KEY = #{googleSnsKey},
+  			FACEBOOK_USE = #{facebookUse},
+  			FACEBOOK_SNS_ID = #{facebookSnsId},
+  			FACEBOOK_SNS_KEY = #{facebookSnsKey},
+  			TWITTER_USE = #{twitterUse},
+  			TWITTER_SNS_ID = #{twitterSnsId},
+  			TWITTER_SNS_KEY = #{twitterSnsKey}
+  		</set>
+  		WHERE SNS_SETTING_NO = 1
+  	</update>
+  	
+  	<insert id="insertAttachmentEnroll">
+  		INSERT INTO
+  			attachment(no,
+  					   staff_no,
+  					   original_filename,
+  					   renamed_filename,
+  					   upload_date)
+  		VALUES(NEXTVAL(seq_attachment_no),
+  			   #{staffNo},
+  			   #{originalFilename},
+  			   #{renamedFilename},
+  			   NOW())
+  	</insert>
+
+ 	<insert id="insertStaff">
+ 		 <selectKey keyProperty="rowOrder" resultType="_int" order="BEFORE">
+ 		 	SELECT
+				IFNULL(MAX(row_order), 0) + 1
+			FROM 
+				staff
+ 		 </selectKey>
+ 		 
+ 		INSERT INTO 
+			staff(
+				staff_no, 
+				staff_name, 
+				staff_position, 
+				staff_career, 
+				staff_profile, 
+				img_url, 
+				reg_date, 
+				row_order
+				)
+		VALUES(
+				NEXTVAL(seq_staff_no), 
+				#{staffName}, 
+				#{staffPosition}, 
+				#{staffCareer}, 
+				#{staffProfile}, 
+				#{imgUrl}, 
+				SYSDATE(),
+				#{rowOrder}
+				)
+ 	</insert>
+ 	
+ 	<select id="selectStaffList" resultType="staff">
+ 		SELECT
+			ROW_NUMBER() OVER(ORDER BY s.row_order DESC) AS `rowNum`,
+			staff_no,
+			img_url,
+			staff_name,
+			staff_position,
+			reg_date,
+			row_order
+		FROM
+			staff s
+		ORDER BY
+			s.row_order DESC
+ 	</select>
+ 	
+ 	<select id="totalStaffListCount" resultType="_int">
+ 		SELECT
+ 			COUNT(*)
+ 		FROM
+ 			staff
+ 	</select>
+ 	
+ 	<delete id="deleteStaff">
+ 		DELETE FROM
+ 			staff
+ 		<where>
+			<foreach collection="array" item="item" open="(" close=")" separator="or">
+		 		staff_no = #{item}
+		 	</foreach>
+		</where>
+	</delete>
+	
+	<select id="searchStaffList" resultType="staff">
+		SELECT
+			ROW_NUMBER() OVER(ORDER BY s.reg_date DESC) AS `rowNum`,
+			staff_no,
+			img_url,
+			staff_name,
+			staff_position,
+			reg_date
+		FROM
+			staff s
+		<where>	
+			<if test="keyword != null and keyword != ''" >
+				${type} LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectsearchStaffListCount" resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			staff
+		<where>	
+			<if test="keyword != null and keyword != ''" >
+				${type} LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+	</select>
+
+	<select id="selectOneStaffByStaffNo" resultType="staff">
+		SELECT
+			staff_no,
+			staff_name,
+			staff_position,
+			staff_career,
+			staff_profile,
+			img_url,
+			reg_date
+		FROM
+			staff
+		WHERE
+			staff_no = #{staffNo}
+	</select>
+	
+	<select id="selectOneimgUrlBystaffNo" resultType="staff">
+		SELECT
+			img_url
+		FROM
+			staff
+		WHERE
+			staff_no = #{staffNo}
+	</select>
+	
+	<update id="deleteStaffImg">
+		UPDATE
+			staff
+		SET
+			img_url = NULL 
+		WHERE
+			staff_no = #{staffNo} 
+	</update>
+	
+	<update id="updateStaff">
+		UPDATE
+			staff
+		SET
+			staff_name = #{staffName},
+			staff_position = #{staffPosition},
+			staff_career = #{staffCareer},
+			staff_profile = #{staffProfile},
+			img_url = #{imgUrl}
+		WHERE
+			staff_no = #{staffNo}
+	</update>
+	
+	<update id="updateChangeOrderUp" parameterType="staff">
+		<selectKey keyProperty="rowOrder" resultType="_int" order="BEFORE">
+			SELECT
+				row_order
+			FROM
+				staff
+			WHERE
+				staff_no = #{staffNo}
+		</selectKey>
+		UPDATE
+			staff
+		SET
+			row_order =
+				CASE
+					WHEN row_order = (SELECT MAX(row_order) FROM staff AS row_order)
+					THEN row_order
+					ELSE (SELECT MIN(row_order) FROM staff WHERE row_order > (SELECT row_order FROM staff WHERE staff_no = #{staffNo}))
+				END
+		WHERE
+			staff_no = #{staffNo}
+	</update>
+	<update id="updateChangeOrderUpNext">
+		UPDATE
+			staff
+		SET
+			row_order = #{rowOrder}
+		WHERE
+			row_order = (SELECT MIN(row_order) FROM staff WHERE row_order > #{rowOrder})
+			AND
+			NOT staff_no IN (#{staffNo})
+	</update>
+	
+	<update id="updateChangeOrderDown" parameterType="staff">
+		<selectKey keyProperty="rowOrder" resultType="_int" order="BEFORE">
+			SELECT
+				row_order
+			FROM
+				staff
+			WHERE
+				staff_no = #{staffNo}
+		</selectKey>
+		UPDATE
+			staff
+		SET
+			row_order =
+				CASE
+					WHEN row_order = (SELECT MIN(row_order) FROM staff AS row_order)
+					THEN row_order
+					ELSE (SELECT MAX(row_order) FROM staff WHERE (SELECT row_order FROM staff WHERE staff_no = #{staffNo}) > row_order) 
+				END
+		WHERE
+			staff_no = #{staffNo}
+	</update>
+	<update id="updateChangeOrderDownNext">
+		UPDATE
+			staff
+		SET
+			row_order = #{rowOrder}
+		WHERE
+			row_order = (SELECT MAX(row_order) FROM staff WHERE #{rowOrder} > row_order)
+			AND
+			NOT staff_no IN (#{staffNo})
+	</update>
+	
+	<select id="selectMaxOrder" resultType="staff">
+		SELECT 
+			MAX(row_order) AS `row_order`
+		FROM	
+			staff
+	</select>
+	<select id="selectMinOrder" resultType="staff">
+		SELECT 
+			MIN(row_order) AS `row_order`
+		FROM	
+			staff
+	</select>
+	
+	<select id="selectInputRowOrder" resultType="staff">
+		SELECT
+			row_order
+		FROM
+			staff
+		WHERE
+			staff_no = #{staffNo}
+	</select>
+	
+</mapper>
