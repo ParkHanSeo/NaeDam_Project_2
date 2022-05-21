@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	
+	<resultMap id="BoardSelectMap" type="board">
+		<result property="boardNo"					column="BOARD_NO"			jdbcType="NUMERIC"></result>
+		<result property="boardTitle"				column="BOARD_TITLE"		jdbcType="VARCHAR"></result>
+		<result property="boardType"				column="BOARD_TYPE"			jdbcType="VARCHAR"></result>
+		<result property="boardCategory"			column="BOARD_CATEGORY"		jdbcType="VARCHAR"></result>
+		<result property="boardEmail"				column="BOARD_EMAIL"		jdbcType="VARCHAR"></result>
+		<result property="boardMemberNo.memberNo"	column="MEMBER_NO"			jdbcType="NUMERIC"></result>
+		
+		<association property="authority" javaType="BoardAuthority" >
+			<result property="authorityNo"				column="AUTHORITY_NO"			jdbcType="NUMERIC"></result>
+			<result property="authorityList"			column="AUTHORITY_LIST"			jdbcType="VARCHAR"></result>
+			<result property="authorityView"			column="AUTHORITY_VIEW"			jdbcType="VARCHAR"></result>
+			<result property="authorityWrite"			column="AUTHORITY_WRITE"		jdbcType="VARCHAR"></result>
+			<result property="authorityUpdate"			column="AUTHORITY_UPDATE"		jdbcType="VARCHAR"></result>
+			<result property="authorityDelete"			column="AUTHORITY_DELETE"		jdbcType="VARCHAR"></result>
+			<result property="authorityAnswer"			column="AUTHORITY_ANSWER"		jdbcType="VARCHAR"></result>
+			<result property="authorityNotice"			column="AUTHORITY_NOTICE"		jdbcType="VARCHAR"></result>
+			<result property="authorityComment"			column="AUTHORITY_COMMENT"		jdbcType="VARCHAR"></result>
+			<result property="authorityBoard.boardNo"	column="BOARD_NO"				jdbcType="NUMERIC"></result>
+		</association>
+		
+		<association property="option" javaType="BoardOption" >
+			<result property="optionNo"				column="OPTION_NO"				jdbcType="NUMERIC"></result>
+			<result property="optionNotice"			column="OPTION_NOTICE"			jdbcType="VARCHAR"></result>
+			<result property="optionComment"		column="OPTION_COMMENT"			jdbcType="VARCHAR"></result>
+			<result property="optionSecret"			column="OPTION_SECRET"			jdbcType="VARCHAR"></result>
+			<result property="optionAnswer"			column="OPTION_ANSWER"			jdbcType="VARCHAR"></result>
+			<result property="optionCaptcha"		column="OPTION_CAPTCHA"			jdbcType="VARCHAR"></result>
+			<result property="optionMass"			column="OPTION_MASS"			jdbcType="VARCHAR"></result>
+			<result property="optionOrder"			column="OPTION_ORDER"			jdbcType="VARCHAR"></result>
+			<result property="optionAddinfo"		column="OPTION_ADDINFO"			jdbcType="VARCHAR"></result>
+			<result property="optionPopup"			column="OPTION_POPUP"			jdbcType="VARCHAR"></result>
+			<result property="optionBoard.boardNo"		column="BOARD_NO"				jdbcType="NUMERIC"></result>
+		</association>
+		
+	</resultMap>
+	
+	<resultMap id="PostSelectMap" type="post">
+		<result property="postNo"					column="POST_NO"				jdbcType="NUMERIC"></result>
+		<result property="postTitle"				column="POST_TITLE"				jdbcType="VARCHAR"></result>
+		<result property="postContents"				column="POST_CONTENTS"			jdbcType="VARCHAR"></result>
+		<result property="postDate"					column="POST_DATE"				jdbcType="VARCHAR"></result>
+		<result property="postThombnail"			column="POST_THOMBNAIL"			jdbcType="VARCHAR"></result>
+		<result property="postViewCount"			column="POST_VIEWCOUNT"			jdbcType="NUMERIC"></result>
+		<result property="postDownloadCount"		column="POST_DOWNLOADCOUNT"		jdbcType="NUMERIC"></result>
+		<result property="postBoard.boardNo"		column="BOARD_NO"				jdbcType="NUMERIC"></result>
+		<result property="postMember.memberNo"		column="MEMBER_NO"				jdbcType="NUMERIC"></result>
+		<result property="postMemberName"			column="MEMBER_NAME"			jdbcType="VARCHAR"></result>
+	</resultMap>
+	
+	<resultMap id="AuthoritySelectMap" type="boardAuthority">
+		<result property="authorityNo"				column="AUTHORITY_NO"			jdbcType="NUMERIC"></result>
+		<result property="authorityList"			column="AUTHORITY_LIST"			jdbcType="VARCHAR"></result>
+		<result property="authorityView"			column="AUTHORITY_VIEW"			jdbcType="VARCHAR"></result>
+		<result property="authorityWrite"			column="AUTHORITY_WRITE"		jdbcType="VARCHAR"></result>
+		<result property="authorityUpdate"			column="AUTHORITY_UPDATE"		jdbcType="VARCHAR"></result>
+		<result property="authorityDelete"			column="AUTHORITY_DELETE"		jdbcType="VARCHAR"></result>
+		<result property="authorityAnswer"			column="AUTHORITY_ANSWER"		jdbcType="VARCHAR"></result>
+		<result property="authorityNotice"			column="AUTHORITY_NOTICE"		jdbcType="VARCHAR"></result>
+		<result property="authorityComment"			column="AUTHORITY_COMMENT"		jdbcType="VARCHAR"></result>
+		<result property="authorityBoard.boardNo"	column="BOARD_NO"				jdbcType="NUMERIC"></result>
+	</resultMap>		
+	
+	<resultMap id="optionSelectMap" type="boardOption">
+		<result property="optionNo"					column="OPTION_NO"				jdbcType="NUMERIC"></result>
+		<result property="optionNotice"				column="OPTION_NOTICE"			jdbcType="VARCHAR"></result>
+		<result property="optionComment"			column="OPTION_COMMENT"			jdbcType="VARCHAR"></result>
+		<result property="optionSecret"				column="OPTION_SECRET"			jdbcType="VARCHAR"></result>
+		<result property="optionAnswer"				column="OPTION_ANSWER"			jdbcType="VARCHAR"></result>
+		<result property="optionCaptcha"			column="OPTION_CAPTCHA"			jdbcType="VARCHAR"></result>
+		<result property="optionMass"				column="OPTION_MASS"			jdbcType="VARCHAR"></result>
+		<result property="optionOrder"				column="OPTION_ORDER"			jdbcType="VARCHAR"></result>
+		<result property="optionAddinfo"			column="OPTION_ADDINFO"			jdbcType="VARCHAR"></result>
+		<result property="optionPopup"				column="OPTION_POPUP"			jdbcType="VARCHAR"></result>
+		<result property="optionBoard.boardNo"		column="BOARD_NO"				jdbcType="NUMERIC"></result>
+	</resultMap>	
+	
+	<resultMap id="translateSelectMap" type="boardTranslate">
+		<result property="translateNo"				column="TRANSLATE_NO"			jdbcType="NUMERIC"></result>
+		<result property="translateCategory"		column="TRANSLATE_CATEGORY"		jdbcType="VARCHAR"></result>
+		<result property="boardNo.boardNo"			column="BOARD_NO"				jdbcType="NUMERIC"></result>
+	</resultMap>
+	
+	<resultMap id="fileSelectMap" type="boardFile">
+		<result property="fileNo"					column="FILE_NO"				jdbcType="NUMERIC"></result>
+		<result property="fileName"					column="FILE_NAME"				jdbcType="VARCHAR"></result>
+		<result property="filePost.postNo"			column="POST_NO"				jdbcType="NUMERIC"></result>
+	</resultMap>
+			
+	<resultMap id="commentSelectMap" type="boardComment">
+		<result property="commentNo"					column="COMMENT_NO"				jdbcType="NUMERIC"></result>
+		<result property="commentContents"				column="COMMENT_CONTENTS"		jdbcType="VARCHAR"></result>
+		<result property="commentData"					column="COMMENT_DATE"			jdbcType="VARCHAR"></result>
+		<result property="commentWriter"				column="COMMENT_WRITER"			jdbcType="VARCHAR"></result>
+		<result property="commentMember.memberNo"		column="MEMBER_NO"				jdbcType="NUMERIC"></result>
+		<result property="commentPost.postNo"			column="POST_NO"				jdbcType="NUMERIC"></result>
+	</resultMap>
+	
+	<resultMap id="memberSelectMap" type="member">
+		<result property="memberNo"					column="MEMBER_NO"				jdbcType="NUMERIC"></result>
+		<result property="firstName"				column="FIRST_NAME"				jdbcType="VARCHAR"></result>
+		<result property="lastName"					column="LAST_NAME"				jdbcType="VARCHAR"></result>
+		<result property="email"					column="EMAIL"					jdbcType="VARCHAR"></result>
+		<result property="phone"					column="PHONE"					jdbcType="VARCHAR"></result>
+		<result property="regDate"					column="REG_DATE"				jdbcType="VARCHAR"></result>
+		<result property="status"					column="STATUS"					jdbcType="VARCHAR"></result>
+		<result property="id"						column="ID"						jdbcType="VARCHAR"></result>
+		<result property="password"					column="PASSWORD"				jdbcType="VARCHAR"></result>
+		<result property="profileImg"				column="PROFILE_IMG"			jdbcType="VARCHAR"></result>
+	</resultMap>	
+	
+	<insert id="addBoard" parameterType="board" useGeneratedKeys="true" keyProperty="boardNo" keyColumn="BOARD_NO">	
+		INSERT
+		INTO BOARD(BOARD_NO,
+				   BOARD_TITLE,
+				   BOARD_TYPE,
+				   BOARD_CATEGORY,
+				   BOARD_EMAIL,
+				   MEMBER_NO)
+		VALUES(NEXTVAL(board_seq),
+			   #{boardTitle : VARCHAR},
+			   #{boardType : VARCHAR},
+			   #{boardCategory : VARCHAR},
+			   #{boardEmail : VARCHAR},
+			   #{boardMemberNo.memberNo})		
+		<selectKey keyProperty="boardNo" resultType="int" order="AFTER">
+			SELECT LASTVAL(board_seq) from dual
+		</selectKey>
+	</insert>
+	
+	<insert id="addPost" parameterType="post" useGeneratedKeys="true" keyProperty="postNo" keyColumn="POST_NO">
+		INSERT
+		INTO POST(POST_NO,
+				  POST_ASC,		
+				  BOARD_NO,
+				  POST_TITLE,
+				  POST_CONTENTS,
+				  POST_DATE,
+				  POST_THOMBNAIL,
+				  POST_VIEWCOUNT,
+				  POST_DOWNLOADCOUNT,
+				  POST_NOTICE,
+				  POST_ORIGIN_NO,
+				  POST_ORD,
+				  POST_LAYER,
+				  MEMBER_NO,
+				  MEMBER_NAME)
+		VALUES(NEXTVAL(post_seq),
+			   0,
+			   #{postBoard.boardNo},
+			   #{postTitle : VARCHAR},
+			   #{postContents : VARCHAR},
+			   <if test="postDate == null or postDate == ''">
+			   	sysdate(),
+			   </if>
+			   <if test="postDate != null">
+			   #{postDate : VARCHAR},
+			   </if>
+			   #{postThombnail : VARCHAR},			   
+			   0,
+			   0,
+			   0,
+			   LASTVAL(post_seq),
+			   #{postOrd : NUMERIC},
+			   #{postLayer : NUMERIC},
+			   #{postMember.memberNo},
+			   #{postMemberName : VARCHAR})		
+			   
+		<selectKey keyProperty="postNo" resultType="int" order="AFTER">
+			SELECT LASTVAL(post_seq) from dual
+		</selectKey>
+	</insert>
+	
+	<insert id="addAnswerPost" parameterType="post">
+		INSERT
+		INTO POST(POST_NO,
+				  POST_ASC,		
+				  BOARD_NO,
+				  POST_TITLE,
+				  POST_CONTENTS,
+				  POST_DATE,
+				  POST_THOMBNAIL,
+				  POST_VIEWCOUNT,
+				  POST_NOTICE,
+				  POST_ORIGIN_NO,
+				  POST_ORD,
+				  POST_LAYER,
+				  MEMBER_NO,
+				  MEMBER_NAME)
+		VALUES(NEXTVAL(post_seq),
+			   #{postAsc : NUMERIC},
+			   #{postBoard.boardNo},
+			   #{postTitle : VARCHAR},
+			   #{postContents : VARCHAR},
+			   sysdate(),
+			   #{postThombnail : VARCHAR},			   
+			   0,
+			   0,
+			   #{postOriginNo : NUMERIC},
+			   #{postOrd : NUMERIC}+1,
+			   #{postLayer : NUMERIC}+1,
+			   #{postMember.memberNo},
+			   #{postMemberName : VARCHAR})		
+	</insert>	
+	
+	<insert id="addAuthority"	parameterType="boardAuthority">
+		INSERT
+		INTO BOARD_AUTHORITY(AUTHORITY_NO,
+				   			 AUTHORITY_LIST,
+				  			 AUTHORITY_VIEW,
+				  			 AUTHORITY_WRITE,
+				 			 AUTHORITY_UPDATE,
+						     AUTHORITY_DELETE,
+				   			 AUTHORITY_ANSWER,
+				   			 AUTHORITY_NOTICE,
+				   			 AUTHORITY_COMMENT,
+				   			 BOARD_NO )
+		VALUES(NEXTVAL(authority_seq),	
+			   #{authorityList : VARCHAR},
+			   #{authorityView : VARCHAR},
+			   #{authorityWrite : VARCHAR},
+			   #{authorityUpdate : VARCHAR},
+			   #{authorityDelete : VARCHAR},
+			   #{authorityAnswer : VARCHAR},
+			   #{authorityNotice : VARCHAR},
+			   #{authorityComment : VARCHAR},
+			   #{authorityBoard.boardNo : NUMERIC})	
+	</insert>
+	
+	<insert id="addOption"	parameterType="boardOption">	
+		INSERT
+		INTO BOARD_OPTION(OPTION_NO,
+				   OPTION_NOTICE,
+				   OPTION_COMMENT,
+				   OPTION_SECRET,
+				   OPTION_ANSWER,
+				   OPTION_CAPTCHA,
+				   OPTION_MASS,
+				   OPTION_ORDER,
+				   OPTION_ADDINFO,
+				   OPTION_POPUP,
+				   BOARD_NO) 
+		VALUES(NEXTVAL(board_option_seq),
+			   #{optionNotice : VARCHAR},
+			   #{optionComment : VARCHAR},
+			   #{optionSecret : VARCHAR},
+			   #{optionAnswer : VARCHAR},
+			   #{optionCaptcha : VARCHAR},
+			   #{optionMass : VARCHAR},
+			   #{optionOrder : VARCHAR},
+			   #{optionAddinfo : VARCHAR},
+			   #{optionPopup : VARCHAR},
+			   #{optionBoard.boardNo : NUMERIC})	
+	</insert>	
+	
+	<insert id="addTranslate"	parameterType="boardTranslate">	
+		INSERT
+		INTO BOARD(TRANSLATE_NO,
+				   TRANSLATE_CATEGORY,
+				   BOARD_NO)	
+		VALUES(NEXTVAL(board_translate_seq),
+			   #{translateCategory : VARCHAR},
+			   #{boardNo.boardNo})	
+	</insert>		
+	
+	<insert id="addFile" parameterType="boardFile">
+		INSERT
+		INTO BOARD_FILE(FILE_NO,
+						POST_NO,
+						FILE_NAME)	
+		VALUES(NEXTVAL(board_file_seq),
+			   #{filePost.postNo},
+			   #{fileName : VARCHAR})
+	</insert>
+	
+	<insert id="addComment" parameterType="boardComment">
+		INSERT
+		INTO BOARD_COMMENT(COMMENT_NO,
+						   COMMENT_CONTENTS,
+						   COMMENT_DATE,
+						   COMMENT_WRITER,
+						   MEMBER_NO,
+						   POST_NO)
+		VALUES(NEXTVAL(board_comment_seq),	
+			   #{commentContents},
+			   sysdate(),
+			   #{commentWriter},
+			   #{commentMemberNo},
+			   #{commentPostNo})
+	</insert>
+	
+	<select id="getBoardList" resultType="hashmap" resultMap="BoardSelectMap" >
+		 SELECT
+				board_no,
+				board_title,
+				board_type,
+				board_category,
+				board_email,
+				(SELECT COUNT(*)
+				 FROM post p
+				 WHERE p.board_no = board_no) count
+		FROM	board
+		ORDER BY board_no ASC 
+	</select>
+	
+	<select id="getTotalCount" parameterType="hashmap" resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(	SELECT
+						board_no,
+						board_title,
+						board_type,
+						board_category,
+						board_email,
+						(SELECT COUNT(*)
+						 FROM post p
+						 WHERE p.board_no = board_no) count
+				FROM	board
+				ORDER BY board_no ASC) countTable
+	</select>
+	
+	<select id="getTotalCount2" parameterType="hashmap" resultType="int" >
+	  	SELECT COUNT(*)
+	  	FROM(					SELECT
+										p.post_no,
+										p.post_asc,
+										p.post_title,
+										p.post_contents,
+										p.post_date,
+										p.post_thombnail,
+										p.post_viewcount,
+										p.post_downloadcount,
+										p.post_notice,
+										p.post_origin_no,
+										p.post_ord,
+										p.post_layer,
+										p.board_no,
+										p.member_no,
+										p.member_name
+								FROM	board b, post p, member m
+								WHERE	b.board_no = p.board_no
+								AND		m.member_no = p.member_no
+								AND		b.board_no = #{boardNo}
+								<if test="search.searchType != null">
+									<if test="search.searchType == 1 and search.searchKeyword !='' ">
+									AND		p.post_title like concat ('%',#{search.searchKeyword},'%')
+									</if>
+									<if test="search.searchType == 2 and search.searchKeyword !='' ">
+									AND		p.member_name like concat ('%',#{search.searchKeyword},'%')
+									</if>
+								</if>
+								ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC) countTable
+	</select>	
+	
+	<select id="getTotalCount3" parameterType="int" resultType="int" >
+	  	SELECT COUNT(*)
+	  	FROM(					SELECT
+										p.post_no,
+										p.post_asc,
+										p.post_title,
+										p.post_contents,
+										p.post_date,
+										p.post_thombnail,
+										p.post_viewcount,
+										p.post_downloadcount,
+										p.post_notice,
+										p.post_origin_no,
+										p.post_ord,
+										p.post_layer,
+										p.board_no,
+										p.member_no,
+										p.member_name
+								FROM	board b, post p, member m
+								WHERE	b.board_no = p.board_no
+								AND		m.member_no = p.member_no
+								AND		b.board_no = #{boardNo}		
+								ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC) countTable
+	</select>
+	
+	
+	<select id="getBoardTitle" resultType="board">		
+		SELECT
+				board_no,
+				board_title
+		FROM	board
+		ORDER BY board_no ASC	
+	</select>
+	
+	<select id="getBoardData" parameterType="int" resultMap="BoardSelectMap">		
+		SELECT
+		*
+		FROM board
+		WHERE board_no = #{boardNo}		
+	</select>
+	
+	<select id="getPostData" parameterType="int" resultMap="PostSelectMap">
+		SELECT
+		*
+		FROM post
+		WHERE post_no = #{value}
+	</select>
+	
+	<select id="getBoardAllData" parameterType="int" resultMap="BoardSelectMap" >		
+		SELECT
+				b.board_no,
+				b.member_no,
+				b.board_title,
+				b.board_type,
+				b.board_category,
+				b.board_email,
+				a.AUTHORITY_NO,
+				a.AUTHORITY_LIST,
+				a.AUTHORITY_VIEW,
+				a.AUTHORITY_WRITE,
+				a.AUTHORITY_UPDATE,
+				a.AUTHORITY_DELETE,
+				a.AUTHORITY_ANSWER,
+				a.AUTHORITY_NOTICE,
+				a.AUTHORITY_COMMENT,
+				a.BOARD_NO,
+				o.OPTION_NO,
+				o.OPTION_NOTICE,
+				o.OPTION_COMMENT,
+				o.OPTION_SECRET,
+				o.OPTION_ANSWER,
+				o.OPTION_CAPTCHA,
+				o.OPTION_MASS,
+				o.OPTION_ORDER,
+				o.OPTION_ADDINFO,
+				o.OPTION_POPUP,
+				o.BOARD_NO
+		FROM    board b, BOARD_AUTHORITY a, BOARD_OPTION o
+		WHERE   b.board_no = #{value}
+		AND     b.board_no = a.board_No
+		AND     b.board_no = o.board_no
+	</select>
+	
+	<select id="getPostList" parameterType="hashmap" resultMap="PostSelectMap" >	
+		SELECT
+				p.post_no,
+				p.post_asc,
+				p.post_title,
+				p.post_contents,
+				p.post_date,
+				p.post_thombnail,
+				p.post_viewcount,
+				p.post_downloadcount,
+				p.post_notice,
+				p.post_origin_no,
+				p.post_ord,
+				p.post_layer,
+				p.board_no,
+				p.member_no,
+				p.member_name
+		FROM	board b, post p, member m
+		WHERE	b.board_no = p.board_no
+		AND		m.member_no = p.member_no
+		AND		b.board_no = #{boardNo}
+		<if test="search.searchType != null">
+			<if test="search.searchType == 1 and search.searchKeyword !='' ">
+			AND		p.post_title like concat ('%',#{search.searchKeyword},'%')
+			</if>
+			<if test="search.searchType == 2 and search.searchKeyword !='' ">
+			AND		p.member_name like concat ('%',#{search.searchKeyword},'%')
+			</if>
+		</if>
+		ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC
+	</select>
+	
+	<select id="getCommentList" parameterType="int" resultMap="commentSelectMap">
+		SELECT
+				c.comment_no,
+				c.comment_contents,
+				c.comment_date,
+				c.comment_writer,
+				c.member_no,
+				c.post_no
+		FROM	board_comment c, post p
+		WHERE	c.post_no = p.post_no
+		AND		c.post_no = #{value}
+		ORDER BY c.comment_no ASC
+	</select>
+			
+	<select id="getMemberData" parameterType="int" resultMap="memberSelectMap">
+		SELECT
+			   member_no,
+			   first_name,
+			   last_name,
+			   email,
+			   phone,
+			   reg_date,
+			   status,
+			   id,
+			   password,
+			   profile_img
+		FROM   member
+		WHERE  member_no = #{memberNo}
+	</select>
+	
+	<select id="getPostFile" parameterType="int" resultMap="fileSelectMap">
+		SELECT
+			   file_no,
+			   post_no,
+			   file_name
+		FROM   board_file
+		WHERE  post_no = #{boardNo}
+	</select>
+	
+	<select id="getFileData" parameterType="int" resultMap="fileSelectMap">
+		SELECT
+			   file_no,
+			   post_no,
+			   file_name
+		FROM   board_file
+		WHERE  file_no = #{file_no}
+	</select>
+	
+	<delete id="deleteChoiceBoard" parameterType="int">
+		DELETE
+		FROM board
+		WHERE board_no = #{value}
+	</delete>
+	
+	<delete id="deleteChoicePost" parameterType="int">
+		DELETE
+		FROM post
+		WHERE post_no = #{value}
+	</delete>
+	
+	<delete id="deleteFile" parameterType="int">
+		DELETE
+		FROM board_file
+		WHERE file_no = #{value}
+	</delete>
+	
+	<delete id="deleteComment" parameterType="int">
+		DELETE
+		FROM board_comment
+		WHERE comment_no = #{value}
+	</delete>
+	
+	<update id="updateBoard" parameterType="board">
+		UPDATE board
+		<set>
+			board_title = #{boardTitle},
+			board_type = #{boardType},
+			board_category = #{boardCategory},
+			board_email = #{boardEmail} 
+		</set>
+		WHERE board_no = #{boardNo : NUMERIC}
+	</update>
+	
+	<update id="updatePost" parameterType="post">
+		UPDATE post
+		<set>
+			post_title = #{postTitle},
+			post_Contents = #{postContents},
+			post_thombnail = #{postThombnail},
+			post_notice = #{postNotice},
+			post_origin_no = #{postOriginNo},
+			post_ord = #{postOrd},
+			post_layer = #{postLayer}
+		</set>
+		WHERE post_no = #{postNo}
+	</update>
+	
+	<update id="updatePostReply" parameterType="post">
+		UPDATE post
+		<set>
+			post_asc = #{postAsc}+1
+		</set>
+		WHERE post_no = #{postOriginNo}
+	</update>
+	
+	<update id="updateAuthority" parameterType="boardAuthority">
+		UPDATE BOARD_AUTHORITY
+		<set>
+			AUTHORITY_LIST = #{authorityList},
+			AUTHORITY_VIEW = #{authorityView},
+			AUTHORITY_WRITE = #{authorityWrite},
+			AUTHORITY_UPDATE = #{authorityUpdate},
+			AUTHORITY_DELETE = #{authorityDelete},
+			AUTHORITY_ANSWER = #{authorityAnswer},
+			AUTHORITY_NOTICE = #{authorityNotice},
+			AUTHORITY_COMMENT = #{authorityComment}
+		</set>
+		WHERE board_no = #{authorityBoard.boardNo : NUMERIC}
+	</update>
+	
+	<update id="updateOption" parameterType="boardOption">
+		UPDATE BOARD_OPTION
+		<set>
+			OPTION_NOTICE = #{optionNotice},
+			OPTION_COMMENT = #{optionComment},
+			OPTION_SECRET = #{optionSecret},
+			OPTION_ANSWER = #{optionAnswer},
+			OPTION_CAPTCHA = #{optionCaptcha},
+			OPTION_MASS = #{optionMass},
+			OPTION_ORDER = #{optionOrder},
+			OPTION_ADDINFO = #{optionAddinfo},
+			OPTION_POPUP = #{optionPopup}			
+		</set>
+		WHERE board_no = #{optionBoard.boardNo : NUMERIC}			
+	</update>
+	
+	<update id="postViewCount" parameterType="post">
+		UPDATE POST
+		<set>
+			POST_VIEWCOUNT = #{postViewCount}
+		</set>	
+		WHERE post_no = #{postNo}
+	</update>
+	
+	<update id="postFileCount" parameterType="post">
+		UPDATE POST
+		<set>
+			POST_DOWNLOADCOUNT = #{postDownloadCount}
+		</set>
+		WHERE post_no = #{postNo}
+	</update>
+	
+	<update id="updateThombnail" parameterType="post">
+		UPDATE POST
+		<set>
+			POST_THOMBNAIL = #{postThombnail}
+		</set>
+		WHERE post_no = #{postNo}
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

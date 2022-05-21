@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="map">
+  <select id="selectOneMapByMapNo" resultType="maps">
+  	SELECT * FROM map
+  </select>
+  
+  <select id="selectAllMapApiList" resultType="mapApi">
+  	select * from map_api
+  </select>
+  
+  <insert id="insertMap">
+  	insert into map values(nextval(seq_map_no), #{mapTitle}, #{mapApiNo} ,#{address}, #{apiKey}, #{latitude}, #{longitude}, #{width}, #{height}, #{zoomLevel}, #{popupInfo}, #{connectingAddr}, sysdate())
+  </insert>
+  
+  <update id="updateMapMyMap">
+  	update map set map_title = #{mapTitle}, map_api_no = #{mapApiNo}, address = #{address}, api_key = #{apiKey}, latitude = #{latitude},
+  					longitude = #{longitude}, width = #{width}, height = #{height}, zoom_level = #{zoomLevel}, popup_info = #{popupInfo},
+  					reg_date = sysdate() 
+  					where map_no = #{mapNo}
+  </update>
+  
+  <delete id="deleteMap">
+  	delete from map where map_no = #{mapNo}
+  </delete>
+  
+</mapper>

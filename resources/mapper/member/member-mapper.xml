@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+<!-- 회원가입 -->
+<insert id="insertMember">
+	INSERT INTO member
+		(member_no,
+		 first_name,
+		 last_name,
+		 email,
+		 phone,
+		 reg_date,
+		 status,
+		 id,
+		 password,
+		 profile_img) 
+	VALUES
+		(NEXTVAL(seq_member_no),
+		#{firstName},
+		#{lastName},
+		#{email},
+		#{phone},
+		NOW(),
+		default,
+		#{id},
+		#{password},
+		NULL)
+</insert>
+
+<!-- 로그인 - 해당 id정보 가져오기 -->
+<select id="selectOneMember" resultType="member">
+	SELECT
+		*
+	FROM
+		member
+	WHERE
+		id = #{id}
+</select>
+
+<!-- 회원 리스트 전체 게시물 목록 -->
+<select id="selectMemberList" resultType="memberEntity">
+	SELECT distinct
+		 m.member_no,
+		 m.id,
+		 m.last_name, 
+		 m.first_name,
+		 CONCAT(SUBSTRING(m.phone FROM 1 FOR 3), '-', SUBSTRING(m.phone FROM 4 FOR 4), '-', SUBSTRING(m.phone FROM 8 FOR 4)) AS phone,
+		 a.address_main, 
+		 a.address_sub,
+		 m.reg_date,
+		 m.status,
+		 SUM(mp.point_amount) AS pointAmount
+	FROM
+	    member m left join member_point mp
+	        on m.member_no = mp.member_no
+	                    left join address_book ab
+	                        on m.member_no = ab.member_no
+	                            left join address a
+	                                on ab.address_no = a.address_no
+	WHERE
+		`status` = 'Y'                          
+	GROUP BY 
+		m.member_no
+	ORDER BY
+		m.member_no DESC
+</select>
+
+<!-- 탈퇴 회원 리스트 -->
+<select id="selectWithdrawalMemberListMemberList" resultType="memberEntity">
+	SELECT distinct
+		 m.member_no,
+		 m.id,
+		 m.last_name, 
+		 m.first_name,
+		 CONCAT(SUBSTRING(m.phone FROM 1 FOR 3), '-', SUBSTRING(m.phone FROM 4 FOR 4), '-', SUBSTRING(m.phone FROM 8 FOR 4)) AS phone,
+		 a.address_main, 
+		 a.address_sub,
+		 m.reg_date,
+		 m.status,
+		 SUM(mp.point_amount) AS pointAmount
+	FROM
+	    member m left join member_point mp
+	        on m.member_no = mp.member_no
+	                    left join address_book ab
+	                        on m.member_no = ab.member_no
+	                            left join address a
+	                                on ab.address_no = a.address_no
+	WHERE
+		`status` = 'N'                          
+	GROUP BY 
+		m.member_no
+	ORDER BY
+		m.member_no DESC
+</select>
+
+<!-- 회원 리스트 전체 게시물 수 -->
+<select id="selectMemberListCount" resultType="_int">
+	SELECT
+		COUNT(*)
+	FROM
+		member
+	WHERE
+		status = 'Y'
+</select>
+
+<!-- id 중복 검사 -->
+<select id="selectOneMemberByMap" resultType="member">
+	SELECT
+		*
+	FROM
+		member
+	WHERE
+		id = #{id}
+</select>
+
+<!-- 타입별 검색 -->
+<select id="selectSearchMemberList" resultType="memberEntity">
+	SELECT
+		m.member_no,
+		m.id,
+		m.last_name,
+		m.first_name,
+		CONCAT(SUBSTRING(m.phone FROM 1 FOR 3), '-', SUBSTRING(m.phone FROM 4 FOR 4), '-', SUBSTRING(m.phone FROM 8 FOR 4)) AS phone,
+		a.address_main,
+		a.address_sub,
+		m.reg_date,
+		m.`status`
+	FROM
+		member m JOIN address_book ab
+			ON m.member_no = ab.member_no
+				JOIN address a
+					ON ab.address_no = a.address_no
+	<where>
+		m.`status` = 'Y'	
+		<if test="keyword != null and keyword != ''" >
+			and
+			${type} LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+	</where>
+	ORDER BY
+		m.member_no DESC
+</select>
+
+<!-- 검색 게시물 수 -->
+<select id="selectSearchListCount" resultType="_int">
+	SELECT
+		count(*)
+	FROM
+		member m JOIN address_book ab
+			ON m.member_no = ab.member_no
+				JOIN address a
+					ON ab.address_no = a.address_no
+	WHERE
+		m.`status` = 'Y'	
+		and
+		${type} LIKE CONCAT('%', #{keyword}, '%')	
+</select>
+
+<!-- 회원 삭제 -->
+<delete id="deleteMember">
+	DELETE FROM
+		member
+	<where>
+		<!-- 
+			collection = 전달받은 인자. List나 Array 형태만 가능
+			item = 전달받은 인자값을 alias 명으로 대체
+			open = 해당 구문이 시작될 때 삽입할 문자열
+			close = 해당 구문이 종료될 때 삽입할 문자열
+			separator = 반복되는 사이에 출력할 문자열
+		 -->
+		 <foreach collection="array" item="item" open="(" close=")" separator="or">
+		 	member_no = #{item}
+		 </foreach>
+	</where>
+</delete>
+
+<!-- 회원 등급 리스트 -->
+<select id="selectMemberGradeList" resultType="memberGrade">
+	SELECT
+		mg.member_grade_no,
+		mg.member_grade_name,
+		a.authority,
+		COUNT(*) AS member_grade_count
+	FROM
+		member_grade mg LEFT JOIN authorities a
+			ON (mg.authority = a.authority)
+	GROUP BY
+		mg.member_grade_no
+	ORDER BY
+		mg.member_grade_no
+</select>
+
+<!-- 회원 등급 수정 -->
+<update id="memberGradeUpdate">
+	UPDATE
+		member_grade
+	SET 
+		member_grade_name = #{memberGradeName}
+	WHERE
+		member_grade_no = #{memberGradeNo}
+</update>
+
+<!-- 주소 입력 -->
+<insert id="insertAddress">
+	INSERT INTO 
+		address(
+			address_no,
+			address_main, 
+			address_sub, 
+			address_zipcode
+			)
+		VALUES(
+			NEXTVAL(seq_address_no),
+		 	#{addressMain},
+		 	#{addressSub}, 
+		 	#{addressZipcode}
+		 	)
+	
+	<selectKey keyProperty="addressNo" resultType="_int" order="AFTER">
+		SELECT
+			LASTVAL(seq_address_no)
+		FROM
+			DUAL
+	</selectKey>
+</insert>
+
+<!-- 주소록 입력 -->
+<select id="insertAddressBook">
+	INSERT INTO 
+		address_book(
+			address_book_no, 
+			address_no, 
+			member_no, 
+			address_book_name
+			)
+		VALUES(
+			NEXTVAL(seq_address_book_no),
+			#{addressNo},
+			#{memberNo},
+			default
+			)
+</select>
+
+<!-- 회원 등록 -->
+<insert id="insertRegisterMember">
+	INSERT INTO member
+		(member_no,
+		 first_name,
+		 last_name,
+		 email,
+		 phone,
+		 reg_date,
+		 status,
+		 id,
+		 password,
+		 profile_img) 
+	VALUES
+		(NEXTVAL(seq_member_no),
+		#{firstName},
+		#{lastName},
+		#{email},
+		#{phone},
+		NOW(),
+		default,
+		#{id},
+		#{password},
+		NULL)
+	<selectKey keyProperty="memberNo" resultType="_int" order="AFTER">
+		SELECT
+			LASTVAL(seq_member_no)
+		FROM
+			DUAL
+	</selectKey>
+</insert>
+
+<!-- 메모 입력 -->
+<insert id="insertMemberMemo">
+	INSERT INTO
+		member_memo(
+			member_memo_no, 
+			member_no, 
+			member_memo_content
+			)
+		VALUES(
+			NEXTVAL(seq_member_memo_no),
+			#{memberNo},
+			#{memberMemoContent} 
+			)
+</insert>
+
+<!-- 권한 입력 -->
+<insert id="insertAuthorities">
+	INSERT INTO 
+		authorities 
+	VALUES(
+		#{authority}, 
+		#{memberNo}
+		)
+</insert>
+
+<!-- 회원정보 조회(회원번호) -->
+<select id="selectOneMemberByMemberNo" resultType="member">
+	SELECT 
+		*
+	FROM 
+		member
+	WHERE
+		member_no = #{memberNo}
+</select>
+
+<!-- 회원주소 조회 -->
+<select id="selectOneAddress" resultType="address">
+	SELECT
+		a.address_no,
+		a.address_main,
+		a.address_sub,
+		a.address_zipcode
+	FROM 
+		member m LEFT JOIN address_book ab
+			ON m.member_no = ab.member_no
+				LEFT JOIN address a
+					ON ab.address_no = a.address_no
+	WHERE
+		m.member_no = #{memberNo}
+</select>
+
+<!-- 회원메모 조회 -->
+<select id="selectOneMemo" resultType="memberMemo">
+	SELECT
+		member_memo_content
+	FROM 
+		member_memo
+	WHERE
+		member_no = #{memberNo}
+</select>
+
+<!-- 회원등급 조회 -->
+<select id="selectOneAuthorities" resultType="authorities">
+	SELECT 
+		a.authority
+	FROM
+		member m LEFT JOIN authorities a
+			ON m.member_no = a.member_no
+	WHERE
+		m.member_no = #{memberNo}
+</select>
+
+<!-- 회원정보 수정(상세보기) -->
+<update id="memberUpdate">
+	UPDATE 
+		member 
+	SET
+		first_name = #{firstName},
+		last_name = #{lastName},
+		email = #{email},
+		phone = #{phone},
+		status = #{status},
+			<if test="password != null and password != ''">
+				password = #{password},
+		 	</if>
+		 	<if test="reason != null and reason != ''">
+				password = #{reason},
+		 	</if>
+		update_date = NOW()
+	WHERE
+		member_no = #{memberNo}
+</update>
+
+<!-- 회원주소 수정(상세보기) -->
+<update id="addressUpdate">
+	UPDATE 
+		address
+	SET
+		address_main = #{addressMain},
+		address_sub = #{addressSub},
+		address_zipcode = #{addressZipcode}
+	WHERE
+		address_no = #{addressNo}
+</update>
+
+<!-- 회원권한 수정(상세보기) -->
+<update id="authoritiesUpdate">
+	UPDATE 
+		authorities
+	SET
+		authority = #{authority}
+	WHERE
+		member_no = #{memberNo}
+</update>
+
+<!-- 회원메모 수정(상세보기) -->
+<update id="memberMemoUpdate">
+	UPDATE 
+		member_memo
+	SET
+		member_memo_content = #{memberMemoContent}
+	WHERE
+		member_no = #{memberNo}
+</update>
+
+<select id="selectMemberPointListByParam" resultType="memberPoint">
+	SELECT a.MEMBER_POINT_NO, b.id, CONCAT(b.LAST_NAME, b.FIRST_NAME) AS member_name, b.EMAIL, a.point_title, a.point_amount, a.reg_date
+	FROM member_point a 
+		JOIN member b ON(a.MEMBER_NO = b.MEMBER_NO)
+	<where>
+		<if test="keyword != null">
+			${field} like concat('%',#{keyword},'%')
+		</if>
+		<if test="memberNo != 0">
+			and a.member_no = #{memberNo}
+		</if>
+	</where>
+	order by a.reg_date desc
+</select>
+
+<!-- 회원 관리 엑셀 다운로드 -->
+<select id="selectMemberListExcelForm" resultType="memberListExcelForm">
+	SELECT
+		m.id,
+		CONCAT(m.last_name, m.first_name) AS member_name,
+		CONCAT(SUBSTRING(m.phone FROM 1 FOR 3), '-', SUBSTRING(m.phone FROM 4 FOR 4), '-', SUBSTRING(m.phone FROM 8 FOR 4)) AS phone,
+		email AS email,
+		CONCAT(a.address_main, SPACE(1), a.address_sub) AS total_address,
+		IFNULL(mm.member_memo_content, '-') AS memo,
+		mg.member_grade_name AS grade,
+		m.status AS status,
+		m.login_date AS login_date,
+		m.update_date AS update_date,
+		m.reg_date
+	FROM
+		member m JOIN address_book ab
+			ON m.member_no = ab.member_no
+				JOIN address a
+					ON ab.address_no = a.address_no
+						JOIN member_memo mm
+							ON m.member_no = mm.member_no
+								JOIN authorities au
+									ON m.member_no = au.member_no
+										JOIN member_grade mg
+											ON au.authority = mg.authority
+	ORDER BY
+		m.reg_date DESC
+</select>
+
+<!-- 주소 삭제 -->
+<delete id="deleteAddress">
+	DELETE FROM 
+		address 
+	WHERE 
+		address_no = #{addressNo}
+</delete>
+
+<!-- 주소록 조회 -->
+<select id="selectOneAddressBook" resultType="addressBook">
+	SELECT
+		*
+	FROM
+		address_book
+	WHERE
+		member_no = #{memberNo}
+</select>
+
+<!-- 권한 삭제 -->
+<delete id="deleteAuthorities">
+	DELETE FROM 
+		authorities
+	<where>
+		<foreach collection="array" item="item" open="(" close=")" separator="or">
+			member_no = #{item}
+		</foreach>
+	</where>
+</delete>
+
+<!-- 탈퇴 사유 -->
+<update id="updateReason">
+	UPDATE 
+		withdrawal_member
+	SET
+		reason = #{reason}
+	WHERE
+		member_no = #{memberNo}
+</update>
+
+
+<!-- 탈퇴 회원 전체 게시물 수 -->
+<select id="selectWithdrawalCount" resultType="_int">
+	SELECT
+		COUNT(*)
+	FROM
+		member
+	WHERE
+		status = 'N'
+</select>
+
+
+<!-- 탈퇴회원 검색 게시물 -->
+<select id="selectSearchWithdrawalList" resultType="memberEntity">
+	SELECT
+		m.member_no,
+		m.id,
+		m.last_name,
+		m.first_name,
+		CONCAT(SUBSTRING(m.phone FROM 1 FOR 3), '-', SUBSTRING(m.phone FROM 4 FOR 4), '-', SUBSTRING(m.phone FROM 8 FOR 4)) AS phone,
+		a.address_main,
+		a.address_sub,
+		m.reg_date,
+		m.`status`
+	FROM
+		member m JOIN address_book ab
+			ON m.member_no = ab.member_no
+				JOIN address a
+					ON ab.address_no = a.address_no
+	<where>
+		m.`status` = 'N'	
+		<if test="keyword != null and keyword != ''" >
+			and
+			${type} LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+	</where>
+	ORDER BY
+		m.member_no DESC
+</select>
+
+
+<!-- 탈퇴 회원 타입 별 검색 게시물 수 -->
+<select id="selectSearchWithdrawalListCount" resultType="_int">
+	SELECT 
+		count(*)
+	FROM
+		member m JOIN address_book ab
+			ON m.member_no = ab.member_no
+				JOIN address a
+					ON ab.address_no = a.address_no
+	<where>
+		status = 'N'	
+		<if test="keyword != null and keyword != ''" >
+			and
+			${type} LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+	</where>
+</select>
+
+
+<select id="selectMemberTotalPoint" resultType="_int">
+SELECT 
+	SUM(point_amount) 
+FROM member_point
+WHERE member_no = #{memberNo};
+</select>
+
+
+<!-- 주소 번호 조회 -->
+<select id="findAddressNo" resultType="address">
+	SELECT
+		address_no
+	FROM
+		address_book
+	<where>
+		 <foreach collection="array" item="item" open="(" close=")" separator="or">
+		 	member_no = #{item}
+		 </foreach>
+	</where>
+</select>
+
+
+<select id="selectTodayRegMemberCnt" resultType="_int">
+SELECT COUNT(*) FROM member WHERE DATE(reg_date) = DATE(SYSDATE())
+</select>
+
+
+<!-- 탈퇴회원 조회 -->
+<select id="selectOneMemberByWithdrawalMemberNo" resultType="withdrawalMember">
+	SELECT 
+		*
+	FROM 
+		withdrawal_member
+	WHERE
+		member_no = #{memberNo}
+</select>
+
+
+<!-- 주소록 삭제 -->
+<delete id="deleteAddressBook">
+	DELETE FROM
+		address_book
+	<where>
+		<foreach collection="array" item="item" open="(" close=")" separator="or">
+			member_no = #{item}
+		</foreach>
+	</where>
+</delete>
+
+
+<!-- 메모 삭제 -->
+<delete id="deleteMemberMemo">
+	DELETE FROM
+		member_memo
+	<where>
+		<foreach collection="array" item="item" open="(" close=")" separator="or">
+			member_no = #{item}
+		</foreach>
+	</where>
+</delete>
+
+
+<!-- 회원 주소번호 조회 -->
+<select id="findMemberAddressList" resultType="address">
+	SELECT
+		address_no
+	FROM
+		address_book
+	<where>
+		 <foreach collection="array" item="item" open="(" close=")" separator="or">
+		 	member_no = #{item}
+		 </foreach>
+	</where>
+</select>
+
+
+<!-- 탈퇴회원 상세보기 -->
+<select id="selectOneWithdrawalMemberEntity" resultType="withdrawalMemberEntity">
+	SELECT 
+		m.member_no,
+		m.id,
+		m.last_name,
+		m.first_name,
+		m.phone,
+		m.email,
+		a.address_zipcode,
+		a.address_main,
+		a.address_sub,
+		mm.member_memo_content,
+		m.reason,
+		au.authority,
+		m.`status`,
+		m.login_date,
+		m.reg_date,
+		m.withdrawal_date,
+		m.update_date
+	FROM
+		member m JOIN address_book ab
+			ON m.member_no = ab.member_no
+				JOIN address a
+					ON ab.address_no = a.address_no
+						JOIN authorities au
+							ON m.member_no = au.member_no
+								JOIN member_memo mm
+									ON m.member_no = mm.member_no
+	WHERE
+		m.member_no = #{memberNo}
+</select>
+
+
+<!-- 회원 탈퇴 변경 -->
+<update id="updateMemberToWithdrawal">
+	UPDATE
+		member
+	SET
+		`status` = 'N',
+		withdrawal_Date = NOW(),
+		reason = #{reason}
+	WHERE
+		member_no = #{memberNo}
+</update>
+
+
+<!-- 회원 접속 이력 관리-->
+<select id="seletHistoryList" resultType="memberAccessHistory">
+	SELECT 
+		ROW_NUMBER() OVER(ORDER BY mah.login_date DESC) AS `access_history_no`,
+		mah.access_history_no, 
+		mah.access_history_id,
+		mah.access_history_name,
+		mah.access_history_ip,
+		mah.access_history_status,
+		mah.login_date,
+		m.member_no
+	FROM 
+		member_access_history mah JOIN member m
+			ON mah.access_history_id = m.id
+	ORDER BY
+		mah.login_date DESC
+</select>
+
+
+<!-- 접속 이력 게시글 수 -->
+<select id="totalAccessHistoryCount" resultType="_int">
+	SELECT
+		COUNT(*)
+	FROM
+		member_access_history
+</select>
+
+
+<!-- 접속 이력 검색 게시물 -->
+<select id="seletSearchAccessHistory" resultType="memberAccessHistory">
+	SELECT
+		ROW_NUMBER() OVER() AS `access_history_no`,
+		mah.access_history_id,
+		mah.access_history_name,
+		mah.access_history_ip,
+		mah.access_history_status,
+		mah.login_date,
+		m.member_no
+	FROM
+		member_access_history mah JOIN member m
+			ON mah.access_history_id = m.id
+	<where>	
+		<if test="keyword != null and keyword != ''" >
+			${type} LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+	</where>
+	ORDER BY
+		`access_history_no` DESC
+</select>
+
+
+<!-- 접속 이력 검색 게시물 수 -->
+<select id="searchHistoryListCount" resultType="_int">
+	SELECT
+		COUNT(*)
+	FROM
+		member_access_history mah JOIN member m
+			ON mah.access_history_id = m.id
+	WHERE
+		${type} LIKE CONCAT('%', #{keyword}, '%')
+</select>
+
+
+<!-- 접속 이력 선택 삭제 -->
+<delete id="deleteAccessHistory">
+	DELETE FROM
+		member_access_history
+	<where>
+		 <foreach collection="array" item="item" open="(" close=")" separator="or">
+		 	access_history_no = #{item}
+		 </foreach>
+	</where>
+</delete>
+
+<!-- 접속 이력 엑셀 다운로드 -->
+<select id="selectMemberAccessHistoryListExcelForm" resultType="memberAccessHistoryListExcelForm">
+	SELECT
+		access_history_id AS id,
+		access_history_name AS `name`,
+		access_history_ip AS ip,
+		access_history_status AS `status`,
+		login_date AS legDate
+	FROM 
+		member_access_history
+	ORDER BY
+		legDate DESC
+</select>
+
+<!-- 회원 정보 조회 -->
+<select id="selectMemberInfo" resultType="member"> 
+	select *
+	from member
+	where member_no = #{code}
+</select>
+
+<!-- sms 발신 번호 조회 -->
+<select id="getPhoneById" resultType="string">
+	select phone
+	  from member
+	 where id = #{id}
+</select>	
+
+<!-- 회원 아이디 조회 -->
+<select id="selectMemberIdByNo" resultType="string">
+	select id
+	  from member
+	 where member_no = #{memberNo}
+</select>
+
+
+</mapper>

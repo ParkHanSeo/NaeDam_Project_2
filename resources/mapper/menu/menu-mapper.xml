@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="menu">
+ 
+	<resultMap id="MenuSelectMap" type="menu">
+		<result property="code"					column="CODE"				jdbcType="NUMERIC"></result>
+		<result property="category_code"		column="CATEGORY_CODE"		jdbcType="NUMERIC"></result>
+		<result property="revision_code"		column="REVISION_CODE"		jdbcType="NUMERIC"></result>
+		<result property="title"				column="TITLE"				jdbcType="VARCHAR"></result>
+		<result property="content"				column="CONTENT"			jdbcType="VARCHAR"></result>
+		<result property="is_outer_link"		column="IS_OUTER_LINK"		jdbcType="VARCHAR"></result>
+		<result property="target"				column="TARGET"				jdbcType="VARCHAR"></result>
+		<result property="url"					column="URL"				jdbcType="VARCHAR"></result>
+		<result property="status"				column="STATUS"				jdbcType="VARCHAR"></result>
+		<result property="menu_head_code"		column="MENU_HEAD_CODE"		jdbcType="NUMERIC"></result>
+		<result property="menuDate"				column="MENU_DATE"			jdbcType="VARCHAR"></result>
+		<result property="is_meta"				column="IS_META"			jdbcType="VARCHAR"></result>
+		<result property="meta_title"			column="META_TITLE"			jdbcType="VARCHAR"></result>
+		<result property="meta_description"		column="META_DESCRIPTION"	jdbcType="VARCHAR"></result>
+		<result property="originNo"				column="ORIGIN_NO"			jdbcType="NUMERIC"></result>
+		<result property="ord"					column="ORD"			jdbcType="NUMERIC"></result>
+	</resultMap>
+	
+	<resultMap id="HeadSelectMap" type="head">
+		<result property="headNo"				column="HEAD_NO"			jdbcType="NUMERIC"></result>
+		<result property="title"				column="TITLE"				jdbcType="VARCHAR"></result>
+		<result property="status"				column="STATUS"				jdbcType="VARCHAR"></result>
+		<result property="content"				column="CONTENT"			jdbcType="VARCHAR"></result>
+	</resultMap>
+	
+	<resultMap id="BottomSelectMap" type="bottom">
+		<result property="bottomNo"				column="BOTTOM_NO"			jdbcType="NUMERIC"></result>
+		<result property="content"				column="CONTENT"			jdbcType="VARCHAR"></result>
+	</resultMap>
+	
+	<resultMap id="MetaSelectMap" type="meta">
+		<result property="metaNo"				column="META_NO"			jdbcType="NUMERIC"></result>
+		<result property="meta_title"			column="META_TITLE"			jdbcType="VARCHAR"></result>
+		<result property="meta_description"		column="META_DESCRIPTION"	jdbcType="VARCHAR"></result>
+	</resultMap>
+	
+	<resultMap id="MenuCategorySelectMap" type="menuCategory">
+		<result property="menuCategoryNo"		column="MENU_CATEGORY_NO"	jdbcType="NUMERIC"></result>
+		<result property="menuCategoryName"		column="MENU_CATEGORY_NAME"	jdbcType="VARCHAR"></result>
+		<result property="originNo"				column="ORIGIN_NO"			jdbcType="NUMERIC"></result>
+		<result property="ord"					column="ORD"				jdbcType="NUMERIC"></result>
+		<result property="layer"				column="LAYER"				jdbcType="NUMERIC"></result>
+		<result property="menuCategoryType"		column="MENU_CATEGORY_TYPE"	jdbcType="VARCHAR"></result>
+		<result property="status"				column="STATUS"				jdbcType="VARCHAR"></result>
+	</resultMap>	
+
+	<insert id="addMenu" parameterType="menu">
+		INSERT
+		INTO MENU(CODE,
+				  CATEGORY_CODE,
+				  REVISION_CODE,
+				  TITLE,
+				  CONTENT,
+				  IS_OUTER_LINK,
+				  TARGET,
+				  URL,
+				  STATUS,
+				  MENU_HEAD_CODE,
+				  MENU_DATE,
+				  IS_META,
+				  META_TITLE,
+				  META_DESCRIPTION,
+				  ORIGIN_NO,
+				  ORD)
+		VALUES(NEXTVAL(menu_seq),
+			   #{category_code},
+			   0,
+			   #{title : VARCHAR},
+			   #{content : VARCHAR},
+			   #{is_outer_link : VARCHAR},
+			   #{target : VARCHAR},
+			   #{url : VARCHAR},
+			   #{status : VARCHAR},
+			   #{menu_head_code : NUMERIC},
+			   sysdate(),
+			   #{is_meta : VARCHAR},
+			   #{meta_title : VARCHAR},
+			   #{meta_description : VARCHAR},
+			   <if test="originNo == 0">
+			   	LASTVAL(menu_seq),
+			   </if>
+			   <if test="originNo != 0">
+			   	#{originNo},
+			   </if>
+			   <if test="ord == null or ord == 0">
+			   	1
+			   </if>
+			   <if test="ord != null and ord != '' ">
+			   	#{ord}
+			   </if>)
+	</insert>
+	
+	<insert id="addHead" parameterType="head">
+		INSERT
+		INTO HEAD(HEAD_NO,
+				  TITLE,
+				  STATUS,
+				  CONTENT)
+		VALUES(NEXTVAL(head_seq),
+			   #{title : VARCHAR},
+			   #{status : VARCHAR},
+			   #{content : VARCHAR})
+	</insert>
+	
+	<insert id="addRevision" parameterType="menu">
+		INSERT
+		INTO MENU(CODE,
+				  CATEGORY_CODE,
+				  REVISION_CODE,
+				  TITLE,
+				  CONTENT,
+				  IS_OUTER_LINK,
+				  TARGET,
+				  URL,
+				  STATUS,
+				  MENU_HEAD_CODE,
+				  MENU_DATE,
+				  IS_META,
+				  META_TITLE,
+				  META_DESCRIPTION,
+				  ORIGIN_NO,
+				  ORD)
+		VALUES(NEXTVAL(menu_seq),
+			   #{category_code},
+			   1,
+			   #{title : VARCHAR},
+			   #{content : VARCHAR},
+			   #{is_outer_link : VARCHAR},
+			   #{target : VARCHAR},
+			   #{url : VARCHAR},
+			   #{status : VARCHAR},
+			   #{menu_head_code : NUMERIC},
+			   NOW(),
+			   #{is_meta : VARCHAR},
+			   #{meta_title : VARCHAR},
+			   #{meta_description : VARCHAR},
+			   #{originNo},
+			   #{ord})
+	</insert>	
+	
+	<select id="getMenu" parameterType="int" resultMap="MenuSelectMap">
+		SELECT *
+		FROM menu
+		WHERE code = #{value}
+	</select>
+	
+	<select id="getHead" parameterType="int" resultMap="HeadSelectMap">
+		SELECT *
+		FROM head
+		WHERE head_No = #{value}
+	</select>
+	
+	<select id="getBottom" resultMap="BottomSelectMap">
+		SELECT *
+		FROM bottom
+		WHERE bottom_no = 1
+	</select>
+	
+	<select id="getMeta" resultMap="MetaSelectMap">
+		SELECT *
+		FROM meta
+		WHERE meta_no = 1
+	</select>
+	
+	<select id="getRevision" parameterType="menu" resultMap="MenuSelectMap">
+		SELECT *
+		FROM menu
+		WHERE code = #{code}
+		AND	revision_code = #{revision_code}
+	</select>	
+	
+	<select id="getMenuList" resultType="hashmap" resultMap="MenuSelectMap">
+		SELECT *
+		FROM menu
+		WHERE revision_code = 0
+		AND	  ORD = 1
+		ORDER BY code ASC
+	</select>
+	
+	<select id="getMenuList2" resultType="hashmap" resultMap="MenuSelectMap">
+		SELECT *
+		FROM menu
+		WHERE revision_code = 0
+		AND   origin_no = #{menu.originNo}
+		AND   code != 1
+		AND   ORD = #{menu.ord}
+		ORDER BY code ASC
+	</select>	
+	
+	
+	<select id="getMenuList3" resultType="hashmap" resultMap="MenuSelectMap">
+		SELECT *
+		FROM menu
+		WHERE revision_code = 0
+		AND   origin_no = #{menu.originNo}
+		AND   code != 1
+		AND   ORD = 3
+		ORDER BY code ASC
+	</select>
+	
+	<select id="getRevisionList" resultType="hashmap" resultMap="MenuSelectMap">
+		SELECT
+		code,
+		category_code,
+		revision_code,
+		title,
+		content,
+		is_outer_link,
+		target,
+		url,
+		status,
+		menu_head_code,
+		DATE_FORMAT(menu_date, '%Y-%m-%d %H:%i') menu_date,
+		is_meta,
+		meta_title,
+		meta_description,
+		origin_no,
+		ord
+		FROM menu
+		WHERE revision_code = 1
+		AND	  origin_no = #{menu.originNo}
+		AND   ord = #{menu.ord}
+		ORDER BY menu_date ASC
+	</select>
+	
+	<select id="deleteRevisionList" resultType="hashmap" resultMap="MenuSelectMap">
+		SELECT
+		code,
+		category_code,
+		revision_code,
+		title,
+		content,
+		is_outer_link,
+		target,
+		url,
+		status,
+		menu_head_code,
+		DATE_FORMAT(menu_date, '%Y-%m-%d %H:%i') menu_date,
+		is_meta,
+		meta_title,
+		meta_description,
+		origin_no,
+		ord
+		FROM menu
+		WHERE revision_code = 2
+		ORDER BY menu_date ASC
+	</select>
+	
+	<select id="getHeadList" resultType="hashmap" resultMap="HeadSelectMap">
+		SELECT *
+		FROM head
+		ORDER BY HEAD_NO ASC;
+	</select>
+	
+	<select id="getMenuCategoryList" resultType="hashmap" resultMap="MenuSelectMap">
+		SELECT *
+		FROM menu
+		WHERE ord = 1
+		AND revision_code = 0
+		ORDER BY code ASC
+	</select>
+	
+	<select id="getMenuCategoryList2" resultType="hashmap" resultMap="MenuSelectMap">
+		SELECT *
+		FROM menu
+		WHERE ord = 2
+		AND revision_code = 0
+		ORDER BY code ASC
+	</select>
+	 
+	<update id="updateMenu" parameterType="menu">
+		UPDATE menu
+		<set>
+			CATEGORY_CODE = #{category_code},
+			REVISION_CODE = #{revision_code},
+			TITLE = #{title : VARCHAR},
+			CONTENT = #{content : VARCHAR},
+			IS_OUTER_LINK =#{is_outer_link : VARCHAR},
+			TARGET = #{target : VARCHAR},
+			URL =#{url : VARCHAR},
+			STATUS = #{status : VARCHAR},
+			MENU_HEAD_CODE = #{menu_head_code : NUMERIC},
+			IS_META = #{is_meta : VARCHAR},
+			META_TITLE = #{meta_title : VARCHAR},
+			META_DESCRIPTION = #{meta_description : VARCHAR}
+		</set>
+		WHERE CODE = #{code:NUMERIC}	
+	</update>
+	
+	<update id="updateHead" parameterType="head">
+		UPDATE head
+		<set>
+			TITLE = #{title : VARCHAR},
+			STATUS = #{status : VARCHAR},
+			CONTENT = #{content : VARCHAR}
+		</set>
+		WHERE HEAD_NO = #{headNo : NUMERIC}
+	</update>
+	
+	<update id="updateBottom" parameterType="bottom">
+		UPDATE bottom
+		<set>
+			CONTENT = #{content : VARCHAR}
+		</set>
+		WHERE BOTTOM_NO = 1
+	</update>
+	
+	<update id="updateMeta" parameterType="meta">
+		UPDATE meta
+		<set>
+			META_TITLE = #{meta_title : VARCHAR},
+			META_DESCRIPTION = #{meta_description : VARCHAR}
+		</set>
+		WHERE META_NO = 1
+	</update>
+	
+	<update id="updateRevision" parameterType="int">
+		UPDATE menu
+		<set>
+			REVISION_CODE = 0
+		</set>
+		WHERE code = #{value}
+	</update>
+	
+	<update id="updateChoiceMenu" parameterType="int">
+		UPDATE menu
+		<set>
+			REVISION_CODE = 2
+		</set>
+		WHERE code = #{value}
+	</update>
+	
+	<delete id="deleteChoiceHead" parameterType="int">
+		DELETE
+		FROM head
+		WHERE head_no = #{value}
+	</delete>
+	
+	<delete id="deleteMenu" parameterType="int">
+		DELETE
+		FROM menu
+		WHERE code = #{value}
+	</delete>
+	 
+</mapper>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

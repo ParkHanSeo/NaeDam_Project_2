@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="schedule">
+  
+  	<resultMap id="ScheduleSelectMap" type="schedule" >
+		<result property="scheduleNo"				column="SCHEDULE_NO"			jdbcType="NUMERIC"></result>
+		<result property="scheduleTitle"			column="SCHEDULE_TITLE"			jdbcType="VARCHAR"></result>
+		<result property="scheduleContents"			column="SCHEDULE_CONTENTS"		jdbcType="VARCHAR"></result>
+		<result property="scheduleStartDate"		column="SCHEDULE_START_DATE"	jdbcType="VARCHAR"></result>
+		<result property="scheduleEndDate"			column="SCHEDULE_END_DATE"		jdbcType="VARCHAR"></result>
+		<result property="scheduleColor"			column="SCHEDULE_COLOR"			jdbcType="VARCHAR"></result>
+  	</resultMap>
+  
+  	<insert id="addSchedule"	 parameterType="schedule" useGeneratedKeys="true" keyProperty="scheduleNo" keyColumn="SCHEDULE_NO">
+  		INSERT
+  		INTO SCHEDULE(SCHEDULE_NO,
+  					  SCHEDULE_TITLE,
+  					  SCHEDULE_CONTENTS,
+  					  SCHEDULE_START_DATE,
+  					  SCHEDULE_END_DATE,
+  					  SCHEDULE_COLOR)
+  		VALUES(NEXTVAL(schedule_seq),
+  			   #{scheduleTitle:VARCHAR},
+  			   #{scheduleContents:VARCHAR},
+  			   #{scheduleStartDate},
+  			   #{scheduleEndDate},
+  			   #{scheduleColor:VARCHAR})
+  	</insert>
+  	
+  	<select id="getSchedule"	 parameterType="int"	 resultMap="ScheduleSelectMap">
+  		SELECT *
+  		FROM schedule
+  		WHERE schedule_no = #{value}
+  	</select>
+  	
+  	<select id="getScheduleList" resultMap="ScheduleSelectMap">
+  		SELECT
+  				SCHEDULE_NO,
+  				SCHEDULE_TITLE,
+  				SCHEDULE_CONTENTS,
+  				SCHEDULE_START_DATE,
+  				SCHEDULE_END_DATE,
+  				SCHEDULE_COLOR
+  		FROM	schedule
+  	</select>
+  	
+  	<update id="updateSchedule"	 parameterType="schedule">
+  		UPDATE schedule
+  		<set>
+  			schedule_title = #{scheduleTitle:VARCHAR},
+  			schedule_contents = #{scheduleContents:VARCHAR},
+  			schedule_start_date = #{scheduleStartDate},
+  			schedule_end_date = #{scheduleEndDate},
+  			schedule_color = #{scheduleColor:VARCHAR}
+  		</set>
+  		WHERE schedule_no = #{scheduleNo}
+  	</update>
+  	
+  	<delete id="deleteSchedule" parameterType="int">
+  		DELETE
+  		FROM schedule
+  		WHERE schedule_no = #{value}
+  	</delete>
+  
+  
+  </mapper>
+  
+  
+  
+  
+  
+  

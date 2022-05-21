@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="history">
+  <select id="selectOneHistoryByHisNo" resultType="history">
+  	select * from history where history_no = #{history}
+  </select>
+  
+  <insert id="insertHistroy">
+  	insert into history values(nextval(seq_history_no), #{historyDate}, #{content}, #{imgUrl})
+  </insert>
+  
+  <update id="updateHistory">
+  	update history set history_date = #{historyDate}, content = #{content}, img_url = #{imgUrl} where history_no = #{historyNo}
+  </update>
+  
+  <delete id="deleteHistory">
+  	delete from history where history_no = #{historyNo}
+  </delete>
+</mapper>

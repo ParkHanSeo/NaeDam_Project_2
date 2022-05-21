@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="product">
+  <select id="selectProductListByParam" resultType="productDetail">
+  	SELECT a.*, b.IMG_URL, c.CATEGORY_NAME 
+	FROM product a
+		JOIN product_img b ON(a.product_no = b.PRODUCT_NO)
+		left JOIN category c ON(a.CATEGORY_NO = c.CATEGORY_NO)
+	<where>
+	  b.IMG_LEVEL = 1 
+	  <if test="cteNo != 0">
+		  AND a.category_no in (SELECT category_no FROM category WHERE parent_no IN(
+			SELECT category_no FROM category WHERE category_no = #{cteNo} OR parent_no = #{cteNo}) OR category_no IN(SELECT category_no FROM category WHERE category_no = #{cteNo} OR parent_no = #{cteNo}))
+	  </if>
+	  <if test="bne != 'null'">
+		  <choose>
+		  	<when test='bne == "best"'>
+		  		and a.product_best = 'Y'
+		  	</when>
+		  	<when test='bne == "new"'>
+		  		and a.product_new = 'Y'
+		  	</when>
+		  	<when test='bne == "event"'>
+		  		and a.product_event = 'Y'
+		  	</when>
+		  </choose>
+	  </if>
+	  <if test="v_status != 'null'">
+	  	<choose>
+	  		<when test='v_status == "Y"'>
+	  			and a.status = 'Y'
+	  		</when>
+	  		<when test='v_status == "N"'>
+	  			and a.status = 'N'
+	  		</when>
+	  	</choose>
+	  </if>
+	  <if test="keyword != 'null'">
+	  	and product_name like concat('%',#{keyword},'%')
+	  </if>
+	</where>
+	  
+  </select>
+  
+  <select id="selectAllProductList" resultType="productDetail">
+  	SELECT a.*, b.IMG_URL, c.CATEGORY_NAME 
+	FROM product a
+		JOIN product_img b ON(a.product_no = b.PRODUCT_NO)
+		left JOIN category c ON(a.CATEGORY_NO = c.CATEGORY_NO)
+	WHERE b.IMG_LEVEL = 1
+  </select>
+  
+  <select id="selectProductListByCteNo" resultType="productDetail">
+  	SELECT a.*, b.IMG_URL, c.CATEGORY_NAME 
+	FROM product a
+		JOIN product_img b ON(a.product_no = b.PRODUCT_NO)
+		left JOIN category c ON(a.CATEGORY_NO = c.CATEGORY_NO)
+	WHERE b.IMG_LEVEL = 1 AND a.category_no in (SELECT category_no FROM category WHERE parent_no IN(
+	SELECT category_no FROM category WHERE category_no = #{cteNo} OR parent_no = #{cteNo}) OR category_no IN(SELECT category_no FROM category WHERE category_no = #{cteNo} OR parent_no = #{cteNo}))
+  </select>
+  
+  <select id="selectProductExcelForm" resultType="productExcelForm">
+  	SELECT * FROM v_product_excel_form
+  </select>
+  
+  <select id="selectOneProductByProductNo" resultType="product">
+  	select * from product where product_no = #{productNo}
+  </select>
+  
+  <select id="selectProductImgsByProductNo" resultType="productImg">
+  	select * from product_img where product_no = #{productNo}
+  </select>
+  
+  <select id="selectProductOptionDetailByOptionNo" resultType="productOptionDetail">
+  	SELECT * 
+	FROM product_option a 
+		JOIN option_value b ON(a.OPTION_NO = b.OPTION_NO)
+	WHERE a.option_no = #{optionNo}
+  </select>
+  
+  <select id="selectProductDiscriptionByProductNo" resultType="productDiscription">
+  	SELECT * from product_discription WHERE product_no = #{productNo}
+  </select>
+  
+  <insert id="insertProduct">
+  	insert into product values(nextval(seq_product_no), #{categoryNo}, #{optionNo}, #{modelName}, #{productName}, #{listTitle}, #{retailPrice}, #{salePrice}, #{isSoldOut}, #{individualPoint}, #{productBest}, #{productNew}, #{productEvent}, #{status}, #{langType}, 1, sysdate())
+  	  <selectKey keyProperty="productNo" resultType="_int" order="AFTER">
+					select
+						lastval(seq_product_no)
+					from
+						dual
+	  </selectKey>
+  </insert>
+  
+  <insert id="insertProductImg">
+  	insert into product_img values(nextval(seq_product_img_no), #{productNo}, #{imgLevel}, #{imgUrl})
+  </insert>
+  
+  <insert id="insertProductDiscription">
+  	insert into product_discription values(nextval(seq_product_discription_no), #{productNo}, #{discriptionLevel}, #{content})
+  </insert>
+  
+  <update id="updateProduct">
+  	update product set category_no = #{categoryNo}, option_no = #{optionNo}, model_name = #{modelName}, product_name = #{productName}, list_title = #{listTitle},
+  		retail_price = #{retailPrice}, sale_price = #{salePrice}, is_sold_out = #{isSoldOut}, individual_point = #{individualPoint},  product_best = #{productBest},
+  		product_new = #{productNew}, product_event = #{productEvent}, status = #{status}, lang_type = #{langType}, reg_date = sysdate() where product_no = #{productNo}
+  </update>
+  <update id="updateProductImg">
+    update product_img set img_url = #{imgUrl} where product_img_no = #{productImgNo}
+  </update>
+  
+  <update id="updateProductDiscription">
+  	update product_discription set content = #{content} where product_no = #{productNo} and discription_level = #{discriptionLevel}
+  </update>
+  
+  <delete id="deleteProductByProductNo">
+  	delete from product where product_no = #{productNo}
+  </delete>
+  
+</mapper>

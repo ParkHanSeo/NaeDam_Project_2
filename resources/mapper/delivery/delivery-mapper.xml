@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="delivery">
+	<select id="selectDoseosanganFeeByZipcode" resultType="_int">
+		select extra_fee from doseosangan where start_zipcode <![CDATA[<=]]> #{zipcode} and end_zipcode <![CDATA[>=]]> #{zipcode}
+	</select>
+  	
+  	
+  	<insert id="insertDeliveryCompanyByParam">
+  		insert into delivery_company values(seq_deli_com_no.nextval, #{company_name}, #{url}, #{is_show}, sysdate)
+  	</insert>
+  	
+  	
+  	<select id="selectOneDeliveryCompanyByComNo" resultType="deliveryCompany">
+  		select * from delivery_company where deli_com_no = #{comNo}
+  	</select>
+  	
+  	<select id="selectDeliveryCompanyListByParam" resultType="deliveryCompany">
+  		select * from delivery_company
+		where ${field} like ('%', #{keyword}, '%')
+  	</select>
+  	
+  	<update id="updateDeliveryCompanyByParam">
+  		update delivery_company set deli_com_name = #{company_name}, trace_url = #{url}, show_yn = #{is_show}, reg_date = sysdate()
+  			where deli_com_no = #{comNo} 
+  	</update>
+  	
+  	<update id="updateDeliverySettingByVo">
+  		update delivery_setting set basic_delivery_fee = #{basicDeliveryFee}, free_shipping_settings = #{freeShippingSettings}, extra_deli_fee_yn = #{extraDeliFeeYn} 
+  	</update>
+  	
+  	<update id="updateDoseosanganByVo">
+  		update doseosangan set extra_fee = #{extraFee} where doseo_no = #{doseoNo}
+  	</update>
+  	
+  	<delete id="deleteDeliveryCompanyByComNo">
+  		delete delivery_company where deli_com_no = #{comNo}
+  	</delete>
+</mapper>

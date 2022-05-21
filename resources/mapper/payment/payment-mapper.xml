@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="payment">
+
+  <select id="selectPaymentInfoList" resultType="paymentInfo">
+  	select * from payment_info
+  </select> 	 
+  
+  <select id="selectTodayPaidCnt" resultType="_int">
+  	SELECT COUNT(*) FROM payment_info WHERE STATUS = 'paid' AND DATE(paid_at) = DATE(SYSDATE())
+  </select>
+  
+  <select id="selectTodayPayReadyCnt" resultType="_int">
+  	SELECT COUNT(*) FROM payment_info WHERE STATUS = 'ready' AND DATE(paid_at) = DATE(SYSDATE())
+  </select>
+  
+  <select id="selectTotalSaleAmountMonth" resultType="_int">
+  	SELECT ifnull(SUM(amount), 0) FROM payment_info WHERE STATUS = 'paid' AND YEAR(paid_at) = YEAR(SYSDATE()) AND MONTH(paid_at) = MONTH(SYSDATE());
+  </select>
+	
+  <select id="selectTotalCancelAmountMonth" resultType="_int">
+  	SELECT IFNULL(SUM(cancel_amount),0) FROM payment_info WHERE YEAR(paid_at) = YEAR(SYSDATE()) AND MONTH(paid_at) = MONTH(SYSDATE())
+  </select>
+   
+   <select id="selectMonthCancelCnt" resultType="_int">
+    SELECT COUNT(*) FROM payment_info WHERE YEAR(paid_at) = YEAR(SYSDATE()) AND MONTH(paid_at) = MONTH(SYSDATE()) AND cancel_at is NOT NULL
+   </select>
+   
+  <insert id="insertPaymentInfo">
+  	insert into payment values(#{paid_amount}, #{imp_uid}, #{merchant_uid}, buyer_addr}, #{buyer_name}, #{buyer_postcode}, #{buyer_tel}, #{cancle_amount}, #{cancel_reason}, #{cancel_at}, #{name}, sysdate(), #{pay_method}, #{status)
+  </insert>
+</mapper>
