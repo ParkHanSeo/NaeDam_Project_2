@@ -279,7 +279,7 @@
  	
  	<select id="selectStaffList" resultType="staff">
  		SELECT
-			ROW_NUMBER() OVER(ORDER BY s.reg_date DESC) AS `rowNum`,
+			ROW_NUMBER() OVER(ORDER BY s.row_order DESC) AS `rowNum`,
 			staff_no,
 			img_url,
 			staff_name,
@@ -384,7 +384,15 @@
 			staff_no = #{staffNo}
 	</update>
 	
-	<update id="updateChangeOrderUp">
+	<update id="updateChangeOrderUp" parameterType="staff">
+		<selectKey keyProperty="rowOrder" resultType="_int" order="BEFORE">
+			SELECT
+				row_order
+			FROM
+				staff
+			WHERE
+				staff_no = #{staffNo}
+		</selectKey>
 		UPDATE
 			staff
 		SET
@@ -392,29 +400,31 @@
 				CASE
 					WHEN row_order = (SELECT MAX(row_order) FROM staff AS row_order)
 					THEN row_order
-					ELSE row_order + 1
+					ELSE (SELECT MIN(row_order) FROM staff WHERE row_order > (SELECT row_order FROM staff WHERE staff_no = #{staffNo}))
 				END
 		WHERE
 			staff_no = #{staffNo}
-			<selectKey keyProperty="rowOrder" resultType="_int" order="AFTER">
-				SELECT
-					row_order
-				FROM
-					staff
-				WHERE
-					staff_no = #{staffNo}
-			</selectKey>
 	</update>
 	<update id="updateChangeOrderUpNext">
 		UPDATE
 			staff
 		SET
-			row_order = row_order - 1
+			row_order = #{rowOrder}
 		WHERE
-			staff_no = (SELECT MIN(staff_no) FROM staff WHERE staff_no > #{staffNo})
+			row_order = (SELECT MIN(row_order) FROM staff WHERE row_order > #{rowOrder})
+			AND
+			NOT staff_no IN (#{staffNo})
 	</update>
 	
-	<update id="updateChangeOrderDown">
+	<update id="updateChangeOrderDown" parameterType="staff">
+		<selectKey keyProperty="rowOrder" resultType="_int" order="BEFORE">
+			SELECT
+				row_order
+			FROM
+				staff
+			WHERE
+				staff_no = #{staffNo}
+		</selectKey>
 		UPDATE
 			staff
 		SET
@@ -422,7 +432,7 @@
 				CASE
 					WHEN row_order = (SELECT MIN(row_order) FROM staff AS row_order)
 					THEN row_order
-					ELSE row_order - 1
+					ELSE (SELECT MAX(row_order) FROM staff WHERE (SELECT row_order FROM staff WHERE staff_no = #{staffNo}) > row_order) 
 				END
 		WHERE
 			staff_no = #{staffNo}
@@ -431,9 +441,11 @@
 		UPDATE
 			staff
 		SET
-			row_order = row_order + 1
+			row_order = #{rowOrder}
 		WHERE
-			staff_no = (SELECT MAX(staff_no) FROM staff WHERE #{staffNo} > staff_no)
+			row_order = (SELECT MAX(row_order) FROM staff WHERE #{rowOrder} > row_order)
+			AND
+			NOT staff_no IN (#{staffNo})
 	</update>
 	
 	<select id="selectMaxOrder" resultType="staff">
@@ -442,4 +454,20 @@
 		FROM	
 			staff
 	</select>
+	<select id="selectMinOrder" resultType="staff">
+		SELECT 
+			MIN(row_order) AS `row_order`
+		FROM	
+			staff
+	</select>
+	
+	<select id="selectInputRowOrder" resultType="staff">
+		SELECT
+			row_order
+		FROM
+			staff
+		WHERE
+			staff_no = #{staffNo}
+	</select>
+	
 </mapper>

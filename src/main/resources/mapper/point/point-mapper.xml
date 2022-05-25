@@ -8,7 +8,11 @@
   	SELECT b.id, CONCAT(b.LAST_NAME, b.FIRST_NAME) AS member_name, b.EMAIL, a.point_title, a.point_amount, a.reg_date
 	FROM member_point a 
 		JOIN member b ON(a.MEMBER_NO = b.MEMBER_NO)
-		
+	<where>
+		<if test="_parameter != null and _parameter != ''">
+			b.id = #{memberId}
+		</if>
+	</where>	
 	ORDER BY a.reg_date desc
   
   </select>

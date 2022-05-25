@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="statistics">
+  <select id="selectPeriodStatistics" resultType="periodStatisticVo">
+  	SELECT *
+	FROM v_period_statistics_paid
+		left JOIN v_period_statistics_cancel USING(paid_at)
+	<where>
+		<if test='type == "D"'>
+			DATE(paid_at) = DATE(#{date})
+		</if>
+		<if test='type == "M"'>
+			MONTH(paid_at) = MONTH(#{date})
+		</if>
+		<if test='type == "Y"'>
+			YEAR(paid_at) = YEAR(#{date})
+		</if>
+	</where>	
+  </select>
+
+  <select id="selectProductStatistics" parameterType="hashmap" resultType="productStatisticVo">
+	SELECT DISTINCT
+	*,
+	(SELECT count(amount)
+	 FROM v_product_statistics
+	 WHERE order_status_no >= 2) paymentCount,
+	 (SELECT COUNT(amount)
+	 FROM v_product_statistics
+	 WHERE order_status_no = 7) returnCount,
+	 (SELECT SUM(amount)
+	 FROM v_product_statistics
+	 WHERE order_status_no >= 2) paymentSum,
+	 (ROW_NUMBER() over(ORDER BY (SELECT
+		 						   COUNT(amount)
+		 						   FROM v_product_statistics
+		 						   WHERE order_status_no >= 2
+		 						   AND   order_status_no != 7) DESC)) AS productRank
+	 FROM v_product_statistics
+	 <if test="search.start_date != null and search.end_date != '' ">
+	 	WHERE reg_date between #{search.start_date} and #{search.end_date}
+	 </if>
+	 <if test="search.categoryCode != null and search.categoryCode != '' ">
+	 	AND category_no = #{search.categoryCode}
+	 </if>
+	 ORDER BY productRank ASC
+  </select>
+  
+  <select id="selectAddressStatistics" resultType="addressStatisticVo">
+  	SELECT *
+  	FROM v_address_statistics
+  	<if test="addressVo.addressCategory == 1">
+  		WHERE DATE(paid_at) = DATE(#{date})
+  	</if>
+  	<if test="addressVo.addressCategory == 2">
+  		WHERE MONTH(paid_at) = MONTH(#{date})
+  	</if>
+  	<if test="addressVo.addressCategory == 3">
+  		WHERE YEAR(paid_at) = YEAR(#{date})
+  	</if>
+  </select>
+  
+  <select id="selectAddressStatistics2" resultType="addressStatisticVo">
+		SELECT
+		COALESCE(a.paid_at, #{date}) AS paid_at,
+		(select sum(g.amount) from payment_info g <if test="addressVo.addressCategory == 1">where paid_at = #{date}</if><if test="addressVo.addressCategory == 2">where MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">where YEAR(paid_at) = YEAR(#{date})</if>) AS paymentSum,
+		(select sum(g.cancel_amount) from payment_info g <if test="addressVo.addressCategory == 1">where DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">where MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">where YEAR(paid_at) = YEAR(#{date})</if>) AS returnSum,
+		sum(a.cancel_amount) AS allSum,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 서울' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `seoul`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 부산' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `busan`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 인천' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `incheon`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 대구' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `daegu`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 광주' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gwangju`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 대전' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `daejeon`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 울산' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `ulsan`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 세종' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `sejong`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 경기' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gyeonggi`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 강원' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gangwon`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 충청북도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `chungbuk`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 충청남도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `chungnam`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 전라북도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `jeonbuk`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 전라남도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `jeonnam`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 경상북도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gyeongbuk`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 경상남도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gyeongnam`,
+		(select sum(g.amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 제주' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `jeju`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 서울' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `seoulReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 부산' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `busanReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 인천' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `incheonReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 대구' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `daeguReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 광주' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gwangjuReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 대전' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `daejeonReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 울산' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `ulsanReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 세종' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `sejongReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 경기' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gyeonggiReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 강원' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gangwonReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 충청북도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `chungbukReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 충청남도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `chungnamReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 전라북도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `jeonbukReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 전라남도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `jeonnamReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 경상북도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gyeongbukReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 경상남도' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `gyeongnamReturn`,
+		(select sum(g.cancel_amount) from payment_info g where substr(g.buyer_addr,1,3) = ' 제주' <if test="addressVo.addressCategory == 1">AND DATE(paid_at) = DATE(#{date})</if><if test="addressVo.addressCategory == 2">AND MONTH(paid_at) = MONTH(#{date}) AND YEAR(paid_at) = YEAR(#{date})</if><if test="addressVo.addressCategory == 3">AND YEAR(paid_at) = YEAR(#{date})</if>) AS `jejuReturn`
+		FROM payment_info a
+		WHERE a.status = 'ready'
+		AND a.paid_at = #{date}
+  </select>  
+  
+  <select id="selectAreaPayment" resultType="areaVo">
+		SELECT DISTINCT
+		b.AREA_NO,
+		b.AREA_NAME,
+		(SELECT
+		 SUM(a.amount)
+		 FROM payment_info a
+		 WHERE SUBSTRING(a.buyer_addr, 1, 3) = b.AREA_NAME
+		 AND   a.`status` != 'ready') AS AREA_PAYMENT
+		FROM  area b LEFT OUTER JOIN payment_info a ON(SUBSTRING(a.buyer_addr, 1, 3) = b.AREA_NAME)
+  	<if test="addressVo.addressCategory == 1">
+  		WHERE DATE(a.paid_at) BETWEEN DATE(#{search.start_date}) AND DATE(#{search.end_date})
+  	</if>
+  	<if test="addressVo.addressCategory == 2">
+  		WHERE MONTH(a.paid_at) BETWEEN MONTH(#{search.start_date}) AND MONTH(#{search.end_date})
+  	</if>
+  	<if test="addressVo.addressCategory == 3">
+  		WHERE YEAR(a.paid_at) BETWEEN YEAR(#{search.start_date}) AND YEAR(#{search.end_date})
+  	</if>
+  </select>
+  
+  <select id="selectArea" resultType="areaVo">
+  	SELECT *
+  	FROM area
+  </select>
+  
+  <select id="selectMemberStatisticsList" resultType="MemberStatisticVo">
+  SELECT NAME, id, SUM(amount) AS total_amount, SUM(cancel_amount) AS total_amount_cancel, (sum(amount) - sum(ifnull(cancel_amount,0))) AS total, RANK() over(ORDER BY total DESC) AS ranking, COUNT(amount) AS order_cnt, COUNT(cancel_amount) AS cancel_cnt
+	FROM v_member_statistics_paid 
+		LEFT JOIN v_member_statistics_cancel USING(member_no)
+	
+	WHERE paid_at <![CDATA[ <=]]> #{endDate} and paid_at <![CDATA[ >=]]> #{startDate}
+	
+		OR cancel_at <![CDATA[ <=]]> #{endDate} and cancel_at <![CDATA[ >=]]> #{startDate}
+	
+	GROUP BY member_no
+	
+	ORDER BY ranking LIMIT 10
+  </select>
+  
+  <select id="selectBeforeStatisticsList" resultType="BeforeYearStatisticVo">
+  	SELECT DISTINCT
+	IFNULL((SELECT SUM(b.amount) FROM payment_info b WHERE MONTH(b.paid_at) = MONTH(#{date}) AND YEAR(b.paid_at) = YEAR(#{by.year})), 0) AS year,
+	IFNULL((SELECT SUM(b.amount) FROM payment_info b WHERE MONTH(b.paid_at) = MONTH(#{date2}) AND YEAR(b.paid_at) = YEAR(#{by.yearsAgo})), 0) AS yearsAgo,
+	IFNULL((SELECT SUM(b.amount) FROM payment_info b WHERE MONTH(b.paid_at) = MONTH(#{date3}) AND YEAR(b.paid_at) = YEAR(#{by.twoYearsAgo})), 0) AS twoYearsAgo
+	FROM payment_info a
+  </select>
+  
+</mapper>
