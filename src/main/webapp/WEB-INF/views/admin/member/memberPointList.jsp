@@ -41,9 +41,15 @@
 						<div class="box-tools pull-right" style="margin-bottom: 5px;">
 							<div class="has-feedback">
 								<select name="field" id="field" class="form-control input-sm">
+<<<<<<< HEAD
+									<option value="id" ${param.field == 'id' ? 'selected' : ''}>아이디</option>
+									<option value="CONCAT(last_name, first_name)" ${param.field == 'CONCAT(last_name, first_name)' ? 'selected' : ''}>이름</option>
+									<option value="point_title" ${param.field == 'point_title' ? 'selected' : ''}>사용내역</option>
+=======
 									<option value="b.id" ${param.field == 'b.id' ? 'selected' : ''}>아이디</option>
 									<option value="CONCAT(b.LAST_NAME, b.FIRST_NAME)" ${param.field == 'member_name' ? 'selected' : ''}>이름</option>
 									<option value="a.point_title" ${param.field == 'a.point_title' ? 'selected' : ''}>사용내역</option>
+>>>>>>> branch 'master' of https://github.com/ParkHanSeo/NaeDam_Project_2.git
 								</select>
 							</div>
 						</div>
@@ -62,14 +68,25 @@
 									<td>적립금 사용내역</td>
 									<td style="width: 100px;">사용 적립금</td>
 									<td style="width: 140px;">일시</td>
-									<!-- <td style="width:60px;">명령</td>                 -->
+									<!-- <td style="width:60px;">명령</td> -->
 								</tr>
 							</thead>
 							<tbody>
 								<c:choose>
+<<<<<<< HEAD
+									<c:when test="${empty mPointList and empty param.keyword}">
+										<tr>
+											<td colspan="8">조회 결과가 없습니다.</td> 
+										</tr>
+									</c:when>
+									<c:when test="${empty mPointList and !empty param.keyword}">
+										<tr>
+											<td colspan="8">검색된 적립금 내역이 없습니다.</td> 
+=======
 									<c:when test="${empty mPointList}">
 										<tr>
 											<td colspan="8">조회 결과가 없습니다.</td> 
+>>>>>>> branch 'master' of https://github.com/ParkHanSeo/NaeDam_Project_2.git
 										</tr>
 									</c:when>
 									<c:otherwise>
@@ -106,11 +123,17 @@
 						<input type="hidden" name="search_data" value=""> 
 						<input type="hidden" name="search_type" value="">
 					</form>
+<<<<<<< HEAD
+					<!-- 페이징 -->
+                    <div id="pagebarContainer" style="text-align: right;">
+                        ${pagebar}
+=======
 					<!-- 위치 조정 필요 -->
 					<div style="text-align: right; margin-top: 20px;">
 						<ul class="pagination" style="margin: 0;">
 							<li class="active"><a href="?tpf=admin/member/point&page=1">1</a></li>
 						</ul>
+>>>>>>> branch 'master' of https://github.com/ParkHanSeo/NaeDam_Project_2.git
 					</div>
 				</div>
 			</div>

@@ -107,7 +107,11 @@
 							class="btn btn-primary btn-block"><b>로그인</b></a>
 						&nbsp;
 						<a href="#none"
+<<<<<<< HEAD
+							onclick="enrollSubmit()"
+=======
 							onclick="location.href='${pageContext.request.contextPath}/user/user/userEnroll.do';"
+>>>>>>> branch 'master' of https://github.com/ParkHanSeo/NaeDam_Project_2.git
 							class="btn btn-primary btn-block"><b>회원가입</b></a>
 					</form:form>
 				</div>
@@ -134,6 +138,11 @@
 				return false;
 			}
 			form.submit();
+		}
+		
+		function enrollSubmit() {
+			console.log("enrollSubmti() 실행");
+			location.href=`${pageContext.request.contextPath}/user/user/userEnroll.do`;
 		}
 	</script>
 </body>

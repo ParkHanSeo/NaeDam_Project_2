@@ -1,6 +1,5 @@
 package com.naedam.admin.member.model.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +26,6 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
 	private MemberDao memberDao;
-
-	// 회원가입
-	@Override
-	public int insertMember(Member member) {
-		return memberDao.insertMember(member);
-	}
 
 	// 로그인 - 해당 id정보 가져오기
 	@Override
@@ -142,11 +135,16 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.selectOneAuthorities(memberNo);
 	}
 	
-	// 회원 적립금 관리
+	// 회원 적립금 목록
 	@Override
 	public List<MemberPoint> selectMemberPointListByParam(Map<String, Object> param) {
-		// TODO Auto-generated method stub
 		return memberDao.selectMemberPointListByParam(param);
+	}
+	
+	// 회원 적립금 목록 수 
+	@Override
+	public int totalPointCount(Map<String, Object> param) {
+		return memberDao.totalPointCount(param);
 	}
 
 	// 회원정보 수정(상세보기)
@@ -201,15 +199,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int selectWithdrawalCount() {
 		return memberDao.selectWithdrawalCount();
-
 	}
 	
 	// 포인트 총계
 	@Override
 	public int selectMemberTotalPoint(int memberNo) {
-		// TODO Auto-generated method stub
 		return memberDao.selectMemberTotalPoint(memberNo);
-
 	}
 
 	// 주소 번호 조회
@@ -220,7 +215,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public int selectTodayRegMemberCnt() {
-		// TODO Auto-generated method stub
 		return memberDao.selectTodayRegMemberCnt();
 	}
 
@@ -236,6 +230,7 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.deleteAuthorities(memberNo);
 	}
 
+	//
 	@Override
 	public List<Address> findMemberAddressList(int[] memberNo) {
 		return memberDao.findMemberAddressList(memberNo);
@@ -337,5 +332,4 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.selectSearchWithdrawalList(param, offset, limit);
 	}
 
-	
 }

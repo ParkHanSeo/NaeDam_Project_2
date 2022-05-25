@@ -74,6 +74,13 @@ public class FormDaoImpl implements FormDao {
 		return session.selectList("form.formPostList", formNo, rowBounds);
 	}
 	
+	//폼게시물 리스트2
+	@Override
+	public List<FormPost> formPostList2(int formNo) throws Exception {
+		// TODO Auto-generated method stub
+		return session.selectList("form.formPostList", formNo);
+	}	
+	
 	//폼게시물 카운트
 	@Override
 	public int formPostListCount(int code) throws Exception {

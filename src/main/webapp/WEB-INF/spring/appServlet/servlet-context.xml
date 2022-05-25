@@ -60,7 +60,7 @@
 	
 	<beans:bean id="chattingHandler" class="com.naedam.admin.chat.handler.ChattingHandler"/>
 	<websocket:handlers>
-		<websocket:mapping handler="chattingHandler" path="/chatting"/>
+		<websocket:mapping handler="chattingHandler" path="/admin/chat/chat"/>
 		<websocket:sockjs></websocket:sockjs>
 	</websocket:handlers>
 	
