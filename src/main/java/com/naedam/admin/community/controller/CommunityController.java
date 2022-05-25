@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.naedam.admin.common.Mir9Utils;
 import com.naedam.admin.community.model.service.CommunityService;
 import com.naedam.admin.community.model.vo.Email;
 import com.naedam.admin.community.model.vo.EmailSetting;
@@ -29,16 +30,12 @@ public class CommunityController {
 	
 	@Autowired
 	private CommunityService communityService;
-
-	// SMS 인증키
-	private static String smsKey = "cuyb2ATgfZrgb0LF";
-	private static String smsSecret = "3VxajYQb";
 	
 	// mail 설정
 	@GetMapping("/email")
 	public String commEmail(Model model) {
 		
-		// sms 설정 정보 조회
+		// mail 설정 정보 조회
 		List<EmailSetting> emailSetting = communityService.selectEmailSetting();
 		model.addAttribute("emailSetting", emailSetting);
 		
@@ -48,19 +45,38 @@ public class CommunityController {
 	// mail 조회 + 검색
 	@RequestMapping(value="/email_list", method= {RequestMethod.GET, RequestMethod.POST})
 	public String commEmailList(
+			@RequestParam(defaultValue="1") int cPage,
 			@RequestParam(required=false) String field,
-			@RequestParam(required=false) String keyword,			
+			@RequestParam(required=false) String keyword,
+			HttpServletRequest request,
 			Model model) {
+		
+		int limit = 15;
+		int startRow = (cPage - 1) * limit + 1;
+		int endRow = startRow + limit -1;
 		
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("field", field);
 		param.put("keyword", keyword);
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
 		
-		// 총 건 수 => 전체 조회 건의 길이
-		List<Email> emailList = communityService.selectEmailList(param);
-		int total = emailList.size();
+		// 메일 목록 조회
+		List<Email> emailList = communityService.selectEmailList(param);		
+		int totalEmailCount = communityService.totalEmailCount(param);
+		String emailUri = "";
+		if((field == null || field == "") && (keyword == null || keyword == "")) {
+			emailUri = request.getRequestURI();
+		}
+		else {
+			emailUri = request.getRequestURI() + "?field=" + field + "&keyword=" + keyword;
+		}
+		String pagebar = Mir9Utils.getPagebar(cPage, limit, totalEmailCount, emailUri);
+
 		model.addAttribute("emailList", emailList);
-		model.addAttribute("total", total);		
+		model.addAttribute("total", totalEmailCount);	
+		model.addAttribute("param", param);
+		model.addAttribute("pagebar", pagebar);
 		
 		return "admin/community/emailList";
 	}
@@ -76,7 +92,7 @@ public class CommunityController {
 		// CORS 문제 해결
 		// 기본 문구
 		int category = 81149;
-		HashMap<String, Object> originSms = communityService.loadSms(smsKey, smsSecret, category); 
+		HashMap<String, Object> originSms = communityService.loadSms(category); 
 		
 		// list에 담기
 		List<String> templateId = (List<String>) originSms.get("templateId");
@@ -87,7 +103,7 @@ public class CommunityController {
 
 		// 저장 문구
 		category = 81150;
-		HashMap<String, Object> savedSms = communityService.loadSms(smsKey, smsSecret, category); 
+		HashMap<String, Object> savedSms = communityService.loadSms(category); 
 		
 		// list에 담기
 		List<String> savedTemplateId = (List<String>) savedSms.get("templateId");
@@ -102,19 +118,38 @@ public class CommunityController {
 	// sms 조회 + 검색
 	@RequestMapping(value="/sms_list", method= {RequestMethod.GET, RequestMethod.POST})
 	public String commSmsList(
+			@RequestParam(defaultValue="1") int cPage,
 			@RequestParam(required=false) String field,
-			@RequestParam(required=false) String keyword,			
+			@RequestParam(required=false) String keyword,
+			HttpServletRequest request,
 			Model model) {
+		
+		int limit = 15;
+		int startRow = (cPage - 1) * limit + 1;
+		int endRow = startRow + limit -1;
 		
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("field", field);
 		param.put("keyword", keyword);
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
 		
-		// 총 건 수 => 전체 조회 건의 길이
+		// sms 목록 조회
 		List<Sms> smsList = communityService.selectSmsList(param);
-		int total = smsList.size();
+		int totalSmsCount = communityService.totalSmsCount(param);
+		String smsUri = "";
+		if((field == null || field == "") && (keyword == null || keyword == "")) {
+			smsUri = request.getRequestURI();
+		}
+		else {
+			smsUri = request.getRequestURI() + "?field=" + field + "&keyword=" + keyword;
+		}
+		String pagebar = Mir9Utils.getPagebar(cPage, limit, totalSmsCount, smsUri);
+		
 		model.addAttribute("smsList", smsList);
-		model.addAttribute("total", total);
+		model.addAttribute("total", totalSmsCount);
+		model.addAttribute("param", param);
+		model.addAttribute("pagebar", pagebar);
 
 		return "admin/community/smsList";
 	}
@@ -122,16 +157,37 @@ public class CommunityController {
 	// 리뷰 조회 + 검색
 	@RequestMapping(value="/review", method={RequestMethod.GET, RequestMethod.POST})
 	public String commReview(
+			@RequestParam(defaultValue="1") int cPage,
 			@RequestParam(required=false) String field,
 			@RequestParam(required=false) String keyword,
+			HttpServletRequest request,
 			Model model) {
 		
-		Map<Object, String> param = new HashMap<>(); 
+		int limit = 15;
+		int startRow = (cPage - 1) * limit + 1;
+		int endRow = startRow + limit -1;
+		
+		Map<Object, Object> param = new HashMap<>(); 
 		param.put("field", field);
 		param.put("keyword", keyword);
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
 		
-		List<Review> reviewList = communityService.reviewList(param);		
+		// 리뷰 목록 조회
+		List<Review> reviewList = communityService.reviewList(param);	
+		int totalReviewCount = communityService.totalReviewCount(param);
+		String reviewUri = "";
+		if((field == null || field == "") && (keyword == null || keyword == "")) {
+			reviewUri = request.getRequestURI();
+		}
+		else {
+			reviewUri = request.getRequestURI() + "?field=" + field + "&keyword=" + keyword;
+		}
+		String pagebar = Mir9Utils.getPagebar(cPage, limit, totalReviewCount, reviewUri);
+		
 		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("param", param);
+		model.addAttribute("pagebar", pagebar);
 		
 		return "admin/community/review";
 	}

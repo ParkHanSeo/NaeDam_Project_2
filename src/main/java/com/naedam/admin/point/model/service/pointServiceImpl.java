@@ -36,9 +36,9 @@ public class pointServiceImpl implements PointService {
 	}
 
 	@Override
-	public List<MemberPointExcelForm> selectMemberPointExcelForm() {
+	public List<MemberPointExcelForm> selectMemberPointExcelForm(String memberId) {
 		// TODO Auto-generated method stub
-		return pointDao.selectMemberPointExcelForm();
+		return pointDao.selectMemberPointExcelForm(memberId);
 	}
 
 	@Override

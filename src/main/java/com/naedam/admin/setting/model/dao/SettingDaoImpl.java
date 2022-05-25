@@ -3,6 +3,7 @@ package com.naedam.admin.setting.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -328,13 +329,10 @@ public class SettingDaoImpl implements SettingDao {
 		return session.update("setting.updateStaff", staff);
 	}
 
-
-
 	@Override
 	public int updateChangeOrderDown(int staffNo) {
 		return session.update("setting.updateChangeOrderDown", staffNo);
 	}
-
 
 	@Override
 	public Staff selectMaxOrder() {
@@ -371,11 +369,10 @@ public class SettingDaoImpl implements SettingDao {
 		return session.update("setting.updateChangeOrderDownNext", paramStaff);
 	}
 
-	
+	@Override
+	public int updateChangeOrderUpNext(int input_row_order) {
+		return session.update("setting.updateChangeOrderUpNext", input_row_order);
+	}
 
-
-
-	
-	
 	
 }

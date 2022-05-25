@@ -16,7 +16,6 @@
 	</script>
 </c:if>
 
-<!-- content-wrapper -->
 <div class="content-wrapper">
 <section class="content-header">
     <h1>
@@ -30,6 +29,7 @@
     </ol>
 </section>
 
+<!-- content-wrapper -->
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -66,7 +66,6 @@
 			                        <td style="width:140px;">등록일</td>
 			                        <td style="width:80px;">
 			                        <i onclick="change('down');" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i>
-			                        <!-- <i onclick="changeOrder('down','staff','?tpf=admin/setting/staff');" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i> -->
 			                        <i onclick="change('up');" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer;"></i>
 			                        </td>
 			                        <td style="width:80px;">명령</td>
@@ -114,43 +113,41 @@
                 <h4 class="modal-title" id="myModalLabelPortfolio">임원 관리</h4>
             </div>
                 <div class="modal-body">
-
-                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 임원 <span id="board_sub_title">등록</span></p></h4>
-                <table class="table table-bordered">
-                    <tr>
-                        <td class="menu">이름 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-                        <td align="left"><input type="text" name="staffName" id="staffName" value="" class="form-control input-sm" style="width:50%;"></td>
-                    </tr>
-                    <tr>
-                        <td class="menu">직책 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-                        <td align="left"><input type="text" name="staffPosition" id="staffPosition" value="" class="form-control input-sm" style="width:50%;"></td>
-                    </tr>
-                    <tr>
-                        <td class="menu">Career <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-                        <td align="left">
-                        <textarea name="staffCareer" id="staffCareer" rows="4" class="form-control input-sm"></textarea>
-                        <div style="font-weight:normal">※ 리스트는 Enter기준으로 구분됩니다.</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="menu">Profile <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-                        <td align="left">
-                        <textarea name="staffProfile" id="staffProfile" rows="4" class="form-control input-sm"></textarea>
-                        <div style="font-weight:normal">※ 리스트는 Enter기준으로 구분됩니다.</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="menu">파일 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-                        <td align="left">
-                        <input type="file" name="file" id="file" class="form-control input-sm" style="width:80%; display:inline;">
-                        <span id="display_file" style="display:none;">
-	                        <button type="button" id="windowBtn" onclick="" class="btn btn-success btn-xs">보기</button>
-	                        <button type="button" id="deleteBtn" onclick="" class="btn btn-danger btn-xs">삭제</button>
-                        </span>
-                        </td>
-                    </tr>
-                </table>
-
+                	<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 임원 <span id="board_sub_title">등록</span></p></h4>
+	                <table class="table table-bordered">
+	                    <tr>
+	                        <td class="menu">이름 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+	                        <td align="left"><input type="text" name="staffName" id="staffName" value="" class="form-control input-sm" style="width:50%;"></td>
+	                    </tr>
+	                    <tr>
+	                        <td class="menu">직책 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+	                        <td align="left"><input type="text" name="staffPosition" id="staffPosition" value="" class="form-control input-sm" style="width:50%;"></td>
+	                    </tr>
+	                    <tr>
+	                        <td class="menu">Career <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+	                        <td align="left">
+	                        <textarea name="staffCareer" id="staffCareer" rows="4" class="form-control input-sm"></textarea>
+	                        <div style="font-weight:normal">※ 리스트는 Enter기준으로 구분됩니다.</div>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="menu">Profile <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+	                        <td align="left">
+	                        <textarea name="staffProfile" id="staffProfile" rows="4" class="form-control input-sm"></textarea>
+	                        <div style="font-weight:normal">※ 리스트는 Enter기준으로 구분됩니다.</div>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="menu">파일 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+	                        <td align="left">
+	                        <input type="file" name="file" id="file" class="form-control input-sm" style="width:80%; display:inline;">
+	                        <span id="display_file" style="display:none;">
+		                        <button type="button" id="windowBtn" onclick="" class="btn btn-success btn-xs">보기</button>
+		                        <button type="button" id="deleteBtn" onclick="" class="btn btn-danger btn-xs">삭제</button>
+	                        </span>
+	                        </td>
+	                    </tr>
+	                </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="btnRegister" onclick="register()" class="btn btn-primary">확인</button>&nbsp;&nbsp;&nbsp;
@@ -179,11 +176,6 @@ function register(){
 	var staffCareer = $("#staffCareer").val();
 	var staffProfile = $("#staffProfile").val();
 	var file = $("#file").val();
-	console.log("staffName = " + staffName);
-	console.log("staffPosition = " + staffPosition);
-	console.log("staffCareer = " + staffCareer);
-	console.log("staffProfile = " + staffProfile);
-	console.log("file = " + file);
 	
 	// 이름 공란 확인
 	if(staffName == ''){
@@ -226,9 +218,7 @@ function register(){
 // 이미지 업로드
 $("input[type=file]").change(function(e){
 	var file = e.target;
-	console.log("file = " + file);
 	var form = new FormData();
-	console.log("form = " + form);
 	form.append("image", file.files[0]);
     var settings = {
     "url": "https://api.imgbb.com/1/upload?key=f84bfb11eb3ee5eedb859de8b49fdff1",
@@ -242,16 +232,10 @@ $("input[type=file]").change(function(e){
    
 	// 이미지 업로드 -> 확인
 	$.ajax(settings).done(function (response) {
-		console.log("response" + response);
-		  
 		var imgbb = JSON.parse(response);
-		console.log("imgbb : " + imgbb);
-		  
 		// 이미지 조회 및 다운로드
 		var url = imgbb.data.thumb.url;
 		var name = imgbb.data.thumb.filename;
-		console.log("url : " + url);
-		console.log("name : " + name);
 	
 		$('[name=imgUrl]').val(url);
 	
@@ -261,7 +245,6 @@ $("input[type=file]").change(function(e){
 //체크박스 전체 선택
 $(".checkbox-group").on("click", "#checkAll", ((e)=>{
 	let checked = $(e.target).is(":checked");
-	console.log("전체 선택 : " + checked);
 	
 	if(checked){
 		$(e.target).parents(".checkbox-group").find("input:checkbox").prop("checked", true);
@@ -269,28 +252,26 @@ $(".checkbox-group").on("click", "#checkAll", ((e)=>{
 		$(e.target).parents(".checkbox-group").find("input:checkbox").prop("checked", false);
 	}
 }));
+
 //체크박스 개별 선택
 $(document).on("click", ".member-is-checked", function(){
 	let isChecked = true;
-	console.log("개별 선택 : " + isChecked);
 	
 	$(".member-is-checked").each((i, item)=>{
 		isChecked = isChecked && $(item).is(":checked");
-		console.log("i : " + i);
-		//console.log(item);
-		console.log($(item).is(":checked"));
 	});
 	
 	$("#checkAll").prop("checked", isChecked);	
 });
+
 //선택삭제
 $(document).on("click", "#staffListDeleteBtn", function(){
 	let isChecked = false;
 	
 	$(".member-is-checked").each((i, item)=>{
 		isChecked = isChecked || $(item).is(":checked");
-		let target = $(item).data("target");
-		console.log("target = ", target); // target = memberNo
+		// target = memberNo
+		let target = $(item).data("target"); 
 		
 		if($(item).is(":checked")){
 			$(item).after(`<input type="hidden" name="staffNo" value="\${target}"/>`);
@@ -299,31 +280,24 @@ $(document).on("click", "#staffListDeleteBtn", function(){
 	
 	var mode = "delete";
 	$('[name=mode]').val(mode);
-	console.log("mode = " + mode);
 	
 	if(!isChecked){
 		alert("선택된 목록이 없습니다.");
 		return;
 	}
 	
-	console.log("클릭");
-	console.log($(document.form_list));
 	if(confirm("해당 자료를 정말 삭제하시겠습니까?"))
 		$(document.form_list).submit();
 });
+
 //타입별 검색
 $(document).ready(function(){
 	// Enter Event
 	$("#keyword").keydown(function(keyNum){
-		
 		var keyword = $('input[name=keyword]').val(); // 검색어
 		var type = $('select[name=type]').val(); // 검색 타입
 	
 		if(keyNum.keyCode == 13){
-			console.log("Enter Event! - 타입별 검색");
-			console.log("keyword = " + keyword);
-			console.log("type = " + type);
-			
 			const search = {
 				"type" : type,
 				"keyword" : keyword
@@ -331,7 +305,7 @@ $(document).ready(function(){
 			
 			$.ajax({
 				type : "GET",
-				url : `${pageContext.request.contextPath}/setting/staffTypeSearch.do`,
+				url : `${pageContext.request.contextPath}/admin/setting/staffTypeSearch.do`,
 				data : search,
 				contentType: "application/json; charset=utf-8",
 				success(data){
@@ -349,7 +323,7 @@ $(document).ready(function(){
 		                        <td>\${v.staffPosition}</td>
 		                        <td style="width:140px;">\${v.regDate}</td>
 		                        <td><input type="radio" name="order_code" value="\${v.staffNo}"/></td>
-		                        <td style="width:80px;"><button type="button" value="\${v.staffNo}" class="btn btn-primary btn-xs">상세보기</button></td>
+		                        <td style="width:80px;"><button type="button" value="\${v.staffNo}" class="btn btn-primary btn-xs detailBtn">상세보기</button></td>
 		                    </tr>
 								`);
 					});
@@ -361,11 +335,10 @@ $(document).ready(function(){
 		}
 	});
 });
+
 // 상세보기
 $(document).on("click", ".detailBtn", function(e){
-	console.log("해당 no = " + $(e.target).val());
 	var staffNo = $(e.target).val();
-	console.log("staffNo = " + staffNo);
 	$("#btnRegister").hide();
 	$("#btnUpdate").show();
 	$("#display_file").show();
@@ -376,19 +349,18 @@ $(document).on("click", ".detailBtn", function(e){
 	};
 	
 	$.ajax({
-		url : `${pageContext.request.contextPath}/setting/staffDetail.do/\${staffNo}`,
+		url : `${pageContext.request.contextPath}/admin/setting/staffDetail.do/\${staffNo}`,
 		data : data,
 		contentType : "application/json; charset=utf-8",
 		method : "GET",
 		success : function(res) {
-			console.log("ajaxData = " + JSON.stringify(res));
 			var staff = res.staff;
 			
 			$("[name=staffName]").val(staff.staffName);
 			$("[name=staffPosition]").val(staff.staffPosition);
 			$("[name=staffCareer]").val(staff.staffCareer);
 			$("[name=staffProfile]").val(staff.staffProfile);
-			//$("[name=imgUrl]").val(staff.imgUrl);
+			$("[name=imgUrl]").val(staff.imgUrl);
 			$("[name=staffNo]").val(staff.staffNo);
 			$('#windowBtn').attr('onclick', 'openWindow('+ staff.staffNo +');');
 			$('#deleteBtn').attr('onclick', 'deleteImg(' + staff.staffNo +');');
@@ -402,20 +374,22 @@ $(document).on("click", ".detailBtn", function(e){
 		error : console.log
 	});
 });
+
 // 이미지 팝업
 function openWindow(staffNo){
 	var win;
-	win = window.open('${pageContext.request.contextPath}/setting/imgView?staffNo='+staffNo, 'imgView', 'scrollbars=no, width=10, height=10, status=no, resizable=no');
+	win = window.open('${pageContext.request.contextPath}/admin/setting/imgView?staffNo='+staffNo, 'imgView', 'scrollbars=no, width=10, height=10, status=no, resizable=no');
 }
+
 // 이미지 사이즈 조정
 function resizeWindow(win) {
 	var wid = win.document.body.offsetWidth + 30;
 	var hei = win.document.body.offsetHeight + 40;        //30 과 40은 넉넉하게 하려는 임의의 값임
 	win.resizeTo(wid,hei);
 }
+
 // 이미지 삭제
 function deleteImg(staffNo){
-	console.log("staffNo = " + staffNo);
 	var result = confirm("정말 삭제하시겠습니까?");
 	if(result){
 		
@@ -424,7 +398,7 @@ function deleteImg(staffNo){
 		}
 		
 		$.ajax({
-			url : `${pageContext.request.contextPath}/setting/deleteImg.do/\${staffNo}`,
+			url : `${pageContext.request.contextPath}/admin/setting/deleteImg.do/\${staffNo}`,
 			data : data,
 			contentType : "application/json; charset=utf-8",
 			method : "POST",
@@ -432,7 +406,6 @@ function deleteImg(staffNo){
 	            "${_csrf.headerName}" : "${_csrf.token}"
 	        },
 			success(data){
-				console.log(data);
 				alert("해당 파일이 삭제되었습니다.");
 				location.reload();
 			},
@@ -442,9 +415,9 @@ function deleteImg(staffNo){
 	}
 		
 }
+
 // 상세보기 - 확인(수정)
 function update(){
-	console.log("상세보기 - 확인");
 	var staffName = $("#staffName").val();
 	var staffPosition = $("#staffPosition").val();
 	var staffCareer = $("#staffCareer").val();
@@ -480,19 +453,15 @@ function update(){
 	$(document.staffEnrollFrm).submit();
 }
 
-
-
 // 게시물 순서 변경
 function change(direction, form_name){
-	console.log("direction = " + direction);
 	var direction = direction;
+	
 	if(!form_name)
 		form_name = 'form_list';
 	
 	var f = eval(form_name);
-	console.log("f = " + f);
 	var chkRadio = f.order_code;
-	console.log("chkRadio = " + chkRadio);
 	
 	if (!chkRadio) {
 		alert('항목이 없습니다.');
@@ -500,16 +469,12 @@ function change(direction, form_name){
 	}
 	
 	var chkLen = chkRadio.length;
-	console.log("chkLen = " + chkLen);
 	if (chkLen == undefined) {
 		alert('2개 이상의 항목이 있어야만 위치 변경이 가능합니다.');
 		return false;
 	}
 	
 	var staffNo = $('input[name=order_code]:checked').val();
-	console.log("staffNo = " + staffNo);
-	
-	
 	
 	const result = {
 		direction : direction,
@@ -520,7 +485,7 @@ function change(direction, form_name){
 	
 	if(staffNo != undefined){
 		$.ajax({
-			url : `${pageContext.request.contextPath}/setting/changeOrder.do`,
+			url : `${pageContext.request.contextPath}/admin/setting/changeOrder.do`,
 			data : data,
 			contentType : "application/json; charset=utf-8",
 			method : "POST",
@@ -528,8 +493,6 @@ function change(direction, form_name){
 	            "${_csrf.headerName}" : "${_csrf.token}"
 	        },
 			success(data){
-	        	console.log("ajaxData = " + JSON.stringify(data));
-	        	
 	        	$("#tbody").html('');
 				
 				$.each(data.staffList, (k, v) => {
@@ -546,8 +509,17 @@ function change(direction, form_name){
 		                    </tr>
 							`);
 				});
+				
+				$("input:radio[name='order_code']:radio[value='" + data.staffNo + "']").prop("checked", true);
+				
+				if(data.changeOrderUpBan == "ban"){ 
+					alert("더이상 상위로 위치 변경은 불가능합니다.");
+				} else if(data.changeOrderDownBan == "ban"){
+					alert("더이상 하위로의 위치 변경은 불가능합니다.");
+				}
+				
 			},
-			error : console.log
+			error : console.log 
 		});
 	} else {
 		alert("1개의 항목을 선택하여야 합니다.");
@@ -555,9 +527,5 @@ function change(direction, form_name){
 	}
 }
 
-
 </script>
-
-
-
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

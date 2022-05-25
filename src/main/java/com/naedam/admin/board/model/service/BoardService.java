@@ -45,13 +45,19 @@ public interface BoardService {
 	public List<BoardComment> getCommentList(int postNo) throws Exception;
 	
 	//게시판 등록 글 수
+	public int getTotalCount2(Map<String, Object> map)throws Exception;
+	
+	//게시판 등록 글 수
 	public int getTotalCount3(int boardNo) throws Exception;
 	
 	//hearder의 게시판 제목
 	public List<Board> getBoardTitle() throws Exception;
 	
 	//게시글 목록
-	public Map<String, Object> getPostList(Map<String, Object> map) throws Exception;
+	public Map<String, Object> getPostList(Map<String, Object> map, int offset, int limit) throws Exception;
+	
+	//대쉬보드 게시글 목록
+	public Map<String, Object> getPostList2(Map<String, Object> map) throws Exception;
 	
 	//게시판의 데이터
 	public Board getBoardData(int boardNo) throws Exception;

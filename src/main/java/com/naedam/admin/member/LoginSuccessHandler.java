@@ -19,6 +19,7 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Service;
 
+import com.naedam.admin.common.Mir9Utils;
 import com.naedam.admin.member.model.vo.Member;
 import com.naedam.admin.security.model.service.SecurityService;
 
@@ -27,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-	
 	
 	@Autowired
 	private SecurityService securityService;
@@ -38,12 +38,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	 * Authentication 객체 : 인증에 성공한 사용자의 정보를 가지고 있는 객체
 	 */
 	@Override
-	public void onAuthenticationSuccess(
-			HttpServletRequest request, 
-			HttpServletResponse response, 
-			Authentication authentication
-			) throws IOException, ServletException {	
-		
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {	
 		List<String> grade = new ArrayList();
 		
 		// 사용자가 가진 모든 권한을 문자열로 체크한다.
@@ -73,7 +68,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		paramHistory.put("accessHistoryName", principal.getLastName() + principal.getFirstName());
 		paramHistory.put("accessHistoryStatus", "login");
 		paramHistory.put("loginDate", param.get("loginDate"));
-		String ip = request.getRemoteAddr();
+		//String ip = request.getRemoteAddr();
+		String ip = Mir9Utils.getClientIP(request);
 		log.debug("ip = {}", ip);
 		paramHistory.put("accessHistoryIp", ip);
 		

@@ -40,10 +40,15 @@ import com.naedam.admin.board.model.vo.BoardOption;
 import com.naedam.admin.board.model.vo.Page;
 import com.naedam.admin.board.model.vo.Post;
 import com.naedam.admin.board.model.vo.Search;
+import com.naedam.admin.common.Mir9Utils;
+import com.naedam.admin.member.controller.MemberController;
 import com.naedam.admin.member.model.vo.Member;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/admin/board/*")
+@Slf4j
 public class BoardController {
 	
 	@Autowired
@@ -328,29 +333,34 @@ public class BoardController {
 	}
 	
 	@RequestMapping( value="postList")
-	public String listPost(Board board, Model model, @ModelAttribute("search") Search search) throws Exception {
+	public String listPost(Model model, HttpServletRequest request ,
+						   @RequestParam("boardNo") int boardNo, 
+						   @RequestParam(defaultValue = "1") int cPage,
+						   @ModelAttribute("search") Search search) throws Exception {
 		
 		System.out.println("/listPost 시작");
+		System.out.println("Search 확인 === "+search);
 		
-		Post post = new Post();
-		Member member = new Member();
+		int limit = 5;
+		int offset = (cPage - 1) * limit;
 		
-		Board board2 = boardService.getBoardAllData(board.getBoardNo());
+		System.out.println("이이거 확인 === "+limit);
+		System.out.println("이이거 확인 === "+offset);
 		
+		Board board2 = boardService.getBoardAllData(boardNo);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("search", search);
-		map.put("board", board);
-		
-		Map<String, Object> resultMap = boardService.getPostList(map);
-		
-		Page resultPage = new Page( search.getCurrentPage(), ((Integer)resultMap.get("totalCount")).intValue(), pageUnit, pageSize);
-				
-		
+		map.put("boardNo", boardNo);
+		Map<String, Object> resultMap = boardService.getPostList(map, offset, limit);
+		int totalPostListCount = Integer.parseInt(resultMap.get("totalCount").toString());
+		// pagebar
+		String url = request.getRequestURI();
+		String pagebar = Mir9Utils.getPagebar(cPage, limit, totalPostListCount, url);
+		model.addAttribute("pagebar", pagebar);		
 		model.addAttribute("list", resultMap.get("list")); 
-		model.addAttribute("board", board);
+		model.addAttribute("boardNo", boardNo);
 		model.addAttribute("board2", board2);
-		model.addAttribute("resultPage", resultPage);
-		
+		model.addAttribute("pageCount",totalPostListCount);
 		return "admin/board/postList";
 	}
 	

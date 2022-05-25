@@ -81,9 +81,9 @@ public class BoardRestController {
 		Search search = new Search();
 		board.setBoardNo(boardNo);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("board", board);
+		map.put("boardNo", boardNo);
 		map.put("search", search);
-		Map<String, Object> resultMap = boardService.getPostList(map);
+		Map<String, Object> resultMap = boardService.getPostList2(map);
 		
 		return resultMap;
 	}	

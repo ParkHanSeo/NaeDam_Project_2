@@ -75,12 +75,20 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public Map<String, Object> getPostList(Map<String, Object> map) throws Exception {
+	public Map<String, Object> getPostList(Map<String, Object> map, int offset, int limit) throws Exception {
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("list", boardDao.getPostList(map));
+		resultMap.put("list", boardDao.getPostList(map, offset, limit));
 		resultMap.put("totalCount", boardDao.getTotalCount2(map));
 				
+		return resultMap;
+	}
+	
+	@Override
+	public Map<String, Object> getPostList2(Map<String, Object> map) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("list", boardDao.getPostList2(map));
+		resultMap.put("totalCount", boardDao.getTotalCount2(map));
 		return resultMap;
 	}
 	
@@ -186,49 +194,15 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public int getTotalCount2(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
 	public int getTotalCount3(int boardNo) throws Exception {
 		return boardDao.getTotalCount3(boardNo);
 	}
-
-	
-
-
-
-	
-
-	
-
-	
-	
-
-	
-
-	
-
-
-
-
-
-	
-
-
-
-
-
-	
-
-	
-
-
-
-
-
-
-	
-
-
-
-
 
 
 }

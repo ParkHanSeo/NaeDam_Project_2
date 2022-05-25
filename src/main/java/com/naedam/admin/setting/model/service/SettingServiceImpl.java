@@ -286,9 +286,9 @@ public class SettingServiceImpl implements SettingService {
 		return settingDao.insertStaff(staff);
 	}
 
-	@Override
-	public List<Staff> selectStaffList() {
-		return settingDao.selectStaffList();
+	@Override 
+	public List<Staff> selectStaffList() { 
+		return settingDao.selectStaffList(); 
 	}
 
 	@Override
@@ -331,10 +331,6 @@ public class SettingServiceImpl implements SettingService {
 		return settingDao.updateStaff(staff);
 	}
 
-
-	
-
-
 	@Override
 	public Staff selectMaxOrder() {
 		return settingDao.selectMaxOrder();
@@ -370,11 +366,10 @@ public class SettingServiceImpl implements SettingService {
 		return settingDao.updateChangeOrderDownNext(paramStaff);
 	}
 
-
-
-
-
-
+	@Override
+	public int updateChangeOrderUpNext(int input_row_order) {
+		return settingDao.updateChangeOrderUpNext(input_row_order);
+	}
 
 	
 }

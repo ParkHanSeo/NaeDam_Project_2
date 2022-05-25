@@ -244,7 +244,7 @@
             <div class="modal-footer">
             <button type="button" onclick="fncAddPost()" class="btn btn-primary">확인</button>&nbsp;&nbsp;&nbsp;
             </div>
-            <input type="hidden" value="${board.boardNo}" name="boardNo">
+            <input type="hidden" value="${boardNo}" name="boardNo">
         </form></div>
     </div>
 </div>

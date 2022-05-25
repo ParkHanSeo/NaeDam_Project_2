@@ -167,12 +167,12 @@
 	            <input type="hidden" name="locale" value="ko">
 	            <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	                <h4 class="modal-title">헤더 등록</h4>
+	                <h4 class="modal-title">헤더 수정</h4>
 	            </div>
 	            <div class="modal-body">
 	            <div class="row">
 	                <div class="col-xs-4">
-	                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 헤더 등록</p></h4>
+	                <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 헤더 수정</p></h4>
 	                </div>
 	
 	                <div class="col-xs-8">
@@ -403,7 +403,7 @@
 			$("input[class='headNo']:checked").each(function(){
 				headArr.push($(this).val());
  			});
-			if(menuArr.length == 0){
+			if(headArr.length == 0){
 				alert("항목을 선택하셔야 합니다.");
 				return;
 			}

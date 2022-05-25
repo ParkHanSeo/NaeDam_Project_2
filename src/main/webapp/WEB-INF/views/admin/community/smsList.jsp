@@ -33,7 +33,7 @@
 	                        <form name="form_search" method="post" action="${pageContext.request.contextPath }/admin/comm/sms_list?${_csrf.parameterName}=${_csrf.token}">
 	                        <div class="has-feedback">
 	                            <span>
-	                                <input type="text" name="keyword" id="keyword" value="" class="form-control input-sm" placeholder="검색"/>
+	                                <input type="text" name="keyword" id="keyword" value="${ param.keyword == null ? '' : param.keyword }" class="form-control input-sm" placeholder="검색"/>
 	                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
 	                            </span>
 	                        </div>
@@ -42,10 +42,10 @@
 	                    <div class="box-tools pull-right" style="margin-bottom:5px;">
 	                        <div class="has-feedback">
 	                            <select name="field" class="form-control input-sm" style="float:left; width:130px;">
-	      							<option value="total">전체</option>      
-	      							<option value="receive_title">제목</option>      
-	      							<option value="receive_content">내용</option>      
-	      							<option value="receive_phone">수신번호</option>                            
+	      							<option value="total" ${param.field == 'total' ? 'selected' : ''}>전체</option>      
+	      							<option value="receive_title" ${param.field == 'receive_title' ? 'selected' : ''}>제목</option>      
+	      							<option value="receive_content" ${param.field == 'receive_content' ? 'selected' : ''}>내용</option>      
+	      							<option value="receive_phone" ${param.field == 'receive_phone' ? 'selected' : ''}>수신번호</option>                            
 	      						</select>
 	                        </div>
 	                        </form>
@@ -74,9 +74,14 @@
 							</thead>
 							<tbody>
 								<c:choose>
-									<c:when test="${ empty smsList }">
+									<c:when test="${ empty smsList and empty param.keyword }">
 										<tr>
 											<td colspan="7">발송한 sms가 없습니다.</td>
+										</tr>
+									</c:when>
+									<c:when test="${ empty smsList and !empty param.keyword }">
+										<tr>
+											<td colspan="7">검색된 sms 발송 내역이 없습니다.</td>
 										</tr>
 									</c:when>
 									<c:otherwise>
@@ -96,18 +101,9 @@
 	                    	</tbody>
 	                    </table>
 	                    <br>
-	
 						<!-- 페이징 -->
-	                    <div style="text-align:right;">
-	                        <ul class="pagination" style="margin:0;">
-								<li class="active"><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=1">1</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=2">2</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=3">3</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=4">4</a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=5">5</a></li>
-								<li class="next"><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=6">Next → </a></li>
-								<li><a href="${pageContext.request.contextPath }/admin/comm/sms_list?type=sms&arrSearch=&page=6">Last → </a></li>
-							</ul>                    
+                        <div id="pagebarContainer" style="text-align: right;">
+							${pagebar}
 						</div>
 	                </div><!-- /.box-body -->
 	            </div><!-- /.box -->

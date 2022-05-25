@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.naedam.admin.banner.model.vo.Banner;
 import com.naedam.admin.category.model.vo.Category;
+import com.naedam.admin.common.Mir9Utils;
 import com.naedam.admin.coupon.model.vo.Coupon;
 import com.naedam.admin.delivery.model.vo.DeliveryCompany;
 import com.naedam.admin.delivery.model.vo.DeliveryNotice;
@@ -142,24 +143,7 @@ public class SettingController {
 		model.addAttribute("apiKey", "D914287C-19AA-31AD-B187-1532CEF93E7F");
 	}
 
-	@GetMapping("/staff.do")
-	public void staffList(Model model) {
-		try {
-
-			// 임원 리스트 게시물
-			List<Staff> resultStaffList = settingService.selectStaffList();
-			log.debug("resultStaffList = {}", resultStaffList);
-			model.addAttribute("resultStaffList", resultStaffList);
-
-			// 전체 게시물 수
-			int totalStaffListCount = settingService.selectStaffListCount();
-			log.debug("totalStaffListCount = {}", totalStaffListCount);
-			model.addAttribute("totalStaffListCount", totalStaffListCount);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	@GetMapping("/history")
 	public void history(Model model) {
@@ -467,11 +451,25 @@ public class SettingController {
 	public void test() {
 	}
 
-	// 임원관리
+	// 임원 리스트 
+	@GetMapping("/staff.do")
+	public void staffList(@RequestParam(defaultValue = "1") int cPage, Model model) {
+		try {
+			// 임원 리스트 게시물
+			List<Staff> resultStaffList = settingService.selectStaffList();
+			model.addAttribute("resultStaffList", resultStaffList);
+			
+			// 전체 게시물 수
+			int totalStaffListCount = settingService.selectStaffListCount();
+			model.addAttribute("totalStaffListCount", totalStaffListCount);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// 임원 등록/수정
 	@PostMapping("/staff_process.do")
 	public String staffProcess(Staff staff, RedirectAttributes redirectAttribute, HttpServletRequest request) {
-
-		log.debug("staff = {}", staff);
 		int result = 0;
 		String msg = null;
 		String mode = request.getParameter("mode");
@@ -479,7 +477,6 @@ public class SettingController {
 		try {
 			if (mode.equals("insert")) {
 				int resultInsertStaff = settingService.insertStaff(staff);
-				log.debug("resultInsertStaff = {}", resultInsertStaff);
 			} else if (mode.equals("update")) {
 				int resultUpdateStaff = settingService.updateStaff(staff);
 				if (resultUpdateStaff > 0) {
@@ -492,10 +489,9 @@ public class SettingController {
 		return "redirect:/admin/setting/staff.do";
 	}
 
+	// 임원 삭제
 	@PostMapping("/staff_delete.do")
-	public String staffDelete(@RequestParam int[] staffNo, RedirectAttributes redirectAttribute,
-			HttpServletRequest request) {
-
+	public String staffDelete(@RequestParam int[] staffNo, RedirectAttributes redirectAttribute, HttpServletRequest request) {
 		int result = 0;
 		String msg = null;
 		String mode = request.getParameter("mode");
@@ -503,7 +499,6 @@ public class SettingController {
 		try {
 			if (mode.equals("delete")) {
 				int resultDeleteStaff = settingService.deleteStaff(staffNo);
-				log.debug("resultDeleteStaff = {}", resultDeleteStaff);
 				if (resultDeleteStaff > 0) {
 					msg = "삭제 되었습니다.";
 				}
@@ -517,14 +512,12 @@ public class SettingController {
 	// 임원 관리 타입별 검색
 	@ResponseBody
 	@GetMapping("/staffTypeSearch.do")
-	public Map<String, Object> staffTypeSearch(@RequestParam String type, @RequestParam String keyword,
-			HttpServletRequest request) {
-
+	public Map<String, Object> staffTypeSearch(@RequestParam String type, @RequestParam String keyword, HttpServletRequest request) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("type", type);
 		param.put("keyword", keyword);
 
-		// 임원 검색 게시물
+		// 임원 검색 게시물 리스트
 		List<Staff> searchStaffList = settingService.selectSearchStaffList(param);
 
 		// 임원 검색 게시물 수
@@ -540,13 +533,10 @@ public class SettingController {
 	// 임원관리 상세보기
 	@ResponseBody
 	@GetMapping("/staffDetail.do/{staffNo}")
-	public Map<String, Object> staffDetail(@PathVariable int staffNo, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
-
+	public Map<String, Object> staffDetail(@PathVariable int staffNo, Model model, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Staff staff = settingService.selectOneStaffByStaffNo(staffNo);
 		resultMap.put("staff", staff);
-
 		return resultMap;
 	}
 
@@ -572,8 +562,7 @@ public class SettingController {
 
 	// 임원 관리 - 이미지 삭제
 	@PostMapping("/deleteImg.do/{staffNo}")
-	public String deleteImg(@PathVariable int staffNo, RedirectAttributes redirectAttribute,
-			HttpServletRequest request) {
+	public String deleteImg(@PathVariable int staffNo, RedirectAttributes redirectAttribute, HttpServletRequest request) {
 
 		try {
 			int resultDeleteImg = settingService.deleteStaffImg(staffNo);
@@ -585,14 +574,11 @@ public class SettingController {
 		return "redirect:" + referer;
 	}
 
+	// 게시물 순서 변경
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@PostMapping("/changeOrder.do")
-	public Map<String, Object> changeOrder(@RequestBody String data,
-										   RedirectAttributes redirectAttribute) {
-		log.debug("{}", "changeOrder.do 시작");
-		log.debug("data = {}", data);
-		
+	public Map<String, Object> changeOrder(@RequestBody String data, RedirectAttributes redirectAttribute) {
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> resultMap = new HashMap<>();
 		
@@ -602,52 +588,48 @@ public class SettingController {
 			
 			Staff paramStaff = new Staff();
 			paramStaff.setStaffNo(Integer.parseInt(map.get("staffNo")));
-			
+			// ajax로 데이터를 받아온 후 radio 체크를 위해 설정
+			resultMap.put("staffNo", map.get("staffNo"));
+		
 			// 초기 row_order
 			Staff resultInputRowOrder = settingService.selectInputRowOrder(paramStaff);
-			log.debug("input_row_order = {}", resultInputRowOrder.getRowOrder());
-			log.debug("resultInputRowOrder = {}", resultInputRowOrder);
 			int input_row_order = resultInputRowOrder.getRowOrder();
+			paramStaff.setRowOrder(input_row_order);
 			
 			if (direction.equals("up")) {
 				// row_order 최대값 찾기
 				Staff resultMaxOrder = settingService.selectMaxOrder();
-				log.debug("max_row_order = {}", resultMaxOrder.getRowOrder());
 				int max_order = resultMaxOrder.getRowOrder();
 				
 				// 선택 게시물 위로 올리기 row_order + 1
 				int resultChangeOrderUp = settingService.updateChangeOrderUp(paramStaff);
-				log.debug("changed_row_order = {}", paramStaff.getRowOrder());
-				log.debug("resultChangeOrderUp = {}", resultChangeOrderUp);
 				int changed_row_order = paramStaff.getRowOrder();
 				
-				// 선택한 row_order + 1 값이 기존 row_order 최대값보다 작다면 다음행 row_order - 1 진행
-				// 선택된 row_order + 1 값이 최대값보다 커질 경우 해당 메소드 미작동
+				/*
+				 *  선택한 row_order + 1 값이 기존 row_order 최대값보다 작다면 다음행 row_order - 1 진행
+				 *  선택된 row_order + 1 값이 최대값보다 커질 경우 해당 메소드 미작동
+				 */
+				log.debug("paramStaff = {}", paramStaff);
 				if(max_order > input_row_order && max_order >= changed_row_order) {
 					// 선택 게시물 위에 있던 게시물 내리기 row_order - 1
 					int resultChangeOrderUpNext = settingService.updateChangeOrderUpNext(paramStaff);
-					log.debug("resultChangeOrderUpNext = {}", resultChangeOrderUpNext);
 					resultMap.put("changeOrderUpBan", "success");
 				} else {
 					resultMap.put("changeOrderUpBan", "ban");
 				}
 
 			} else if (direction.equals("down")) {
-				// row_order 최대값 찾기
+				// row_order 최소값 찾기
 				Staff resultMinOrder = settingService.selectMinOrder();
-				log.debug("min_row_order = {}", resultMinOrder.getRowOrder());
 				int min_order = resultMinOrder.getRowOrder();
 				
 				// 선택 게시물 아래로 내리기 row_order - 1
 				int resultChangeOrderDown = settingService.updateChangeOrderDown(paramStaff);
-				log.debug("changed_row_order = {}", paramStaff.getRowOrder());
-				log.debug("resultChangeOrderDown = {}", resultChangeOrderDown);
 				int changed_row_order = paramStaff.getRowOrder();
 				
 				if(min_order < input_row_order && changed_row_order >= min_order ) {
 					// 선택 게시물 아래에 있던 게시물 올리기 row_order + 1
 					int resultChangeOrderDownNext = settingService.updateChangeOrderDownNext(paramStaff);
-					log.debug("resultChangeOrderDownNext = {}", resultChangeOrderDownNext);
 					resultMap.put("changeOrderDownBan", "success");
 				} else {
 					resultMap.put("changeOrderDownBan", "ban");
@@ -659,8 +641,6 @@ public class SettingController {
 
 		// 임원 리스트 게시물
 		List<Staff> staffList = settingService.selectStaffList();
-		log.debug("staffList = {}", staffList);
-		
 		resultMap.put("staffList", staffList);
 
 		return resultMap;

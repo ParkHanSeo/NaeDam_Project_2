@@ -84,8 +84,33 @@
 						}
 					}			
 				}
-			})	
-		})
+			});	
+		});
+		
+		$("a[name='form']").one("click", function(){
+			$.ajax({
+				url : "/admin/form/json/formList",
+				method : "GET" ,
+				dataType : "json" ,
+				headers : {
+					"Accept" : "application/json",
+					"Content-Type" : "application/json"
+				},
+				success : function(Data, status){
+					var display = '';
+					if(Data.length > 0){
+						for(var i = 0; i < Data.length; i++){
+							display = "<li>"
+									+ "<a href=/admin/form/formPostList?formNo="+Data[i].formNo+">"
+									+ "<i class='fa fa-circle-o'></i> "+Data[i].title
+									+ "</a>"
+									+ "</li>"
+							$('#formMenu').append(display);
+						}
+					}			
+				}
+			});			
+		});
 		
 		$.ajax({
 			url : "/admin/board/json/getAdminMenu",
@@ -341,22 +366,24 @@ function logoutSubmit(){
 							<i class="fa fa-calendar"></i> <span>일정 관리</span>
 						</a>
 					</li>
-					<li class="treeview" id="formMailManage" >
-						<a href="#"> 
+					<li class="treeview" id="formManage" >
+						<a href="#" name="form"> 
 							<i class="fa fa-check-square-o"></i> <span>폼메일 관리</span> 
 							<i class="fa fa-angle-left pull-right"></i>
 						</a>
-						<ul class="treeview-menu">
+						<ul class="treeview-menu" id="formMenu">
 							<li>
-								<a href="${pageContext.request.contextPath}/admin/form/manage">
+								<a href="${pageContext.request.contextPath}/admin/form/list">
 									<i class="fa fa-circle-o"></i> 리스트
 								</a>
 							</li>
+							<!-- 폼메일 리스트 
 							<li>
-								<a href="${pageContext.request.contextPath}/admin/form/list&form_code=1">
+								<a href="${pageContext.request.contextPath}/admin/form/qna">
 									<i class="fa fa-circle-o"></i> 문의사항
 								</a>
 							</li>
+							 -->
 						</ul>
 					</li>
 					<li class="treeview" id="statisticsManage">
@@ -503,19 +530,6 @@ function logoutSubmit(){
 							</li>
 						</ul>
 					</li>
-					<li class="treeview">
-						<a href="#" name="chat"> 
-							<i class="fa fa-list-alt"></i> <span>채팅 테스트</span> 
-							<i class="fa fa-angle-left pull-right"></i>
-						</a>
-						<ul class="treeview-menu">
-							<li>
-								<a href="/admin/chat/chat">
-									<i class="fa fa-circle-o"></i> 채팅
-								</a>
-							</li>
-						</ul>
-					</li>					
 					<li>
 						<a href="${pageContext.request.contextPath}/admin/setting/version"> 
 							<i class="fa fa-exclamation-circle"></i> <span>Version</span> 

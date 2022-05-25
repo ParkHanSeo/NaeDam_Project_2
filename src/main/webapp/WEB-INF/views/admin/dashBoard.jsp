@@ -108,7 +108,7 @@ ul {
 						for(var i = 0; i <= JSONData.list.length; i++){
 							var post = JSONData.list;
 							display = '<li name="postData">'
-									+ '<a href="/mir9/board/postList?boardNo='+post[i].postBoard.boardNo+'">'+post[i].postTitle+''
+									+ '<a href="/admin/board/postList?boardNo='+post[i].postBoard.boardNo+'">'+post[i].postTitle+''
 									+ '<span class="pull-right cs-m-right20">'+post[i].postDate+'</span>'
 									+ '</a>'
 									+ '</li>';
@@ -146,7 +146,7 @@ ul {
 						for(var i = 0; i <= JSONData.list.length; i++){
 							var post = JSONData.list;
 							display = '<li name="postData">'
-									+ '<a href="/mir9/board/postList?boardNo='+post[i].postBoard.boardNo+'">'+post[i].postTitle+''
+									+ '<a href="/admin/board/postList?boardNo='+post[i].postBoard.boardNo+'">'+post[i].postTitle+''
 									+ '<span class="pull-right cs-m-right20">'+post[i].postDate+'</span>'
 									+ '</a>'
 									+ '</li>';
@@ -600,7 +600,7 @@ ul {
 						<i class="fa fa-credit-card"></i>
 					</div>
 					<a class="small-box-footer"
-						href="/mir9/setting/paymentpg">신청하기 <i
+						href="/admin/setting/paymentpg">신청하기 <i
 						class="fa fa-arrow-circle-right"></i></a>
 				</div>
 
@@ -633,7 +633,7 @@ ul {
 							</c:if>							
 						</c:forEach>
 						<li class="pull-right">
-							<a class="text-muted" href="/mir9/board/listBoard">더보기 
+							<a class="text-muted" href="/admin/board/listBoard">더보기 
 								<i class="fa fa-arrow-circle-right"></i>
 							</a>
 						</li>

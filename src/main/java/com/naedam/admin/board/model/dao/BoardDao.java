@@ -45,7 +45,10 @@ public interface BoardDao {
 	public int getTotalCount(Map <String, Object> map) throws Exception;
 	
 	//게시글 목록
-	public List<Post> getPostList(Map<String, Object> map) throws Exception;
+	public List<Post> getPostList(Map<String, Object> map, int offset, int limit) throws Exception;
+	
+	//데쉬보드 목록
+	public List<Post> getPostList2(Map<String, Object> map) throws Exception;
 	
 	//게시글의 파일 데이터
 	public List<BoardFile> getPostFile(int postNo) throws Exception;

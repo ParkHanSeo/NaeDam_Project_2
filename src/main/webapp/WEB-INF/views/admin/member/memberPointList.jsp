@@ -29,7 +29,7 @@
 			<div class="box">
 				<div class="box-body">
 					<label style="margin-top: 5px;">총 ${mPointList.size() } 건</label>
-					<form name="form_search" method="post" action="${pageContext.request.contextPath }/admin/member/point?${_csrf.parameterName}=${_csrf.token}">
+					<form name="form_search" method="post">
 						<div class="box-tools pull-right" style="margin-bottom: 5px;">
 							<div class="has-feedback">
 								<span> 
@@ -41,9 +41,9 @@
 						<div class="box-tools pull-right" style="margin-bottom: 5px;">
 							<div class="has-feedback">
 								<select name="field" id="field" class="form-control input-sm">
-									<option value="b.id" ${param.field == 'b.id' ? 'selected' : ''}>아이디</option>
-									<option value="member_name" ${param.field == 'member_name' ? 'selected' : ''}>이름</option>
-									<option value="a.point_title" ${param.field == 'a.point_title' ? 'selected' : ''}>사용내역</option>
+									<option value="id" ${param.field == 'id' ? 'selected' : ''}>아이디</option>
+									<option value="CONCAT(last_name, first_name)" ${param.field == 'CONCAT(last_name, first_name)' ? 'selected' : ''}>이름</option>
+									<option value="point_title" ${param.field == 'point_title' ? 'selected' : ''}>사용내역</option>
 								</select>
 							</div>
 						</div>
@@ -62,24 +62,38 @@
 									<td>적립금 사용내역</td>
 									<td style="width: 100px;">사용 적립금</td>
 									<td style="width: 140px;">일시</td>
-									<!-- <td style="width:60px;">명령</td>                 -->
+									<!-- <td style="width:60px;">명령</td> -->
 								</tr>
 							</thead>
-							
-							<c:forEach var="mPoint" items="${mPointList }" varStatus="vs">
-								<tr>
-									<td><input type="checkbox" name="list[]" value="${mPoint.memberPointNo }" /></td>
-									<td>${mPointList.size() - vs.index }</td>
-									<td>${mPoint.id }</td>
-									<td>${mPoint.memberName }</td>
-									<td>${mPoint.email }</td>
-									<td>${mPoint.pointTitle }</td>
-									<td><fmt:formatNumber value="${mPoint.pointAmount }" pattern="#,###" /></td>
-									<td><fmt:formatDate pattern = "yyyy-MM-dd HH:mm" value="${mPoint.regDate}"/></td>
-									<!-- <td><button type="button" onclick="viewDetail()" class="btn btn-primary btn-xs">상세보기</button></td> -->
-								</tr>
-							</c:forEach>
-							
+							<tbody>
+								<c:choose>
+									<c:when test="${empty mPointList and empty param.keyword}">
+										<tr>
+											<td colspan="8">조회 결과가 없습니다.</td> 
+										</tr>
+									</c:when>
+									<c:when test="${empty mPointList and !empty param.keyword}">
+										<tr>
+											<td colspan="8">검색된 적립금 내역이 없습니다.</td> 
+										</tr>
+									</c:when>
+									<c:otherwise>
+										<c:forEach var="mPoint" items="${mPointList }" varStatus="vs">
+											<tr>
+												<td><input type="checkbox" name="list[]" value="${mPoint.memberPointNo }" /></td>
+												<td>${mPointList.size() - vs.index }</td>
+												<td>${mPoint.id }</td>
+												<td>${mPoint.memberName }</td>
+												<td>${mPoint.email }</td>
+												<td>${mPoint.pointTitle }</td>
+												<td><fmt:formatNumber value="${mPoint.pointAmount }" pattern="#,###" /></td>
+												<td><fmt:formatDate pattern = "yyyy-MM-dd HH:mm" value="${mPoint.regDate}"/></td>
+												<!-- <td><button type="button" onclick="viewDetail()" class="btn btn-primary btn-xs">상세보기</button></td> -->
+											</tr>
+										</c:forEach>
+									</c:otherwise>
+								</c:choose>
+							</tbody>
 						</table>
 					</form>
 					<br>
@@ -88,7 +102,7 @@
 					<button type="button" onclick="downloadExcel();" class="btn btn-warning">
 						<i class="fa" aria-hidden="true"></i> Excel 다운로드
 					</button>
-					<button type="button" onclick="location.replace('${pageContext.request.contextPath}/admin/member/list')" class="btn btn-primary" style="float: right">
+					<button type="button" onclick="location.replace('${pageContext.request.contextPath}/admin/member/list.do')" class="btn btn-primary" style="margin-left: 20px;">
 						<i class="fa fa-minus-square" aria-hidden="true"></i> 회원 리스트 이동
 					</button>
 					<form name="form_download" method="post" action="${pageContext.request.contextPath }/excel/download.do?${_csrf.parameterName}=${_csrf.token}">
@@ -97,10 +111,9 @@
 						<input type="hidden" name="search_data" value=""> 
 						<input type="hidden" name="search_type" value="">
 					</form>
-					<div style="text-align: right; margin-top: 20px;">
-						<ul class="pagination" style="margin: 0;">
-							<li class="active"><a href="?tpf=admin/member/point&page=1">1</a></li>
-						</ul>
+					<!-- 페이징 -->
+                    <div id="pagebarContainer" style="text-align: right;">
+                        ${pagebar}
 					</div>
 				</div>
 			</div>
@@ -111,9 +124,22 @@
 <!-- /.content-wrapper -->
 
 <script>
+$(function(){
+	var path = document.location.pathname;
+	var str = path.substring(path.lastIndexOf("/") + 1);
+	
+	if(str == "point") {
+		$("form[name='form_search']").attr("action", "${pageContext.request.contextPath }/admin/member/point?${_csrf.parameterName}=${_csrf.token}");
+	}
+	else {
+		$("form[name='form_search']").attr("action", "${pageContext.request.contextPath }/admin/member/memberPointList/" + str + "?${_csrf.parameterName}=${_csrf.token}");
+		$("input[name='search_type']").val(str); // 해당 멤버 번호
+	}
+});
+
 function downloadExcel() {  // Excel 다운로드
     form_download.target = 'iframe_process';
-    form_download.search_data.value = $('#form_search :input').serialize();
+    form_download.search_data.value = $('#form_search').serialize();
     form_download.submit();
 }
 

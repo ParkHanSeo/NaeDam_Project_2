@@ -23,7 +23,7 @@ public class CommunityDaoImpl implements CommunityDao {
 
 	// 리뷰 조회 + 검색
 	@Override
-	public List<Review> reviewList(Map<Object, String> param) {
+	public List<Review> reviewList(Map<Object, Object> param) {
 		return session.selectList("review.reviewList", param);
 	}
 	
@@ -122,4 +122,29 @@ public class CommunityDaoImpl implements CommunityDao {
 	public List<Email> selectEmailList(HashMap<String, Object> param) {
 		return session.selectList("email.selectEmailList", param);
 	}
+
+	// sms 이용 요금 조회
+	@Override
+	public int countBySendPhone(String phone) {
+		return session.selectOne("sms.countBySendPhone", phone);
+	}
+	
+	// review 전체 목록 개수
+	@Override
+	public int totalReviewCount(Map<Object, Object> param) {
+		return session.selectOne("review.totalReviewCount", param);
+	}
+
+	// sms 전체 목록 개수
+	@Override
+	public int totalSmsCount(HashMap<String, Object> param) {
+		return session.selectOne("sms.totalSmsCount", param);
+	}
+
+	// email 전체 목록 개수
+	@Override
+	public int totalEmailCount(HashMap<String, Object> param) {
+		return session.selectOne("email.totalEmailCount", param);
+	}
+	
 }

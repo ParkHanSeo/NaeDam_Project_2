@@ -504,7 +504,7 @@
             	<button type="button" onclick="funReply()" name="display_reply" style="" class="btn btn-danger">답변 페이지로 전환</button>
             </c:if>
             </div>
-            <input type="hidden" value="${board.boardNo}" name="boardNo">
+            <input type="hidden" value="${boardNo}" name="boardNo">
         </form></div>
     </div>
 </div>

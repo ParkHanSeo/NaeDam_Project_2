@@ -16,7 +16,7 @@ public interface PointDao {
 
 	int updatePointUse(PointUse pointUse);
 
-	List<MemberPointExcelForm> selectMemberPointExcelForm();
+	List<MemberPointExcelForm> selectMemberPointExcelForm(String memberId);
 
 	int insertMemberPoint(MemberPoint memberPoint);
 

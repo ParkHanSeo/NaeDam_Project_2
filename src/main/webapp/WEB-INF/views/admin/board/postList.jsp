@@ -130,7 +130,13 @@
 		})
 		
 	}
+	
+	const paging = (cPage) => {
+		$("input[name='cPage']").val(cPage)
+		$("form[name='searchForm']").attr("method" , "POST").attr("action" , "/admin/board/postList?${_csrf.parameterName}=${_csrf.token}").submit();
+	}
 
+	
 </script>
 
 <script src="${pageContext.request.contextPath}/resources/ckeditor_4.18.0_0efc8d0dbe1a/ckeditor/ckeditor.js"></script>
@@ -155,19 +161,21 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-body">
-                    <label style="margin-top:5px;">총 ${resultPage.totalCount} 건</label>
-                    
-                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                    <label style="margin-top:5px;">총 ${pageCount} 건</label>
                     <form name="searchForm" method="post" action="/admin/board/postList?${_csrf.parameterName}=${_csrf.token}">
-                    	<input type="hidden" name="boardNo" value="${board.boardNo}">
-                        <div class="has-feedback">
-                        <span>
-                        <input type="text" name="searchKeyword" id="searchKeyword" class="form-control input-sm" placeholder="검색"/>
-                        <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                        </span>
-                        </div>
+                    <div class="box-tools pull-right" style="margin-bottom:5px;">
+                    	
+	                    	<input type="hidden" name="boardNo" value="${boardNo}">
+	                    	<input type="hidden" name="cPage">
+	                        <div class="has-feedback">
+		                        <span>
+		                      	  <input type="text" name="searchKeyword" id="searchKeyword" class="form-control input-sm" placeholder="검색" value="${search.searchKeyword}"/>
+		                      	  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+		                        </span>
+	                        </div>
+                        
                     </div>
-
+					
                     <div class="box-tools pull-right" style="margin-bottom:5px;">
                         <div class="has-feedback">
                         <select name="searchType" class="form-control input-sm" style="float:left; width:130px;">
@@ -175,8 +183,9 @@
       						<option value="2">작성자</option>                        
       					</select>
                         </div>
-                    </form>
+                    
                     </div>
+                    </form>
                     <table class="table table-bordered table-hover">
                     <form name="form_list" method="post">
                     <thead>
@@ -311,8 +320,9 @@
                     <button type="button" onclick="fncBoardTitle2()" class="btn btn-warning btn-sm"><i class="fa fa-random"></i> 게시물 복사</button>
                     <button type="button" onclick="fncBoardTitle()" class="btn btn-warning btn-sm"><i class="fa fa-random"></i> 게시물 이전</button>
 
-                    <div style="text-align:right;">
-                                            </div>
+					<div style="text-align: right;">
+						${pagebar}
+					</div>
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
         </div><!-- /.col-xs-12 -->

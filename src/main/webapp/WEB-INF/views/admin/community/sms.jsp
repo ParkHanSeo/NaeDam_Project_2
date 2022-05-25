@@ -8,6 +8,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!-- content-wrapper -->
 <div class="content-wrapper">
 <style>
@@ -61,22 +62,10 @@ textarea {
 			                <table class="table table-bordered">
 				                <tbody>
 					                <tr>
-					                    <td class="menu">SMS 잔여 포인트</td>
+					                    <td class="menu">SMS 이용 요금</td>
 					                    <td align="left">
-					                    	<span style="float:left;">
-						                    	<c:choose>
-							                    	<c:when test="">
-								                    	발신번호가 등록된 사용자가 아닙니다.
-							                    	</c:when>
-							                    	<c:otherwise>
-							                    		<!-- 로그인한 사용자의 발신번호와  DB에 저장된 발신번호가 일치할 때 -->
-							                    	</c:otherwise>
-						                    	</c:choose>
-					                    	</span>
-					                    	<br> 
-					                    	<span style="line-height:1.0;">
-					                    		<small class="text-red">※ 발신번호 등록(관리자 > 설정 > 기본설정 > 발신자 번호)을 사전에 하여야 발송이 가능합니다. (발신번호를 미르나인 담당자에게 알려주기 바랍니다.)</small>
-					                    	</span>
+					                    	<input type="hidden" name="secName" value="<sec:authentication property='principal.username'/>">
+					                    	<span name="charge" style="float:left;"></span>
 					                    </td>
 					                </tr>
 								</tbody>
@@ -446,8 +435,30 @@ textarea {
 
 <script>
 
-	// 저장된 양식 조회
+	// 이용 요금 및 저장된 양식 조회
 	$(function(){
+		// 로그인 정보 보내기
+		var secName = $("input[name='secName']").val();
+		console.log(secName);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath }/admin/comm/charge",
+			method : "POST",
+			headers: {
+				"${_csrf.headerName}" : "${_csrf.token}"
+			},
+			data: { id : secName },
+			success: function(result) {
+				if(result > 0) {
+					$("span[name='charge']").html((result * 9.9) + "원 (총 " + result + "건 발송)");
+				}
+				else {
+					var str = "발신번호가 등록된 사용자가 아닙니다.<br><small class='text-red'>※ 발신번호 등록(관리자 > 설정 > 기본설정 > 발신자 번호)을 사전에 하여야 발송이 가능합니다.</small>";
+					$("span[name='charge']").html(str);
+				}
+			}
+		});		
+		
 		// savedTemplateId, savedContent, textarea 선언
 		var savedTemplateId = [];
 		var savedContent = [];
