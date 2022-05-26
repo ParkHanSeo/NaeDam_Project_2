@@ -233,6 +233,16 @@ public class BoardDaoImpl implements BoardDao {
 		return sqlSession.update("board.updatePostReply", post);
 	}
 
+	//down순서변경
+	public void updateDownAsc(Map<String, Object> map) throws Exception {
+		sqlSession.update("board.updateDownAsc", map);
+	}
+
+	//up순서변경
+	public void updateUpAsc(Map<String, Object> map) throws Exception {
+		sqlSession.update("board.updateUpAsc", map);
+	}
+
 	
 }
 

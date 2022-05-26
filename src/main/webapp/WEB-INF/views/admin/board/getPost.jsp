@@ -35,8 +35,7 @@
 	            // Specify what files to browse for
 	        },	        
 	        init : {
-	        	FileUploaded: function(up, file, result) {	               
-	               console.log(file.name)	               
+	        	FileUploaded: function(up, file, result) {	               	               
 	               var fileName = '<input type="hidden" name="postName" id="postName" value="'+file.name+'" class="form-control input-sm" style="width:100%; display:inline; margin-bottom:10px;">'
 	               $("span[id='file_list']").append(fileName)	               
 	               up.start();
@@ -87,6 +86,7 @@
 	}
 	
 	function funReply2(){	
+		alert("답변 등록이 완료되었습니다.")
 		$("form[name='getPostForm']").attr("method", "POST").attr("action", "/admin/board/addAnswerPost?${_csrf.parameterName}=${_csrf.token}").submit();
 	}
 	

@@ -102,6 +102,12 @@ public interface BoardService {
 	
 	//썸네일 삭제이지만 업데이트
 	public int updateThombnail(Post post) throws Exception;
+
+	//down순서변경
+	public void updateDownAsc(Map<String, Object> map)throws Exception;
+	
+	//up순서변경
+	public void updateUpAsc(Map<String, Object> map)throws Exception;	
 	
 	//게시글 조회수
 	public int postViewCount(Post post) throws Exception;

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -152,6 +153,7 @@ public class MemberController {
 	@ResponseBody
 	@GetMapping("/checkIdDuplicate.do")
 	public Map<String, Object> checkIdDuplicate(@RequestParam Map<String, Object> param) {
+		log.debug("{}", "checkIdDuplicate.do 실행");
 		Map<String, Object> map = new HashMap<>();
 		Member member = memberService.selectOneMemberByMap(param);
 		map.put("available", member == null);
@@ -739,98 +741,87 @@ public class MemberController {
 	}
 	
 	// 선택 회원 적립금 내역보기
-	// @RequestMapping(value="/memberPointList/{memberNo}", method= {RequestMethod.GET, RequestMethod.POST})
-	@GetMapping("/memberPointList/{memberNo}")
-	public String memberPointList(
-			@PathVariable int memberNo, 
+	@RequestMapping(value="/memberPointList/{memberNo}", method= {RequestMethod.GET, RequestMethod.POST})
+	public String selectedMemberPointList(
+			@PathVariable int memberNo,
 			@RequestParam(defaultValue="1") int cPage,
+			@RequestParam(required=false) String field,
+			@RequestParam(required=false) String keyword,
 			HttpServletRequest request,
 			Model model) {
 		
-		log.debug("memberNo = {}", memberNo);
+		int limit = 15;
+		int startRow = (cPage - 1) * limit + 1;
+		int endRow = startRow + limit -1;
 		
-		Map<String, Object> param = new HashMap<String, Object>();
+		Map<String, Object> param = new HashMap<>();
 		param.put("memberNo", memberNo);
+		param.put("field", field);
+		param.put("keyword", keyword);
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+		
+		// 전체 회원 포인트 목록 조회
 		List<MemberPoint> mPointList = memberService.selectMemberPointListByParam(param);
-		
-		model.addAttribute("mPointList",mPointList);
-		
-		return "admin/member/memberPointList";
-	}
-	
-	@PostMapping("/memberPointList/{memberNo}")
-	@SuppressWarnings("rawtypes")
-	public String memberPointList(@PathVariable int memberNo, HttpServletRequest request, Model model) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		Enumeration params = request.getParameterNames();
-		while (params.hasMoreElements()){
-		    String name = (String)params.nextElement();
-		    param.put(name, request.getParameter(name));
+		int totalPointCount = memberService.totalPointCount(param);
+		String pointAllUri = "";
+		if((field == null || field == "") 
+				&& (keyword == null || keyword == "")) {
+			pointAllUri = request.getRequestURI();
 		}
-		param.put("memberNo", memberNo);
-		List<MemberPoint> mPointList = memberService.selectMemberPointListByParam(param);
-		
-		model.addAttribute("mPointList",mPointList);
-		model.addAttribute("param",param);
-		
-		return "admin/member/memberPointList";
-	}
-	
-	// 전체 회원 적립금 관리
-	@GetMapping("/point")
-	public String memberPointList(Model model, @RequestParam(defaultValue = "0") int mNo) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("memberNo", mNo);
-		List<MemberPoint> mPointList = memberService.selectMemberPointListByParam(param);
-		
-		model.addAttribute("mPointList",mPointList);
-		
-		return "admin/member/memberPointList";
-	}
-	
-	@PostMapping("/point")
-	@SuppressWarnings("rawtypes")
-	public String memberPointList(HttpServletRequest request, Model model, @RequestParam(defaultValue = "0") int mNo) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		Enumeration params = request.getParameterNames();
-		while (params.hasMoreElements()){
-		    String name = (String)params.nextElement();
-		    param.put(name, request.getParameter(name));
+		else {
+			pointAllUri = request.getRequestURI() + "?field=" + field + "&keyword=" + keyword;
 		}
-		param.put("memberNo", mNo);
-		List<MemberPoint> mPointList = memberService.selectMemberPointListByParam(param);
-		
-		model.addAttribute("mPointList",mPointList);
+		String pagebar = Mir9Utils.getPagebar(cPage, limit, totalPointCount, pointAllUri);
+
+		model.addAttribute("mPointList", mPointList);
+		model.addAttribute("total", totalPointCount);
 		model.addAttribute("param",param);
+		model.addAttribute("pagebar", pagebar);
 		
 		return "admin/member/memberPointList";
 	}
 
-	
-	// 회원가입
-	@PostMapping("/memberEnroll.do")
-	public String memberEnroll(Member member, RedirectAttributes redirectAttr) {
-		log.debug("member = {}", member);
+	// 전체 회원 적립금 관리
+	@RequestMapping(value="/point", method= {RequestMethod.GET, RequestMethod.POST})
+	public String memberPointList(
+			@RequestParam(defaultValue="0") int mNo,
+			@RequestParam(defaultValue="1") int cPage,
+			@RequestParam(required=false) String field,
+			@RequestParam(required=false) String keyword,
+			HttpServletRequest request,
+			Model model) {
 		
-		try {
-			// 0. 비밀번호 암호화 처리
-			log.info("{}", passwordEncoder);
-			String rawPassword = member.getPassword();
-			String encryptedPassword = passwordEncoder.encode(rawPassword);
-			member.setPassword(encryptedPassword);
-			log.info("{} -> {}", rawPassword, encryptedPassword);
-			
-			// 1.업무로직
-			int result = memberService.insertMember(member);
-			
-			// 2.리다이렉트 & 사용자피드백 전달
-			redirectAttr.addFlashAttribute("msg", "회원가입 성공!");
-		} catch (Exception e) {
-			log.error("회원가입 실패", e);
-			throw e;
+		int limit = 15;
+		int startRow = (cPage - 1) * limit + 1;
+		int endRow = startRow + limit -1;
+		
+		Map<String, Object> param = new HashMap<>();
+		param.put("memberNo", mNo);
+		param.put("field", field);
+		param.put("keyword", keyword);
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+		
+		// 전체 회원 포인트 목록 조회
+		List<MemberPoint> mPointList = memberService.selectMemberPointListByParam(param);
+		int totalPointCount = memberService.totalPointCount(param);
+		String pointAllUri = "";
+		if((field == null || field == "") 
+				&& (keyword == null || keyword == "")) {
+			pointAllUri = request.getRequestURI();
 		}
+		else {
+			pointAllUri = request.getRequestURI() + "?field=" + field + "&keyword=" + keyword;
+		}
+		String pagebar = Mir9Utils.getPagebar(cPage, limit, totalPointCount, pointAllUri);
+
+		model.addAttribute("mPointList", mPointList);
+		model.addAttribute("total", totalPointCount);
+		model.addAttribute("param",param);
+		model.addAttribute("pagebar", pagebar);
 		
-		return "redirect:/";
+		return "admin/member/memberPointList";
 	}
 	
 	// 로그인 화면 요청

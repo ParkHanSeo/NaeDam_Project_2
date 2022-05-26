@@ -19,7 +19,7 @@
 
 	<section class="content" style="padding: 15px 15px 0 15px">
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-xs-12" style="height:">
 				<div class="box">
 					<div class="box-body">
 						<div class="col-xs-3" style="padding: 0 5px 0 0;">

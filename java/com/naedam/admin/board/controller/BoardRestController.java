@@ -183,8 +183,6 @@ public class BoardRestController {
 		return adminMenu;
 	}
 	
-	
-	
 	@GetMapping(value="json/downloadImg/{fileNo}")
 	public void download(HttpServletResponse response, @PathVariable("fileNo") int fileNo) throws Exception {
 		System.out.println("json/downloadImg 시작");
@@ -222,6 +220,48 @@ public class BoardRestController {
         }
 	}
 	
+	@PostMapping("json/updateUpAsc")
+	public Boolean updateUpAsc(@RequestParam("boardAsc") int boardAsc,
+							@RequestParam("boardUpAsc") int boardUpAsc,
+							@RequestParam("postNo") int postNo,
+							@RequestParam("upPostNo") int upPostNo) throws Exception{
+		System.out.println("updateUpAsc 시작");
+		Boolean result = false;
+		if(postNo != 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map.put("boardUpAsc", boardUpAsc);
+			map.put("upPostNo", postNo);
+			map2.put("boardUpAsc", boardAsc);
+			map2.put("upPostNo", upPostNo);
+			boardService.updateUpAsc(map);
+			boardService.updateUpAsc(map2);
+			result = true;
+		}
+		return result;
+	}
+	
+	@PostMapping("json/updateDownAsc")
+	public Boolean updateDownAsc(@RequestParam("boardAsc") int boardAsc,
+							@RequestParam("boardDownAsc") int boardDownAsc,
+							@RequestParam("postNo") int postNo,
+							@RequestParam("downPostNo") int downPostNo) throws Exception{
+		System.out.println("json/updateDownAsc 시작");
+		Boolean result = false;
+		if(postNo != 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map.put("boardDownAsc", boardDownAsc);
+			map.put("downPostNo", postNo);
+			map2.put("boardDownAsc", boardAsc);
+			map2.put("downPostNo", downPostNo);
+			boardService.updateDownAsc(map);
+			boardService.updateDownAsc(map2);
+			result = true;
+		}
+
+		return result;
+	}
 	
 }
 

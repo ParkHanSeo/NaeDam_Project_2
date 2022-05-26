@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>  
 
-<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
 <head>
 <title>사진보기</title>
