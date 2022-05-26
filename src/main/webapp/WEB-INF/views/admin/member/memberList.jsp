@@ -5,7 +5,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 	<jsp:param value="회원 관리" name="title" />
 </jsp:include>
@@ -125,116 +124,178 @@
 	<!-- /.row --> 
 	</section>
 
-	<!-- 회원 등록 폼 -->
-	<div class="modal fade" id="modalRegister" tabindex="-2" ; role="dialog" aria-labelledby="myModal" aria-hidden="true">
-		<div class="modal-dialog" style="width: 620px;">
+   <!-- 회원 등록 폼 -->
+   <div class="modal fade" id="modalRegister" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+      <div class="modal-dialog" style="width: 620px;">
+         <div class="modal-content">
+            <input type="hidden" id="addressNo" name="addressNo" value="" />
+            <input type="hidden" id="memberNo" name="memberNo" value="" />
+            <form name="memberInsertModalFrm" id="memberInsertModalFrm" method="POST" action="${pageContext.request.contextPath}/admin/member/memberInsertModalFrm.do">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">회원 등록</h4>
+               </div>
+               <div class="modal-body">
+                  <h4>
+                     <p class="text-light-blue">
+                        <i class="fa fa-fw fa-info-circle"></i> 회원정보
+                     </p>
+                  </h4>
+                  <table class="table table-bordered">
+                     <tr>
+                        <td class="menu">아이디</td>
+                        <td align="left"><input type="text" id="id" name="id" value="" class="form-control input-sm" style="width: 30%; float: left;" />  &nbsp;
+                           <button type="button" id="btnCheckId" name="btnCheckId" class="btn btn-sm btn-default" onclick="onclickCheckId()">아이디 중복확인</button> 4~12자로 입력하세요.</td>
+                     </tr>
+                     <tr>
+                        <td class="menu">비밀번호</td>
+                        <td align="left"><input type="password" id="password" name="password" class="form-control input-sm" style="width: 30%; float: left;" /> 대소문자와 숫자 포함 8~15자로 입력하세요</td>
+                     </tr>
+                     <tr>
+                        <td class="menu">비밀번호 확인</td>
+                        <td align="left"><input type="password" id="passwordCheck" name="passwordCheck" class="form-control input-sm" style="width: 30%;" /></td>
+                     </tr>
+                     <tr>
+                        <td class="menu">이름</td>
+                        <td align="left"><input type="text" name="firstName" id="firstName" class="form-control input-sm" style="width: 30%; float: left;" placeholder="이름" /> <input type="text" name="lastName" id="lastName" class="form-control input-sm" style="width: 30%;" placeholder="성" /></td>
+                     </tr>
+                     <tr>
+                        <td class="menu">휴대폰</td>
+                        <td align="left"><select name="mobile1" id="mobile1" class="form-control input-sm" style="width: 15%; float: left;">
+                              <option value="010">010</option>
+                              <option value="011">011</option>
+                              <option value="016">016</option>
+                              <option value="017">017</option>
+                              <option value="018">018</option>
+                              <option value="019">019</option>
+                        </select> <span style="float: left;">-</span> <input type="text" name="mobile2" id="mobile2" class="form-control input-sm" style="width: 15%; float: left;" maxlength="4" /> <span style="float: left;">-</span> <input type="text" name="mobile3" id="mobile3" class="form-control input-sm" style="width: 15%; float: left;" maxlength="4" /></td>
+                     </tr>
+                     <tr>
+                        <td class="menu">이메일</td>
+                        <td align="left"><input type="text" name="email" id="email" class="form-control input-sm" style="width: 60%;" /></td>
+                     </tr>
+                     <tr>
+                        <td class="menu">주소</td>
+                        <td align="left">
+                           <input type="text" id="address_zipcode" name="addressZipcode" readonly class="form-control input-sm" style="width: 15%; background-color: #dddddd; float: left;" /> 
+                           &nbsp;
+                           <button type="button" onclick="callAddress()" class="btn btn-sm btn-default">주소입력</button> 
+                           <br> 
+                           <input type="text" id="address_main" name="addressMain" readonly class="form-control input-sm" style="margin: 5px 0; width: 100%; background-color: #dddddd;" /> 
+                           <input type="text" id="address_sub" name="addressSub" placeholder="상세주소" class="form-control input-sm" style="width: 100%;" />
+                        </td>
+                     </tr>
+                     <tr>
+                        <td class="menu">메모</td>
+                        <td align="left"><textarea name="memberMemoContent" id="memberMemoContent" rows="4" class="form-control input-sm" style="width: 100%;"></textarea></td>
+                     </tr>
+                     <tr>
+                        <td class="menu">현재 포인트</td>
+                        <td align="left"><span id="current_point"> </span></td>
+                     </tr>
+                     <tr id="display_level">
+                        <td class="menu">등급 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                        <td>
+                           <select name="authority" id="memberGradeChk" class="form-control input-sm" style="width: 120px;">
+                              <c:forEach items="${memberGradeList}" var="memberGrade">
+                                 <option value="${memberGrade.authority}">${memberGrade.memberGradeName}</option>
+                              </c:forEach>
+                           </select>
+                        </td>
+                     </tr>
+                     <tr id="display_status">
+                        <td class="menu">상태 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+                        <td>
+                           <select name="status" id="status" class="form-control input-sm" style="width: 120px;">
+                              <option value="Y">정상</option>
+                              <option value="N">대기</option>
+                           </select>
+                        </td>
+                     </tr>
+                     <tr id="display_last_login_date">
+                        <td class="menu">최근 접속일</td>
+                        <td align="left"><span id="last_login_date"></span></td>
+                     </tr>
+                     <tr id="display_update_date">
+                        <td class="menu">수정일자</td>
+                        <td align="left"><span id="update_date"></span></td>
+                     </tr>
+                     <tr id="display_reg_date">
+                        <td class="menu">등록일자</td>
+                        <td align="left"><span id="reg_date"></span></td>
+                     </tr>
+                  </table>
+                 </div>
+               <div class="modal-footer">
+                  <button type="button" id="btnRegister" onclick="register()" class="btn btn-primary">저장</button>
+                  <button type="button" id="btnUpdate" onclick="update()" class="btn btn-primary">저장</button>
+               </div>                  
+            </form>
+         </div>
+      </div>
+   </div>
+	
+	<!-- // 적립금 지급 폼 -->
+	<div class="modal fade" id="modalPoint" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+		<div class="modal-dialog" style="width: 500px;">
 			<div class="modal-content">
+<<<<<<< HEAD
+				<form name="formPoint" method="post" onsubmit="return false;">
+					<input type="hidden" name="mode" value="point"> 
+					<input type="hidden" name="member_code">
+=======
 				<input type="hidden" id="addressNo" name="addressNo" value="" />
 				<input type="hidden" id="memberNo" name="memberNo" value="" />
-				<form:form name="memberInsertModalFrm" id="memberInsertModalFrm" method="POST" action="${pageContext.request.contextPath}/admin/member/memberInsertModalFrm.do">
+				<form name="memberInsertModalFrm" id="memberInsertModalFrm" method="POST" action="${pageContext.request.contextPath}/admin/member/memberInsertModalFrm.do">
+>>>>>>> branch 'master' of https://github.com/dawnduck07/mir9.git
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="myModalLabel">회원 등록</h4>
+						<h4 class="modal-title" id="myModalLabelPortfolio">적립금 지급</h4>
 					</div>
 					<div class="modal-body">
-						<h4>
-							<p class="text-light-blue">
-								<i class="fa fa-fw fa-info-circle"></i> 회원정보
-							</p>
-						</h4>
 						<table class="table table-bordered">
 							<tr>
-								<td class="menu">아이디</td>
-								<td align="left"><input type="text" id="id" name="id" value="" class="form-control input-sm" style="width: 30%; float: left;" />  &nbsp;
-									<button type="button" id="btnCheckId" name="btnCheckId" class="btn btn-sm btn-default" onclick="onclickCheckId()">아이디 중복확인</button> 4~12자로 입력하세요.</td>
+								<td class="menu">대상 회원</td>
+								<td align="left"><span id="sendCount"></span> 명</td>
 							</tr>
 							<tr>
-								<td class="menu">비밀번호</td>
-								<td align="left"><input type="password" id="password" name="password" class="form-control input-sm" style="width: 30%; float: left;" /> 대소문자와 숫자 포함 8~15자로 입력하세요</td>
-							</tr>
-							<tr>
-								<td class="menu">비밀번호 확인</td>
-								<td align="left"><input type="password" id="passwordCheck" name="passwordCheck" class="form-control input-sm" style="width: 30%;" /></td>
-							</tr>
-							<tr>
-								<td class="menu">이름</td>
-								<td align="left"><input type="text" name="firstName" id="firstName" class="form-control input-sm" style="width: 30%; float: left;" placeholder="이름" /> <input type="text" name="lastName" id="lastName" class="form-control input-sm" style="width: 30%;" placeholder="성" /></td>
-							</tr>
-							<tr>
-								<td class="menu">휴대폰</td>
-								<td align="left"><select name="mobile1" id="mobile1" class="form-control input-sm" style="width: 15%; float: left;">
-										<option value="010">010</option>
-										<option value="011">011</option>
-										<option value="016">016</option>
-										<option value="017">017</option>
-										<option value="018">018</option>
-										<option value="019">019</option>
-								</select> <span style="float: left;">-</span> <input type="text" name="mobile2" id="mobile2" class="form-control input-sm" style="width: 15%; float: left;" maxlength="4" /> <span style="float: left;">-</span> <input type="text" name="mobile3" id="mobile3" class="form-control input-sm" style="width: 15%; float: left;" maxlength="4" /></td>
-							</tr>
-							<tr>
-								<td class="menu">이메일</td>
-								<td align="left"><input type="text" name="email" id="email" class="form-control input-sm" style="width: 60%;" /></td>
-							</tr>
-							<tr>
-								<td class="menu">주소</td>
+								<td class="menu">지급 형태</td>
 								<td align="left">
-									<input type="text" id="address_zipcode" name="addressZipcode" readonly class="form-control input-sm" style="width: 15%; background-color: #dddddd; float: left;" /> 
-									&nbsp;
-									<button type="button" onclick="callAddress()" class="btn btn-sm btn-default">주소입력</button> 
-									<br> 
-									<input type="text" id="address_main" name="addressMain" readonly class="form-control input-sm" style="margin: 5px 0; width: 100%; background-color: #dddddd;" /> 
-									<input type="text" id="address_sub" name="addressSub" placeholder="상세주소" class="form-control input-sm" style="width: 100%;" />
+									<select name="plus_minus_type" class="form-control input-sm" style="width: 120px;">
+										<option value="+">지급</option>
+										<option value="-">차감</option>
+									</select>
 								</td>
+							</tr>
+							<tr>
+								<td class="menu">적립금</td>
+								<td align="left"><input type="text" name="point" onkeyup="this.value=displayComma(checkNum(this.value))" class="form-control input-sm" style="width: 120px;" /></td>
 							</tr>
 							<tr>
 								<td class="menu">메모</td>
-								<td align="left"><textarea name="memberMemoContent" id="memberMemoContent" rows="4" class="form-control input-sm" style="width: 100%;"></textarea></td>
+								<td align="left"><input type="text" name="content" class="form-control input-sm" /></td>
 							</tr>
 							<tr>
-								<td class="menu">현재 포인트</td>
-								<td align="left"><span id="current_point"> </span></td>
-							</tr>
-							<tr id="display_level">
-								<td class="menu">등급 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-								<td>
-									<select name="authority" id="memberGradeChk" class="form-control input-sm" style="width: 120px;">
-										<c:forEach items="${memberGradeList}" var="memberGrade">
-											<option value="${memberGrade.authority}">${memberGrade.memberGradeName}</option>
-										</c:forEach>
-									</select>
+								<td class="menu">알림 설정</td>
+								<td align="left">
+									<input type="checkbox" name="pointSms" value="y" /> SMS 알림 (설정된 SMS 발송)<br> 
+									<input type="checkbox" name="pointEmail" value="y" /> 메일 알림 (설정된 메일 발송)<br>
 								</td>
-							</tr>
-							<tr id="display_status">
-								<td class="menu">상태 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-								<td>
-									<select name="status" id="status" class="form-control input-sm" style="width: 120px;">
-										<option value="Y">정상</option>
-										<option value="N">대기</option>
-									</select>
-								</td>
-							</tr>
-							<tr id="display_last_login_date">
-								<td class="menu">최근 접속일</td>
-								<td align="left"><span id="last_login_date"></span></td>
-							</tr>
-							<tr id="display_update_date">
-								<td class="menu">수정일자</td>
-								<td align="left"><span id="update_date"></span></td>
-							</tr>
-							<tr id="display_reg_date">
-								<td class="menu">등록일자</td>
-								<td align="left"><span id="reg_date"></span></td>
 							</tr>
 						</table>
-				</form:form>
+<<<<<<< HEAD
+					</div>
+=======
+					  </div>
+					<div class="modal-footer">
+						<button type="button" id="btnRegister" onclick="register()" class="btn btn-primary">저장</button>
+						<button type="button" id="btnUpdate" onclick="update()" class="btn btn-primary">저장</button>
+					</div>						
+				</form>
 			</div>
 		</div>
-		<div class="modal-footer">
-			<button type="button" id="btnRegister" onclick="register()" class="btn btn-primary">저장</button>
-			<button type="button" id="btnUpdate" onclick="update()" class="btn btn-primary">저장</button>
-		</div>
 	</div>
-</div>
+
 
 <!-- // 적립금 지급 폼 -->
 <div class="modal fade" id="modalPoint" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
@@ -278,60 +339,68 @@
 							</td>
 						</tr>
 					</table>
-			</form>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button type="button" onclick="registerPoint();" class="btn btn-primary">지급하기</button>
-	</div>
-</div>
-
-<!-- // 쿠폰 지급 폼 -->
-<div class="modal fade" id="modalCoupon" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
-	<div class="modal-dialog" style="width: 500px;">
-		<div class="modal-content">
-			<form name="formCoupon" method="post" onsubmit="return false;" >
-				<input type="hidden" name="mode" value="coupon"> 
-				<input type="hidden" name="member_code">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="myModalLabelPortfolio">쿠폰 지급</h4>
 				</div>
-				<div class="modal-body">
-					<table class="table table-bordered">
-						<tr>
-							<td class="menu">대상 회원</td>
-							<td align="left"><span id="sendCountCoupon"></span> 명</td>
-						</tr>
-						<tr>
-							<td class="menu">쿠폰 선택</td>
-							<td align="left">
-								<select name="coupon_code" class="form-control input-sm">
-									<option value="">선택</option>
-									<c:forEach var="coupon" items="${couponList }">
-										<option value="${coupon.couponNo }">${coupon.couponName }</option>
-									</c:forEach>
-								</select> ※ 쿠폰은 회원당 한번씩만 발급 할수 있습니다.
-							</td>
-						</tr>
-						<tr>
-							<td class="menu">알림 설정</td>
-							<td align="left">
-								<input type="checkbox" name="couponSms" value="y" /> SMS 알림 (설정된 SMS 발송)<br> 
-								<input type="checkbox" name="couponEmail" value="y" /> 메일 알림 (설정된 메일 발송)<br>
-							</td>
-						</tr>
-					</table>
-			</form>
+>>>>>>> branch 'master' of https://github.com/dawnduck07/mir9.git
+					<div class="modal-footer">
+						<button type="button" onclick="registerPoint();" class="btn btn-primary">지급하기</button>
+					</div>
+				</form>
+			</div>
 		</div>
-
 	</div>
-	<div class="modal-footer">
-		<button type="button" onclick="registerCoupon();" class="btn btn-primary">지급하기</button>
-	</div>
+	
+	<!-- // 쿠폰 지급 폼 -->
+	<div class="modal fade" id="modalCoupon" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
+		<div class="modal-dialog" style="width: 500px;">
+			<div class="modal-content">
+				<form name="formCoupon" method="post" onsubmit="return false;" >
+					<input type="hidden" name="mode" value="coupon"> 
+					<input type="hidden" name="member_code">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabelPortfolio">쿠폰 지급</h4>
+					</div>
+					<div class="modal-body">
+						<table class="table table-bordered">
+							<tr>
+								<td class="menu">대상 회원</td>
+								<td align="left"><span id="sendCountCoupon"></span> 명</td>
+							</tr>
+							<tr>
+								<td class="menu">쿠폰 선택</td>
+								<td align="left">
+									<select name="coupon_code" class="form-control input-sm">
+										<option value="">선택</option>
+										<c:forEach var="coupon" items="${couponList }">
+											<option value="${coupon.couponNo }">${coupon.couponName }</option>
+										</c:forEach>
+									</select> ※ 쿠폰은 회원당 한번씩만 발급 할수 있습니다.
+								</td>
+							</tr>
+							<tr>
+								<td class="menu">알림 설정</td>
+								<td align="left">
+									<input type="checkbox" name="couponSms" value="y" /> SMS 알림 (설정된 SMS 발송)<br> 
+									<input type="checkbox" name="couponEmail" value="y" /> 메일 알림 (설정된 메일 발송)<br>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" onclick="registerCoupon();" class="btn btn-primary">지급하기</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
 </div>
-
+<<<<<<< HEAD
+=======
+</div>
+>>>>>>> branch 'master' of https://github.com/dawnduck07/mir9.git
 <!-- /.content-wrapper -->
+
+
 
 <!-- 다음 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -593,6 +662,7 @@ function onclickCheckId(){
 function register(){
 	var id = $("#id").val();
 	var password = $("#password").val();
+	console.log("password = " + password);
 	var passwordCheck = $("#passwordCheck").val();
 	var firstName = $("#firstName").val();
 	var lastName = $("#lastName").val();
@@ -830,7 +900,7 @@ function onclickCoupon() {
         return false;
 	}
 	
-    $('#modalCoupon').modal({backdrop:'static', show:true});
+    $("#modalCoupon").modal({backdrop:"static", show:true});
 	
 }
 

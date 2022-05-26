@@ -12,10 +12,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!-- Tell the browser to be responsive to screen width -->
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<!-- Bootstrap 3.3.7 -->
-<link rel="stylesheet" href="/html/css/bootstrap.min.css">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="/html/css/font-awesome.min.css">
 <!-- Ionicons -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ionicons.min.css">
 <!-- jvectormap -->
@@ -286,7 +282,7 @@
                     <br>
 
                     <button type="button" id="deleteChoiceBoard" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
-                    <button type="button" onclick="onclickInsert()"  class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalRegister"><i class="fa fa-plus-square"></i> 게시판 생성</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalRegister"><i class="fa fa-plus-square"></i> 게시판 생성</button>
 
                 </div><!-- /.box-body -->
             </div><!-- /.box -->

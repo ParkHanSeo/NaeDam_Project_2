@@ -16,6 +16,9 @@ public class Search {
 	private int pageSize;
 	private int endRowNum;
 	private int startRowNum;
+	private String start_date;
+	private String end_date;
+	private String categoryCode;
 	
 	
 	public int getEndRowNum() {

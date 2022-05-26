@@ -127,7 +127,7 @@ public class ExcelController {
 			String formNo = request.getParameter("formNo");
 			List<String> formPostHeader = new ArrayList<>();
 			List<Item> itemList = formService.formTr(Integer.parseInt(formNo));
-			List<FormPost> fp = formService.formPostList(Integer.parseInt(formNo));
+			List<FormPost> fp = formService.formPostList2(Integer.parseInt(formNo));
 			for(int i = 0; i < itemList.size(); i++) {				
 				formPostHeader.add(0,itemList.get(i).getLabel());
 			}
@@ -240,7 +240,7 @@ public class ExcelController {
     		    sheet.setColumnWidth(cnt, (sheet.getColumnWidth(cnt))+(short)1024);
     		    // 데이터 작성
     		    String formNo = request.getParameter("formNo");
-    		    List<FormPost> fp = formService.formPostList(Integer.parseInt(formNo));
+    		    List<FormPost> fp = formService.formPostList2(Integer.parseInt(formNo));
     		    data = fp.get(forInt).getItemData().split("&");
     		    for(int i = 0; i < data.length; i++) {
     		    	cell = row.createCell(i);

@@ -49,8 +49,8 @@
 	                        <td>헤더명</td>
 	                        <td style="width:55px;">상태</td>
 	                        <td style="width:60px;">
-	                        <i onclick="changeOrder('down','menu_head','?tpf=admin/menu/head');" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer"></i>
-	                        <i onclick="changeOrder('up','menu_head','?tpf=admin/menu/head');" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer"></i>
+	                        <i onclick="fncDown();" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer"></i>
+	                        <i onclick="fncUp();" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer"></i>
 	                        </td>
 	                        <td style="width:60px;">명령</td>
 	                    </tr>
@@ -78,7 +78,7 @@
 			                          </c:if>			                          
 			                        </td>
 			                        <td>
-			                        	<input type="radio" name="order_code" value="1">
+			                        	<input type="radio" name="order_code" value="${head.headAsc}">
 			                        </td>
 			                        <td>
 			                        	<button type="button" onclick="onclickUpdate(${head.headNo});" class="btn btn-primary btn-xs">수정하기</button>
@@ -327,13 +327,15 @@
             if(form_register.title.value == '') { alert('헤더명이 입력되지 않았습니다.'); form_register.title.focus(); return false;}
             form_register.target = 'iframe_process';
             form_register.submit();
-            location.reload();
+            alert("헤드가 등록 되었습니다.");
+            location.href = "/admin/head/headList";
         }
         function register2() {
             if(form_register2.title.value == '') { alert('헤더명이 입력되지 않았습니다.'); form_register2.title.focus(); return false;}
             form_register2.target = 'iframe_process';
             form_register2.submit();
-            location.reload();
+            alert("헤더가 수정 되었습니다.");
+            location.href = "/admin/head/headList";
         }        
         function setData(code) {
             // 정보
@@ -426,7 +428,87 @@
 				alert("해당 자료가 삭제 되었습니다.")
 				location.reload();
 			}
-        }        
+        }      
+        
+    	function fncUp(){
+    		var headAsc = $("input:radio[name='order_code']:checked").val();
+    		var headIndex = $("input:radio[name='order_code']:checked").parent().parent().index()+1;
+    		var headUpAsc = $("tr").eq(headIndex-1).children().find("input:radio").val();
+    		var headNo = $("input:radio[name='order_code']:checked").parent().parent().find("input[name='headNo']").val();
+    		
+    		if(headIndex == 0){
+    			alert("1개의 항목을 선택하여야 합니다.")
+    			return;
+    		}
+    		if(headAsc == headUpAsc){
+    			headIndex--;
+    			headUpAsc = $("tr").eq(headIndex-1).children().find("input:radio").val();
+    			var upHeadNo = $("tr").eq(headIndex-1).children().find("input[name='headNo']").val();
+    		}else{
+    			var upHeadNo = $("tr").eq(headIndex-1).children().find("input[name='headNo']").val();
+    		}
+    		if(headIndex == 1){
+    			alert("더이상 상위로의 위치 변경은 불가능합니다.");
+    			return;
+    		}else{
+    	  		$.ajax({
+    			 	 url : "/admin/head/json/updateHeadUpAsc?${_csrf.parameterName}=${_csrf.token}",
+    	 		  	 type : "POST",
+    		  	 	 data : { 
+    		  	 		headAsc,
+    		  	 		headUpAsc,
+    		  	 		headNo,
+    		  	 		upHeadNo
+    		  	 	 },
+    			 	 success : function(result){
+    			 		if(result == true){
+    			 			location.reload();
+    			 		}
+    			  	 }
+    	 		});	
+    		}
+    	}		
+    	
+    	function fncDown(){
+    		var lastIndex = $("input:radio[name='order_code']:checked").parent().parent().parent().find("tr").last().index()+1;    		
+    		var headAsc = $("input:radio[name='order_code']:checked").val();
+    		var headIndex = $("input:radio[name='order_code']:checked").parent().parent().index()+1;
+    		var headDownAsc = $("tr").eq(headIndex+1).children().find("input:radio").val();
+    		var headNo = $("input:radio[name='order_code']:checked").parent().parent().find("input[name='headNo']").val();
+    		
+    		if(headIndex == 0){
+    			alert("1개의 항목을 선택하여야 합니다.")
+    			return;
+    		}
+    		if(headAsc == headDownAsc){
+    			headIndex++;
+    			headDownAsc = $("tr").eq(headIndex+1).children().find("input:radio").val();
+    			var downHeadNo = $("tr").eq(headIndex+1).children().find("input[name='headNo']").val();
+    		}else{
+    			var downHeadNo = $("tr").eq(headIndex+1).children().find("input[name='headNo']").val();
+    		}
+    		if(headIndex == lastIndex){
+    			alert("더이상 하위로의 위치 변경은 불가능합니다.")
+    			return;
+    		}else{
+    	  		$.ajax({
+    			 	 url : "/admin/head/json/updateHeadDownAsc?${_csrf.parameterName}=${_csrf.token}",
+    	 		  	 type : "POST",
+    		  	 	 data : { 
+    		  	 		headAsc,
+    		  	 		headDownAsc,
+    		  	 		headNo,
+    		  	 		downHeadNo
+    		  	 	 },
+    			 	 success : function(result){
+    			 		if(result == true){
+    			 			location.reload();
+    			 		}
+    			  	 }
+    	 		});				
+    		}
+    	}         
+        
 </script>
 	
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

@@ -5,7 +5,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 <jsp:param value="문의사항 관리" name="title"/>
 </jsp:include>
@@ -25,8 +24,7 @@
 	        <div class="col-xs-12">
 	            <div class="box">
 	                <div class="box-body">
-<<<<<<< HEAD
-	                    <label style="margin-top:5px;">총 5 건</label>
+	                    <label style="margin-top:5px;">총 ${formPostListCount} 건</label>
 	
 	                    <table class="table table-bordered table-hover">
 		                    <form name="form_list" method="post" action="?tpf=admin/form/process"></form>
@@ -55,8 +53,8 @@
 		      				  </c:forEach>
 		      				  	<td style="width:200px;">등록일</td>                           
 		                        <td style="width:80px;">
-		                            <i onclick="changeOrder('down','form_reply','?tpf=admin/form/list&amp;form_code=1',1,'ko','',);" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i>
-		                            <i onclick="changeOrder('up','form_reply','?tpf=admin/form/list&amp;form_code=1',1,'ko','',);" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer;"></i>
+		                            <i onclick="fncDown();" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i>
+		                            <i onclick="fncUp();" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer;"></i>
 		                        </td>
 		                        <td style="width:60px;">명령</td>
 		                    </tr>
@@ -89,7 +87,7 @@
 			                          	<c:set var="j" value="${ j+1 }" />			                        		
 			                          </c:forEach>
 			                        <td>${formPost.date}</td>
-			                        <td><input type="radio" name="order_code" value="-5"></td>
+			                        <td><input type="radio" name="order_code" value="${formPost.formPostAsc}"></td>
 			                        <td><button type="button" onclick="onclickUpdate(${formPost.code});" class="btn btn-primary btn-xs">수정하기</button></td>
 			                    </tr> 
 			                  </c:forEach>   
@@ -451,433 +449,6 @@
     }	
     // 수정 버튼
     function onclickInsert2() {
-=======
-	                    <label style="margin-top:5px;">총 4 건</label>
-	
-	                    <table class="table table-bordered table-hover">
-		                    <form name="form_list" method="post" action="?tpf=admin/form/process"></form>
-				            <input type="hidden" name="mode" id="mode">
-				            <input type="hidden" name="form_code" value="1">
-		                    <thead>
-		                    <tr>
-		                        <td style="width:30px;">
-		                      		<div class="allCheck">
-										<input type="checkbox" name="allCheck" id="allCheck" /><label for="allCheck"></label>
-											<script>
-												$("#allCheck").click(function() {
-													var chk = $("#allCheck").prop("checked");
-													if (chk) {
-														$('.formPostNo').prop("checked", true);
-													} else {
-														$('.formPostNo').prop("checked", false);
-													}
-												});
-											</script>
-									</div>
-		                        </td>
-		                        <td style="width:60px;">NO</td>
-		      				  <c:forEach var="item" items="${td}" varStatus="status" >
-		      					<td>${item.label}</td>   
-		      				  </c:forEach>
-		      				  	<td style="width:200px;">등록일</td>                           
-		                        <td style="width:80px;">
-		                            <i onclick="changeOrder('down','form_reply','?tpf=admin/form/list&amp;form_code=1',1,'ko','',);" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i>
-		                            <i onclick="changeOrder('up','form_reply','?tpf=admin/form/list&amp;form_code=1',1,'ko','',);" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer;"></i>
-		                        </td>
-		                        <td style="width:60px;">명령</td>
-		                    </tr>
-		                    </thead>
-			      			<tbody>
-			      			  <c:set var="i" value="0"/>
-			      			  <c:set var="num" value="${number}"/>
-		      				  <c:forEach var="formPost" items="${fp}" varStatus="status" >
-		      				  <c:set var="i" value="${ i+1 }" />
-			      				<tr>
-			                        <td>
-				                        <div>
-				                        	<input type="checkbox" class="formPostNo" name="formPostNo"  value="${formPost.code}" />
-				                        	<script>
-												$(".formPostNo").click(function() {
-													$("#allCheck").prop("checked", false);
-												});
-											</script>
-										</div>
-			                        </td>
-			                        <td>${i}</td>
-			                        <c:set var="ex" value="${fn:split(formPost.itemData,'&')}"/>
-			                          <c:set var="j" value="0"/>
-			                          <c:set var="k" value="0"/>
-			                          <c:forEach var="exNum" items="${ex}" varStatus="g">
-			                           <c:if test="${j == num[k]}">
-			                        	<td style="text-align:left;">${ex[j]}</td>
-			                        	<c:set var="k" value="${ k+1 }" />
-			                           </c:if>	
-			                          	<c:set var="j" value="${ j+1 }" />			                        		
-			                          </c:forEach>
-			                        <td>${formPost.date}</td>
-			                        <td><input type="radio" name="order_code" value="-5"></td>
-			                        <td><button type="button" onclick="onclickUpdate(${formPost.code});" class="btn btn-primary btn-xs">수정하기</button></td>
-			                    </tr> 
-			                  </c:forEach>   
-			                  <c:if test="${empty fp}">
-			                  	<tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>
-			                  </c:if>
-		                    </tbody>
-	                    </table>
-	                    <br>
-	
-	                    <button type="button" onclick="deleteChoiceFormPost(${formNo});" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
-	                    <button type="button" onclick="onclickInsert();" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 등록</button>
-	                    <button type="button" onclick="excelDownload();" class="btn btn-warning btn-sm"><i class="fa fa-file-excel-o"></i> Excel 다운로드</button>
-	                    
-	                    <form name="form_download" method="post" action="${pageContext.request.contextPath }/excel/download.do?${_csrf.parameterName}=${_csrf.token}">
-	                        <input type="hidden" name="mode" value="downloadExcel">
-	                        <input type="hidden" name="formNo" value="${formNo}">
-	                        <input type="hidden" name="search_data">
-	                        <input type="hidden" name="download_type" value="formPost"/>
-	                    </form>
-	                    
-						<!-- page -->
-	                    <div style="text-align: right;">
-							${pagebar}
-						</div>
-	                </div><!-- /.box-body -->
-	            </div><!-- /.box -->
-	        </div><!-- /.col-xs-12 -->
-	    </div><!-- /.row -->
-	</section><!-- /.content -->
-
-	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
-	    <div class="modal-dialog" style="width:800px;">
-	        <div class="modal-content">
-	            <form name="formRegister" method="post" onsubmit="return false;" action="/admin/form/addFormPost?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
-		            <input type="hidden" name="mode" id="mode" value="insertReply">
-		            <input type="hidden" name="formNo" id="formNo" value="${formNo}">
-		            <input type="hidden" name="locale" id="locale">
-		            
-		            <div class="modal-header">
-		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		                <h4 class="modal-title" id="myModalLabelPortfolio">정보 등록</h4>
-		            </div><!-- /.modal-header -->
-		            
-		            <div class="modal-body">
-		            	<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 정보 등록</p></h4>
-		            	<table class="table table-bordered">
-		      				<tbody>
-		      				  <c:forEach var="item" items="${tr}" varStatus="status" >
-			      				<tr>
-			                        <td class="menu">${item.label}</td>
-			                        <c:if test="${item.input_type == 'text' || item.input_type == 'tel' || item.input_type == 'email'}">
-				                        <td align="left">
-											<input type="${item.input_type}" name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm">          
-				                        </td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'textarea'}">
-			                        	<td align="left">
-			                        		<textarea name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>
-			                        	</td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'webeditor'}">
-			                        	<td align="left">
-			                        		<textarea id="content18" name="data${item.itemNo}" id="ckEditor" placeholder="${item.placeholder}" style="padding: 5px; line-height: 20px; width: 100%; height: 200px;"></textarea>
-			                        	</td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'select'}">
-			                        	<td align="left">
-				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<select name="data${item.itemNo}" class="form-control input-sm">
-				                        			<option value="">선택하세요</option>
-				                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
-				                        				<option value="${exNum}">${exNum}</option>
-				                        			</c:forEach>
-				                        		</select>
-				                          </c:if>			                        		
-			                        	</td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'radio'}">
-			                        	<td align="left">
-				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="radio" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
-				                          </c:if>			                        		
-			                        	</td>
-			                        </c:if>	
-			                        <c:if test="${item.input_type == 'checkbox'}">
-			                        	<td align="left">
-				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="checkbox" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
-				                          </c:if>			                        		
-			                        	</td>
-			                        </c:if>
-									<c:if test="${item.input_type == 'date'}">
-										<td align="left">
-											<input type="text" id="datepicker" name="data${item.itemNo}" readonly="" style="width:100px;" class="hasDatepicker">
-										</td>
-									</c:if>	
-									<c:if test="${item.input_type == 'file'}">
-										<td align="left">
-											<input type="file" id="${item.itemNo}" name="file[]" style="width:80%; float:left;">
-										</td>
-									</c:if>
-			                    </tr>
-			                  </c:forEach>               
-		                    </tbody>
-		            	</table>
-		            </div><!-- /.modal-body -->
-		            
-		            <div class="modal-footer">
-		            	<button type="button" onclick="registerForm();" class="btn btn-primary">저장하기</button>
-		            </div><!-- /.modal-footer -->
-	            </form><!-- /.formRegister -->
-	        </div><!-- /.modal-content -->
-	    </div><!-- /.modal-dialog -->
-	</div><!-- /.modal .fade -->
-	
-	<div class="modal fade" id="modalContent2" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
-	    <div class="modal-dialog" style="width:800px;">
-	        <div class="modal-content">
-	            <form name="formRegister2" method="post" onsubmit="return false;" action="/admin/form/updateFormPost?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
-		            <input type="hidden" name="mode" id="mode" value="insertReply">
-		            <input type="hidden" name="formNo" id="formNo" value="${formNo}">
-		            <input type="hidden" name="code" id="code">
-		            
-		            <div class="modal-header">
-		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		                <h4 class="modal-title" id="myModalLabelPortfolio">정보 수정</h4>
-		            </div><!-- /.modal-header -->
-		            
-		            <div class="modal-body">
-		            	<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 정보 수정</p></h4>
-		            	<table class="table table-bordered">
-		      				<tbody>
-		      				  <c:forEach var="item" items="${tr}" varStatus="status" >
-			      				<tr>
-			                        <td class="menu">${item.label}</td>
-			                        <c:if test="${item.input_type == 'text' || item.input_type == 'tel' || item.input_type == 'email'}">
-				                        <td align="left">
-											<input type="${item.input_type}" name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm">          
-				                        </td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'textarea'}">
-			                        	<td align="left">
-			                        		<textarea name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>
-			                        	</td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'webeditor'}">
-			                        	<td align="left">
-			                        		<textarea id="content19" name="data${item.itemNo}" id="ckEditor2" placeholder="${item.placeholder}" style="padding: 5px; line-height: 20px; width: 100%; height: 200px;"></textarea>
-			                        	</td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'select'}">
-			                        	<td align="left">
-				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<select name="data${item.itemNo}" class="form-control input-sm">
-				                        			<option value="">선택하세요</option>
-				                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
-				                        				<option value="${exNum}">${exNum}</option>
-				                        			</c:forEach>
-				                        		</select>
-				                          </c:if>			                        		
-			                        	</td>
-			                        </c:if>
-			                        <c:if test="${item.input_type == 'radio'}">
-			                        	<td align="left">
-				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="radio" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
-				                          </c:if>			                        		
-			                        	</td>
-			                        </c:if>	
-			                        <c:if test="${item.input_type == 'checkbox'}">
-			                        	<td align="left">
-				                          <c:if test="${!empty item.input_example}">
-				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="checkbox" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
-				                          </c:if>			                        		
-			                        	</td>
-			                        </c:if>
-									<c:if test="${item.input_type == 'date'}">
-										<td align="left">
-											<input type="text" id="datepicker" name="data${item.itemNo}" readonly="" style="width:100px;" class="hasDatepicker">
-										</td>
-									</c:if>	
-									<c:if test="${item.input_type == 'file'}">
-										<td align="left">
-											<input type="file" id="${item.itemNo}" name="file[]" style="width:80%; float:left;">
-										</td>
-									</c:if>
-			                    </tr>
-			                  </c:forEach>               
-		                    </tbody>
-		            	</table>
-		            </div><!-- /.modal-body -->
-		            
-		            <div class="modal-footer">
-		            	<button type="button" onclick="registerForm2();" class="btn btn-primary">저장하기</button>
-		            </div><!-- /.modal-footer -->
-	            </form><!-- /.formRegister -->
-	        </div><!-- /.modal-content -->
-	    </div><!-- /.modal-dialog -->
-	</div><!-- /.modal .fade -->	
-
-	<div class="modal fade" id="modalCopyList" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
-	    <div class="modal-dialog" style="width:400px;">
-	        <div class="modal-content">
-	            <form name="formCopyContent" method="post" action="?tpf=admin/form/process">
-	                <input type="hidden" name="mode" id="mode" value="copyContent">
-	                <input type="hidden" name="form_code" value="1">
-	                <input type="hidden" name="code" id="code">
-	                
-	                <div class="modal-header">
-	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-	                    <h4 class="modal-title" id="myModalLabelPortfolio">리스트 복사</h4>
-	                </div><!-- /.modal-header -->
-	                
-	                <div class="modal-body">
-	                    <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 리스트 <span id="board_sub_title">복사</span></p></h4>
-	                    <table class="table table-bordered">
-	                        <tbody>
-	                            <tr>
-	                                <td class="menu">폼메일 선택</td>
-	                                <td align="left">
-	                                    <select name="formPostCopy" id="formPostCopy" class="form-control input-sm">
-	                                        <option value="">선택</option>                                   
-	                          			</select>
-	                                </td>
-	                            </tr>
-	                        </tbody>
-	                    </table>
-	                </div><!-- /.modal-body -->
-	                
-	                <div class="modal-footer">
-	                    <button type="button" onclick="fncformPostCopy()" class="btn btn-primary">확인</button>
-		            </div><!-- /.modal-footer -->
-	            </form><!-- /.formCopyContent -->
-	        </div><!-- /.modal-content -->
-	    </div><!-- /.modal-dialog -->
-	</div><!-- /.modal .fade -->
-
-	<form name="formFileDelete" method="post" action="?tpf=admin/form/process">
-		<input type="hidden" name="mode" id="mode" value="deleteFile">
-		<input type="hidden" name="code" id="code">
-	</form>
-
-<script src="//mir9.co.kr/resource/js/ckeditor4.7.2/ckeditor.js"></script>
-</div><!-- /.content-wrapper -->
-
-<script>
-	
-	var a = $("input[id='ckEditor']").val();
-	
-	if (window.CKEDITOR) {  // CKEDITOR loading 여부 체크 (Web 버젼에서만 사용)
-	    var objEditor18 = CKEDITOR.replace('content18', {
-	        height: 300,
-	        extraPlugins : 'tableresize',
-	        extraPlugins: 'codemirror',
-	        filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-	        filebrowserImageUploadUrl: '/daemon/ckeditor_upload.php?command=QuickUpload&type=Images',
-	        fillEmptyBlocks : true
-	    });
-	    CKEDITOR.on('dialogDefinition', function (ev) {
-	        var dialogName = ev.data.name;
-	        var dialog = ev.data.definition.dialog;
-	        var dialogDefinition = ev.data.definition;
-	
-	        if (dialogName == 'image') {
-	            dialog.on('show', function (obj) {
-	                this.selectPage('Upload'); //업로드텝으로 시작
-	            });
-	            dialogDefinition.removeContents('advanced'); // 자세히탭 제거
-	            dialogDefinition.removeContents('Link'); // 링크탭 제거
-	        }
-	    });
-	    CKEDITOR.config.allowedContent = true;
-	    CKEDITOR.config.codemirror = {
-	        // Set this to the theme you wish to use (codemirror themes)
-	        theme: '3024-night',
-	
-	        // Whether or not to automatically format code should be done when the editor is loaded
-	        autoFormatOnStart: false,
-	    };
-	}
-	if (window.CKEDITOR) {  // CKEDITOR loading 여부 체크 (Web 버젼에서만 사용)
-	    var objEditor19 = CKEDITOR.replace('content19', {
-	        height: 300,
-	        extraPlugins : 'tableresize',
-	        extraPlugins: 'codemirror',
-	        filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-	        filebrowserImageUploadUrl: '/daemon/ckeditor_upload.php?command=QuickUpload&type=Images',
-	        fillEmptyBlocks : true
-	    });
-	    CKEDITOR.on('dialogDefinition', function (ev) {
-	        var dialogName = ev.data.name;
-	        var dialog = ev.data.definition.dialog;
-	        var dialogDefinition = ev.data.definition;
-	
-	        if (dialogName == 'image') {
-	            dialog.on('show', function (obj) {
-	                this.selectPage('Upload'); //업로드텝으로 시작
-	            });
-	            dialogDefinition.removeContents('advanced'); // 자세히탭 제거
-	            dialogDefinition.removeContents('Link'); // 링크탭 제거
-	        }
-	    });
-	    CKEDITOR.config.allowedContent = true;
-	    CKEDITOR.config.codemirror = {
-	        // Set this to the theme you wish to use (codemirror themes)
-	        theme: '3024-night',
-	
-	        // Whether or not to automatically format code should be done when the editor is loaded
-	        autoFormatOnStart: false,
-	    };
-	}	
-	$.fn.modal.Constructor.prototype.enforceFocus = function () {   // bootstrap & ckEdiotr 소스 방지 코드
-	    modal_this = this
-	    $(document).on('focusin.modal', function (e) {
-	        if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
-	        }
-	    })
-	}		
-	function excelDownload() {  // Excel 다운로드
-	    form_download.target = 'iframe_process';
-	    form_download.search_data.value = $('#form_search :input').serialize();
-	    form_download.submit();
-	}
-    // 등록 버튼
-    function onclickInsert() {
-        $("#modalContent").modal({backdrop:"static", show:true});
-        formRegister.reset();
-        formRegister.mode.value = "insertReply";
-        //formRegister.form_code.value = "1";
-        formRegister.locale.value = "ko";
-        $("[id^='displayFile']").css("display","none");
-    }	
-    // 수정 버튼
-    function onclickInsert() {
->>>>>>> branch 'master' of https://github.com/ParkHanSeo/NaeDam_Project_2.git
         $("#modalContent2").modal({backdrop:"static", show:true});
         formRegister2.reset();
         formRegister2.mode.value = "insertReply";
@@ -1070,9 +641,9 @@
 		}else{
   		$.ajax({
 		 	 url : "/admin/form/deleteChoiceFormPost?${_csrf.parameterName}=${_csrf.token}",
- 		  		 type : "POST",
+ 		  	 type : "POST",
 	  	 	 data : { 
-	  	 		formPostArr : formPostArr 
+	  	 	 formPostArr : formPostArr 
 	  	 	 },
 	 		 success : function(result){
 	 		
@@ -1105,9 +676,9 @@
 		}else{
   		$.ajax({
 		 	 url : "/admin/form/deleteChoiceFormPost?${_csrf.parameterName}=${_csrf.token}",
- 		  		 type : "POST",
+ 		  	 type : "POST",
 	  	 	 data : { 
-	  	 		formPostArr : formPostArr 
+	  	 	 formPostArr : formPostArr 
 	  	 	 },
 	 		 success : function(result){
 	 		
@@ -1123,6 +694,85 @@
 	const paging = (cPage) => {
 		location.href = '/admin/form/formPostList?cPage='+cPage+'&formNo='+${formNo};
 	}
+	
+	function fncUp(){
+		var formPostAsc = $("input:radio[name='order_code']:checked").val();
+		var formPostIndex = $("input:radio[name='order_code']:checked").parent().parent().index()+1;
+		var formPostUpAsc = $("tr").eq(formPostIndex-1).children().find("input:radio").val();
+		var formPostNo = $("input:radio[name='order_code']:checked").parent().parent().find("input[name='formPostNo']").val();
+		if(formPostIndex == 0){
+			alert("1개의 항목을 선택하여야 합니다.");
+			return;
+		}
+		if(formPostAsc == formPostUpAsc){
+			formPostIndex--;
+			formPostUpAsc = $("tr").eq(formPostIndex-1).children().find("input:radio").val();
+			var upFormPostNo = $("tr").eq(formPostIndex-1).children().find("input[name='formPostNo']").val();
+		}else{
+			var upFormPostNo = $("tr").eq(formPostIndex-1).children().find("input[name='formPostNo']").val();
+		}
+		if(formPostIndex == 1){
+			alert("더이상 상위로의 위치 변경은 불가능합니다.");
+			return;
+		}else{
+	  		$.ajax({
+			 	 url : "/admin/form/json/updateUpAsc2?${_csrf.parameterName}=${_csrf.token}",
+	 		  	 type : "POST",
+		  	 	 data : { 
+		  	 		formPostAsc,
+		  	 		formPostUpAsc,
+		  	 		formPostNo,
+		  	 		upFormPostNo
+		  	 	 },
+			 	 success : function(result){
+			 		if(result == true){
+			 			location.reload();
+			 		}
+			  	 }
+	 		});
+		}
+	}
+	
+	function fncDown(){
+		var lastIndex = $("input:radio[name='order_code']:checked").parent().parent().parent().find("tr").last().index()+1;
+		var formPostAsc = $("input:radio[name='order_code']:checked").val();
+		var formPostIndex = $("input:radio[name='order_code']:checked").parent().parent().index()+1;
+		var formPostDownAsc = $("tr").eq(formPostIndex+1).children().find("input:radio").val();
+		var formPostNo = $("input:radio[name='order_code']:checked").parent().parent().find("input[name='formPostNo']").val();
+
+		if(formPostIndex == 0){
+			alert("1개의 항목을 선택하여야 합니다.")
+			return;
+		}
+		if(formPostAsc == formPostDownAsc){
+			formPostIndex++;
+			formPostDownAsc = $("tr").eq(formPostIndex+1).children().find("input:radio").val();
+			var downFormPostNo = $("tr").eq(formPostIndex+1).children().find("input[name='formPostNo']").val();
+		}else{
+			var downFormPostNo = $("tr").eq(formPostIndex+1).children().find("input[name='formPostNo']").val();
+		}
+		if(formPostIndex == lastIndex){
+			alert("더이상 하위로의 위치 변경은 불가능합니다.")
+			return;
+		}else{
+	  		$.ajax({
+			 	 url : "/admin/form/json/updateDownAsc2?${_csrf.parameterName}=${_csrf.token}",
+	 		  	 type : "POST",
+		  	 	 data : { 
+		  	 		formPostAsc,
+		  	 		formPostDownAsc,
+		  	 		formPostNo,
+		  	 		downFormPostNo
+		  	 	 },
+			 	 success : function(result){
+			 		if(result == true){
+			 			location.reload();
+			 		}
+			  	 }
+	 		});				
+		}
+	}	
+	
       
     /* 
     datepicker 
