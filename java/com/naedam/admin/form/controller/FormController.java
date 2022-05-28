@@ -176,7 +176,15 @@ public class FormController {
 	public String formList(Model model) throws Exception {
 		System.out.println("formList 시작");
 		List<Form> formList = formService.formList();
+		int formCount = formService.formListCount();
+		List formPostCount = new ArrayList();
+		for(int i = 0; i < formList.size(); i++) {
+			int num = formService.formPostListCount(formList.get(i).getFormNo());
+			formPostCount.add(num);
+		}
 		model.addAttribute("list", formList);
+		model.addAttribute("formCount", formCount);
+		model.addAttribute("formPostCount", formPostCount);
 		return "admin/form/formList";
 	}
 		
@@ -208,6 +216,7 @@ public class FormController {
 		model.addAttribute("tr",tr);
 		model.addAttribute("formNo", formNo);
 		model.addAttribute("number",number);
+		model.addAttribute("formPostListCount", totalFormPostListCount);
 		return "admin/form/formPostList";
 	}
 	
@@ -215,6 +224,7 @@ public class FormController {
 	public String itemList(@RequestParam("formNo") int formNo, Model model) throws Exception {
 		System.out.println("form/itemList 시작");
 		List<Item> itemList = formService.itemList(formNo);
+		int itemCount = formService.itemListCount(formNo);
 		Form form = formService.getForm(formNo);
 		for(int i = 0; i < itemList.size(); i++) {
 			itemList.get(i).setInput_example(itemList.get(i).getInput_example().replace("\r\n", "/"));
@@ -222,6 +232,7 @@ public class FormController {
 		model.addAttribute("list",itemList);
 		model.addAttribute("formNo", formNo);
 		model.addAttribute("form", form);
+		model.addAttribute("itemCount", itemCount);
 		return "admin/form/itemList";
 	}
 	

@@ -190,32 +190,28 @@ public class MenuServiceImpl implements MenuService {
 		menuDao.deleteMenu(code);
 	}
 
+	//메뉴 down순서변경
+	@Override
+	public void updateDownAsc(Map<String, Object> map) throws Exception {
+		menuDao.updateDownAsc(map);
+	}
 
+	//메뉴 up순서변경
+	@Override
+	public void updateUpAsc(Map<String, Object> map) throws Exception {
+		menuDao.updateUpAsc(map);
+	}
+	
+	//헤드 down순서변경
+	@Override
+	public void updateHeadDownAsc(Map<String, Object> map) throws Exception {
+		menuDao.updateHeadDownAsc(map);
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	//헤드 up순서변경
+	@Override
+	public void updateHeadUpAsc(Map<String, Object> map) throws Exception {
+		menuDao.updateHeadUpAsc(map);
+	}	
 	
 }

@@ -155,45 +155,47 @@
 						<h4 class="modal-title" id="myModalLabelPortfolio">주문내역 상세 보기</h4>
 					</div>
 					<div class="modal-body">
-						<h4>
-							<p class="text-light-blue">
-								<i class="fa fa-fw fa-info-circle"></i> 구매 내역
-							</p>
-						</h4>
-
-						<span id="order_list_txt"></span>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<td style="width: 350px;">상품명</td>
-									<td>가격(원)</td>
-									<td>수량(개)</td>
-									<td style="width: 120px;">합계(원)</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="td_option_target" style="text-align: left;"><img id="p_img" src="" alt="" style="float: left; margin-right: 10px; width: 120px;'" /> "<span id="p_name"></span>"</td>
-									<td class="money"><span id="p_sPrice"></span></td>
-									<td class="count"><span id="p_amt"></span></td>
-									<td class="money"><span class="text-light-blie"><span id="p_ltPrice"></span></span></td>
-								</tr>
-								<tr>
-									<td colspan="3" class="money">상품합계</td>
-									<td class="money"><span id="p_priceNoDeli"></span></td>
-								</tr>
-								<tr>
-									<td colspan="3" class="money">배송료</td>
-									<td class="money"><span id="deli_fee"></span></td>
-								</tr>
-								<tr>
-									<td colspan="3" class="money">총 결제금액</td>
-									<td class="money"><span class="red_16_b"> <b><span id="p_totalPrice"></span></b>
-									</span></td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="col-xs-5" style="padding: 0 5px 0 0;">
+						<div>
+							<h4>
+								<p class="text-light-blue">
+									<i class="fa fa-fw fa-info-circle"></i> 구매 내역
+								</p>
+							</h4>
+	
+							<span id="order_list_txt"></span>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<td style="width: 350px;">상품명</td>
+										<td>가격(원)</td>
+										<td>수량(개)</td>
+										<td style="width: 120px;">합계(원)</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td id="td_option_target" style="text-align: left;"><img id="p_img" src="" alt="" style="float: left; margin-right: 10px; width: 120px;'" /> "<span id="p_name"></span>"</td>
+										<td class="money"><span id="p_sPrice"></span></td>
+										<td class="count"><span id="p_amt"></span></td>
+										<td class="money"><span class="text-light-blie"><span id="p_ltPrice"></span></span></td>
+									</tr>
+									<tr>
+										<td colspan="3" class="money">상품합계</td>
+										<td class="money"><span id="p_priceNoDeli"></span></td>
+									</tr>
+									<tr>
+										<td colspan="3" class="money">배송료</td>
+										<td class="money"><span id="deli_fee"></span></td>
+									</tr>
+									<tr>
+										<td colspan="3" class="money">총 결제금액</td>
+										<td class="money"><span class="red_16_b"> <b><span id="p_totalPrice"></span></b>
+										</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div style="width:40%; display:inline-block;">
 							<h4>
 								<p class="text-light-blue">
 									<i class="fa fa-fw fa-info-circle"></i> 결제 정보
@@ -239,7 +241,7 @@
 							</table>
 						</div>
 
-						<div class="col-xs-7" style="padding: 0 0 0 5px;">
+						<div style="display:inline-block; float:right;">
 							<h4>
 								<p class="text-light-blue">
 									<i class="fa fa-fw fa-info-circle"></i> 수취인 정보
@@ -264,7 +266,7 @@
 								</tr>
 								<tr>
 									<td class="menu">관리자 메모</td>
-									<td align="left"><span style="float: left"> <textarea name="memo" id="memo" class="form-control input-sm" rows="5" style="width: 200px;"></textarea>
+									<td align="left"><span style="float: left"> <textarea name="memo" id="memo" class="form-control input-sm" rows="5" style="width: 200px; resize:none;"></textarea>
 									</span> <span style="padding: 20px 0 0 10px; float: left">
 											<button id="update_admin_memo" type="button" onclick="updateAdminMemo()" class="btn btn-primary btn-sm">
 												저장<br>하기

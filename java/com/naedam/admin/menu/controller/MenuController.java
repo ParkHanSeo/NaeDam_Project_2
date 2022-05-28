@@ -33,7 +33,6 @@ public class MenuController {
 	public String addMenu(@ModelAttribute("menu") Menu menu)throws Exception{
 		
 		System.out.println("menu/addMenu 시작");
-		System.out.println("menu 데이터 확인 === ::: "+menu);
 		menuService.addMenu(menu);
 		
 		return "admin/menu/menu";
@@ -43,13 +42,10 @@ public class MenuController {
 	public String updateMenu(@ModelAttribute("menu") Menu menu)throws Exception{
 		
 		System.out.println("menu/updateMenu 시작");
-		System.out.println("menu를 확인합시다. == ::: "+menu);
 		Menu menu2 = new Menu();
 		menu2 = menuService.getRevision(menu);
 		menu2.setOriginNo(menu.getCode());
-		System.out.println("menu2를 확인합시다. == ::: "+menu2);
 		menuService.addRevision(menu2);
-		System.out.println("addRevision 후 확인 체크");
 		menuService.updateMenu(menu);
 		
 		
@@ -139,8 +135,6 @@ public class MenuController {
 		
 		Map<String, Object> resultMap = menuService.getMenuCategoryList(map);
 		Map<String, Object> resultMap2 = menuService.getMenuCategoryList2(map);
-		System.out.println("데이터 확인 ::: === "+resultMap);
-		System.out.println("데이터 확인2 ::: === "+resultMap2.get("list"));
 		model.addAttribute("list", resultMap.get("list"));
 		model.addAttribute("list2", resultMap2.get("list"));
 		

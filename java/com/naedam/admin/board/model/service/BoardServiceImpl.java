@@ -203,6 +203,18 @@ public class BoardServiceImpl implements BoardService {
 	public int getTotalCount3(int boardNo) throws Exception {
 		return boardDao.getTotalCount3(boardNo);
 	}
+	
+	//down순서변경
+	@Override
+	public void updateDownAsc(Map<String, Object> map) throws Exception {
+		boardDao.updateDownAsc(map);
+	}
+
+	//up순서변경
+	@Override
+	public void updateUpAsc(Map<String, Object> map) throws Exception {
+		boardDao.updateUpAsc(map);
+	}
 
 
 }

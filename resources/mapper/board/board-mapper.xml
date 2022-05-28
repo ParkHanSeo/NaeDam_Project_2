@@ -152,7 +152,7 @@
 				  MEMBER_NO,
 				  MEMBER_NAME)
 		VALUES(NEXTVAL(post_seq),
-			   0,
+			   NEXTVAL(allAsc_seq),
 			   #{postBoard.boardNo},
 			   #{postTitle : VARCHAR},
 			   #{postContents : VARCHAR},
@@ -354,7 +354,7 @@
 									AND		p.member_name like concat ('%',#{search.searchKeyword},'%')
 									</if>
 								</if>
-								ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC) countTable
+								ORDER BY p.post_asc ASC, p.post_ord ASC, p.post_layer ASC) countTable
 	</select>	
 	
 	<select id="getTotalCount3" parameterType="int" resultType="int" >
@@ -379,7 +379,7 @@
 								WHERE	b.board_no = p.board_no
 								AND		m.member_no = p.member_no
 								AND		b.board_no = #{boardNo}		
-								ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC) countTable
+								ORDER BY p.post_asc ASC, p.post_ord ASC, p.post_layer ASC) countTable
 	</select>
 	
 	
@@ -469,7 +469,7 @@
 			AND		p.member_name like concat ('%',#{search.searchKeyword},'%')
 			</if>
 		</if>
-		ORDER BY p.post_origin_no ASC, p.post_ord ASC, p.post_layer ASC
+		ORDER BY p.post_asc ASC, p.post_ord ASC, p.post_layer ASC
 	</select>
 	
 	<select id="getCommentList" parameterType="int" resultMap="commentSelectMap">
@@ -606,6 +606,22 @@
 			OPTION_POPUP = #{optionPopup}			
 		</set>
 		WHERE board_no = #{optionBoard.boardNo : NUMERIC}			
+	</update>
+	
+	<update id="updateUpAsc" parameterType="map">
+		UPDATE POST
+		<set>
+			POST_ASC = #{boardUpAsc}
+		</set>
+		WHERE POST_ORIGIN_NO = #{upPostNo}
+	</update>	
+	
+	<update id="updateDownAsc" parameterType="map">
+		UPDATE POST
+		<set>
+			POST_ASC = #{boardDownAsc}
+		</set>
+		WHERE POST_ORIGIN_NO = #{downPostNo}
 	</update>
 	
 	<update id="postViewCount" parameterType="post">

@@ -30,6 +30,9 @@ public interface FormDao {
 	//폼게시물 리스트
 	public List<FormPost> formPostList(int formNo, int offset, int limit) throws Exception;
 	
+	//폼게시물 리스트2
+	public List<FormPost> formPostList2(int formNo) throws Exception;
+	
 	//문항 td
 	public List<Item> formTd(int formNo) throws Exception;
 	

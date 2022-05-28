@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 <jsp:param value="주문후기 관리" name="title"/>
 </jsp:include>
@@ -32,7 +31,7 @@
 	                        <form name="form_search" method="post" action="${pageContext.request.contextPath }/admin/comm/review?${_csrf.parameterName}=${_csrf.token}">
 	                        <div class="has-feedback">
 	                            <span>
-	                                <input type="text" name="keyword" id="keyword" value="" class="form-control input-sm" placeholder="검색"/>
+	                                <input type="text" name="keyword" id="keyword" value="${ param.keyword == null ? '' : param.keyword }" class="form-control input-sm" placeholder="검색"/>
 	                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
 	                            </span>
 	                        </div>
@@ -41,8 +40,9 @@
 	                    <div class="box-tools pull-right" style="margin-bottom:5px;">
 	                        <div class="has-feedback">
 	                            <select name="field" class="form-control input-sm" style="float:left; width:130px;">
-	      							<option value="a.writer">작성자</option>      
-	      							<option value="productName">제품명</option>                            
+	                            	<option value="total" ${param.field == 'total' ? 'selected' : ''}>전체</option>  
+	      							<option value="a.writer" ${param.field == 'a.writer' ? 'selected' : ''}>작성자</option>      
+	      							<option value="productName" ${param.field == 'productName' ? 'selected' : ''}>제품명</option>                            
 	      						</select>
 	                        </div>
 	                        </form>
@@ -67,13 +67,18 @@
 	                            <!-- 리뷰가 있을 경우 조회하기 -->
 	                            <tbody>
 	                                <c:choose>
-	                                    <c:when test="${ empty reviewList }">
-	                                    	<tr>
-	                                        	<td colspan="10"><br>등록된 자료가 없습니다.<br><br></td>
+                                   		<c:when test="${ empty reviewList and empty param.keyword }">
+                                   			<tr>
+	                                        	<td colspan="10"><br>등록된 후기가 없습니다.<br><br></td>
 	                                        </tr>
-	                                    </c:when>
-	                                    <c:otherwise>
-	                                        <c:forEach var="review" items="${ reviewList }"> 
+                                   		</c:when>
+                                   		<c:when test="${ empty reviewList and !empty param.keyword}">
+                                   			<tr>
+	                                        	<td colspan="10"><br>검색된 후기가 없습니다.<br><br></td>
+	                                        </tr>
+                                   		</c:when>
+                                   		<c:otherwise>
+                                   			<c:forEach var="review" items="${ reviewList }"> 
 	                                        	<tr>
 		                                            <td><input type="checkbox" name="list[]" value="${ review.reviewCode }"/></td> 
 		                                            <td>${ review.reviewCode }</td>
@@ -85,10 +90,9 @@
 		                                            <td><button type="button" class="btn btn-primary btn-xs" onclick="review_detail(${ review.reviewCode })">상세보기</button></td>
 	                                            </tr>
 	                                        </c:forEach>
-	                                    </c:otherwise>
-	                                </c:choose>     
-	                            </tbody>     
-	                            <!-- 리뷰 조회 완료 -->            
+                                   		</c:otherwise>
+	                                </c:choose>
+	                            </tbody><!-- 리뷰 조회 완료 -->         
 	                       	</form>
 	                    </table>
 	                    <br>

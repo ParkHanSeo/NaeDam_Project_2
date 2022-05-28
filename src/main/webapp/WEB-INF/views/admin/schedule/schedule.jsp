@@ -360,6 +360,7 @@
 		        					end: scheduleEndDate,
 		        					backgroundColor: scheduleColor
 		        				});
+		        				alert("일정이 등록 되었습니다.")
 		        				location.reload();
 		        			},
 		        			error:function(request, status, error){

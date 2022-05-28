@@ -33,6 +33,9 @@ public interface FormService {
 	//폼게시물 리스트
 	List<FormPost> formPostList(int formNo, int offset, int limit) throws Exception;
 	
+	//폼게시물 리스트
+	List<FormPost> formPostList2(int formNo) throws Exception;
+	
 	//폼게시물 카운트
 	int formPostListCount(int code) throws Exception;
 	

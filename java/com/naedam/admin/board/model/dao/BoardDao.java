@@ -105,6 +105,12 @@ public interface BoardDao {
 	
 	//계층형 쿼리
 	public int updatePostReply(Post post) throws Exception;
+
+	//up순서변경
+	public void updateUpAsc(Map<String, Object> map)throws Exception;	
+	
+	//down순서변경
+	public void updateDownAsc(Map<String, Object> map)throws Exception;
 	
 	//조회수
 	public int postViewCount(Post post) throws Exception;

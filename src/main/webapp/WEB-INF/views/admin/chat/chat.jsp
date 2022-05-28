@@ -35,7 +35,7 @@
 		$('#msg').val('')
 	}
 	
-	var sock = new SockJS('http://localhost:8080/chatting');
+	var sock = new SockJS('http://localhost:8080/admin/chat/chat');
 	sock.onmessage = onMessage;
 	sock.onclose = onClose;
 	sock.onopen = onOpen;

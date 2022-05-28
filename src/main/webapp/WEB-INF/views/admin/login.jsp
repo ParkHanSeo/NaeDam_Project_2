@@ -82,7 +82,7 @@
 						<a href="#none" id="loginBtn" onclick="loginSubmit()"
 							class="btn btn-primary btn-block"><b>로그인</b></a>
 						&nbsp;
-						<a href="#none" onclick="location.href='${pageContext.request.contextPath}/admin/member/memberEnroll.do';"
+						<a href="#none" onclick="location.href='${pageContext.request.contextPath}/user/user/memberEnroll.do';"
 							class="btn btn-primary btn-block"><b>회원가입</b></a>
 					</form>
 				</div>

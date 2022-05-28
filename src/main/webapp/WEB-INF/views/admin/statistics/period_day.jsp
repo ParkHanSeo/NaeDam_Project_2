@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>  
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 	<jsp:param value="기간별 통계" name="title" />
 </jsp:include>
@@ -37,7 +37,7 @@
 								<tbody>
 									<tr>
 										<td class="menu">통계종류</td>
-										<td align="left"><input type="radio" name="statistics_type" id="statistics_type_1" value="date" checked /> <label for="statistics_type_1">일별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_2" value="month" onclick="location.href='${pageContext.request.contextPath}/statistics/period_month';" /> <label for="statistics_type_2">월별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_3" value="year" onclick="location.href='${pageContext.request.contextPath}/statistics/period_year';" /> <label for="statistics_type_3">연도별통계</label></td>
+										<td align="left"><input type="radio" name="statistics_type" id="statistics_type_1" value="date" checked /> <label for="statistics_type_1">일별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_2" value="month" onclick="location.href='${pageContext.request.contextPath}/admin/statistics/period_month';" /> <label for="statistics_type_2">월별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_3" value="year" onclick="location.href='${pageContext.request.contextPath}/admin/statistics/period_year';" /> <label for="statistics_type_3">연도별통계</label></td>
 									</tr>
 									<tr>
 										<td class="menu">기간 검색</td>

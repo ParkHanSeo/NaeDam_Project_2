@@ -1,6 +1,5 @@
 package com.naedam.admin.member.model.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +18,6 @@ import com.naedam.admin.member.model.vo.WithdrawalMemberEntity;
 import com.naedam.admin.point.model.vo.MemberPoint;
 
 public interface MemberDao {
-
-	// 회원가입
-	int insertMember(Member member);
 
 	// 로그인 - 해당 id정보 가져오기
 	Member selectOneMember(String id);
@@ -77,9 +73,12 @@ public interface MemberDao {
 	// 회원등급 조회
 	Authorities selectOneAuthorities(int memberNo);
 	
-	// 회원 적립금 관리
+	// 회원 적립금 목록
 	List<MemberPoint> selectMemberPointListByParam(Map<String, Object> param);
 
+	// 회원 적립금 목록 수
+	int totalPointCount(Map<String, Object> param);
+	
 	// 회원정보 수정(상세보기)
 	int memberUpdate(Member paramMember);
 

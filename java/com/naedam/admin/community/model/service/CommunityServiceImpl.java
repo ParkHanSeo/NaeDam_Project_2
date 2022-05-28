@@ -349,7 +349,7 @@ public class CommunityServiceImpl implements CommunityService {
 		int result = 0;
 		int insert = 0;
 		String template = json.getAsJsonObject().get("templateId").getAsString();
-
+		
 		// post 요청
 		String postUrl = "https://api-mail.cloud.toast.com/email/v2.0/appKeys/" + mailKey +  "/sender/mail";
 		String response = postRequest(postUrl, mailSecret, json);

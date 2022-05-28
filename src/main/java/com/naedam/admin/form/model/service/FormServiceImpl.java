@@ -75,6 +75,13 @@ public class FormServiceImpl implements FormService {
 		return formDao.formPostList(formNo,offset,limit);
 	}
 	
+	//폼게시물 리스트
+	@Override
+	public List<FormPost> formPostList2(int formNo) throws Exception {
+		// TODO Auto-generated method stub
+		return formDao.formPostList2(formNo);
+	}	
+	
 	//폼게시물 카운트
 	@Override
 	public int formPostListCount(int code) throws Exception {

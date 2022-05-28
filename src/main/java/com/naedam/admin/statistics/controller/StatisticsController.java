@@ -192,9 +192,9 @@ public class StatisticsController {
 		model.addAttribute("endDateStr", endDateStr);
 		
 		if(type.equals("date")) {
-			return "statistics/period_day";
+			return "admin/statistics/period_day";
 		}else if(type.endsWith("month")) {
-			return "statistics/period_month";
+			return "admin/statistics/period_month";
 		}
 		
 		return "admin/statistics/period_year";

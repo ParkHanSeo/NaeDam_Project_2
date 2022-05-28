@@ -111,7 +111,7 @@ var tree_tpl = {
 	<tbody>
 		<tr>
 			<td nowrap="">
-				<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/menu/menuList');">
+				<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menuList');">
 					<img src="${pageContext.request.contextPath}/resources/imgs/tree/base.gif" border="0" align="absbottom" name="i_img0_0" class="t0im">Home
 				</a>
 			</td>

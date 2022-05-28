@@ -61,14 +61,25 @@
 <link rel="stylesheet"
 	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+<style>
+	#loginBody {
+		min-height: 100vh;
+		background: -webkit-gradient(linear, left bottom, right top, from(#92b5db),
+			to(#1d466c));
+		background: -webkit-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+		background: -moz-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+		background: -o-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+		background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+	}
+</style>
+</head>
 <c:if test="${not empty msg}">
 	<script>
 		alert("${msg}");
 	</script>
 </c:if>
-</head>
 
-<body class="hold-transition login-page">
+<body id="loginBody" class="hold-transition login-page">
 	<!-- content-wrapper -->
 	<iframe name="iframe_process" width="0" height="0" frameborder="0"></iframe>
 	<div align="center">
@@ -107,13 +118,12 @@
 							class="btn btn-primary btn-block"><b>로그인</b></a>
 						&nbsp;
 						<a href="#none"
-							onclick="location.href='${pageContext.request.contextPath}/user/user/userEnroll.do';"
+							onclick="enrollSubmit()"
 							class="btn btn-primary btn-block"><b>회원가입</b></a>
 					</form:form>
 				</div>
 
-				<p class="text-muted text-center" style="padding: 10px;">Copyright
-					2018©MIR9 SHOP. All Rights Reserved.</p>
+				<p class="text-muted text-center" style="padding: 10px;">&copy; NAEDAM </p>
 			</div>
 		</div>
 	</div>
@@ -134,6 +144,11 @@
 				return false;
 			}
 			form.submit();
+		}
+		
+		function enrollSubmit() {
+			console.log("enrollSubmti() 실행");
+			location.href=`${pageContext.request.contextPath}/user/user/userEnroll.do`;
 		}
 	</script>
 </body>

@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta charset="utf-8">
@@ -72,8 +72,8 @@
 		                        <td>url</td>
 		                        <td style="width:55px;">상태</td>
 		                        <td style="width:60px;">
-		                            <i onclick="changeOrder('down','menu','?tpf=admin/menu/list_sub&amp;category_code=','');" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer"></i>
-		                            <i onclick="changeOrder('up','menu','?tpf=admin/menu/list_sub&amp;category_code=','');" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer"></i>
+		                            <i onclick="fncDown();" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer"></i>
+		                            <i onclick="fncUp();" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer"></i>
 		                        </td>
 		                        <td style="width:220px;">명령</td>
 		                    </tr>
@@ -104,7 +104,8 @@
 		                        	</c:if>		                        	
 		                        </td>
 		                        <td>
-		                        	<input type="radio" name="order_code" value="1" disabled="">
+		                        	<input type="radio" name="order_code" value="${menu.menuAsc}">
+		                        	<input type="hidden" name="originNo" value="${menu.originNo}">
 		                        </td>
 		                        <td>
 		                            <button type="button" onclick="onclickRevision(${menu.code});" class="btn btn-warning btn-xs">리비젼보기</button>
@@ -315,6 +316,85 @@
 				location.reload();
 			}
         }
+        
+    	function fncUp(){
+    		var menuAsc = $("input:radio[name='order_code']:checked").val();
+    		var menuIndex = $("input:radio[name='order_code']:checked").parent().parent().index()+1;
+    		var menuUpAsc = $("tr").eq(menuIndex-1).children().find("input:radio").val();
+    		var menuNo = $("input:radio[name='order_code']:checked").parent().parent().find("input[name='originNo']").val();
+    		
+    		if(menuIndex == 0){
+    			alert("1개의 항목을 선택하여야 합니다.")
+    			return;
+    		}
+    		if(menuAsc == menuUpAsc){
+    			menuIndex--;
+    			menuUpAsc = $("tr").eq(menuIndex-1).children().find("input:radio").val();
+    			var upMenuNo = $("tr").eq(menuIndex-1).children().find("input[name='originNo']").val();
+    		}else{
+    			var upMenuNo = $("tr").eq(menuIndex-1).children().find("input[name='originNo']").val();
+    		}
+    		if(menuIndex == 1){
+    			alert("더이상 상위로의 위치 변경은 불가능합니다.");
+    			return;
+    		}else{
+    	  		$.ajax({
+    			 	 url : "/admin/menu/json/updateUpAsc?${_csrf.parameterName}=${_csrf.token}",
+    	 		  	 type : "POST",
+    		  	 	 data : { 
+    		  	 		menuAsc,
+    		  	 		menuUpAsc,
+    		  	 		menuNo,
+    		  	 		upMenuNo
+    		  	 	 },
+    			 	 success : function(result){
+    			 		if(result == true){
+    			 			location.reload();
+    			 		}
+    			  	 }
+    	 		});	
+    		}
+    	}		
+    	
+    	function fncDown(){
+    		var lastIndex = $("input:radio[name='order_code']:checked").parent().parent().parent().find("tr").last().index()+1;    		
+    		var menuAsc = $("input:radio[name='order_code']:checked").val();
+    		var menuIndex = $("input:radio[name='order_code']:checked").parent().parent().index()+1;
+    		var menuDownAsc = $("tr").eq(menuIndex+1).children().find("input:radio").val();
+    		var menuNo = $("input:radio[name='order_code']:checked").parent().parent().find("input[name='originNo']").val();
+    		
+    		if(menuIndex == 0){
+    			alert("1개의 항목을 선택하여야 합니다.")
+    			return;
+    		}
+    		if(menuAsc == menuDownAsc){
+    			menuIndex++;
+    			menuDownAsc = $("tr").eq(menuIndex+1).children().find("input:radio").val();
+    			var downMenuNo = $("tr").eq(menuIndex+1).children().find("input[name='originNo']").val();
+    		}else{
+    			var downMenuNo = $("tr").eq(menuIndex+1).children().find("input[name='originNo']").val();
+    		}
+    		if(menuIndex == lastIndex){
+    			alert("더이상 하위로의 위치 변경은 불가능합니다.")
+    			return;
+    		}else{
+    	  		$.ajax({
+    			 	 url : "/admin/menu/json/updateDownAsc?${_csrf.parameterName}=${_csrf.token}",
+    	 		  	 type : "POST",
+    		  	 	 data : { 
+    		  	 		menuAsc,
+    		  	 		menuDownAsc,
+    		  	 		menuNo,
+    		  	 		downMenuNo
+    		  	 	 },
+    			 	 success : function(result){
+    			 		if(result == true){
+    			 			location.reload();
+    			 		}
+    			  	 }
+    	 		});				
+    		}
+    	}      
         
         
         
