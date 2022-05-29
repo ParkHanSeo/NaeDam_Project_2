@@ -3,31 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="member">
-<!-- 회원가입 -->
-<insert id="insertMember">
-	INSERT INTO member
-		(member_no,
-		 first_name,
-		 last_name,
-		 email,
-		 phone,
-		 reg_date,
-		 status,
-		 id,
-		 password,
-		 profile_img) 
-	VALUES
-		(NEXTVAL(seq_member_no),
-		#{firstName},
-		#{lastName},
-		#{email},
-		#{phone},
-		NOW(),
-		default,
-		#{id},
-		#{password},
-		NULL)
-</insert>
 
 <!-- 로그인 - 해당 id정보 가져오기 -->
 <select id="selectOneMember" resultType="member">
@@ -400,19 +375,68 @@
 		member_no = #{memberNo}
 </update>
 
+<!-- 회원 포인트 목록 조회 + 검색 -->
 <select id="selectMemberPointListByParam" resultType="memberPoint">
-	SELECT a.MEMBER_POINT_NO, b.id, CONCAT(b.LAST_NAME, b.FIRST_NAME) AS member_name, b.EMAIL, a.point_title, a.point_amount, a.reg_date
-	FROM member_point a 
-		JOIN member b ON(a.MEMBER_NO = b.MEMBER_NO)
+	select d.*
+	  from (select @ROWNUM:=@ROWNUM+1 as rowNum, c.* 
+			  from (select @ROWNUM:=0, 
+			  			   a.MEMBER_NO,
+			  			   a.MEMBER_POINT_NO, 
+			  			   b.id, 
+			  			   CONCAT(b.LAST_NAME, b.FIRST_NAME) AS member_name, 
+			  			   b.EMAIL, 
+			  			   a.point_title, 
+			  			   a.point_amount, 
+			  			   a.reg_date
+					 from member_point a 
+					 join member b ON(a.MEMBER_NO = b.MEMBER_NO)
+					<where>
+						<if test="keyword != null and keyword != ''">
+							<choose>
+								<when test="field eq 'total'">
+									(
+										id LIKE CONCAT('%',#{keyword},'%') ||
+										CONCAT(last_name, first_name) LIKE CONCAT('%',#{keyword},'%') ||
+										point_title LIKE CONCAT('%',#{keyword},'%')
+									)
+								</when>
+								<otherwise>
+									${field} LIKE CONCAT('%',#{keyword},'%')
+								</otherwise>
+							</choose>
+						</if>
+						<if test="memberNo > 0">
+							and a.MEMBER_NO = #{memberNo}
+						</if>
+					</where>
+					 order by a.reg_date DESC) as c) as d
+	 where d.rowNum BETWEEN #{startRow} AND #{endRow}
+</select>
+
+<!-- 회원 포인트 목록 수 -->
+<select id="totalPointCount" parameterType="map" resultType="int">
+	select COUNT(*)
+	  from member_point a 
+	  join member b ON(a.MEMBER_NO = b.MEMBER_NO)
 	<where>
-		<if test="keyword != null">
-			${field} like concat('%',#{keyword},'%')
+		<if test="keyword != null and keyword != ''">
+			<choose>
+				<when test="field eq 'total'">
+					(
+						id LIKE CONCAT('%',#{keyword},'%') ||
+						CONCAT(last_name, first_name) LIKE CONCAT('%',#{keyword},'%') ||
+						point_title LIKE CONCAT('%',#{keyword},'%')
+					)
+				</when>
+				<otherwise>
+					${field} LIKE CONCAT('%',#{keyword},'%')
+				</otherwise>
+			</choose>
 		</if>
-		<if test="memberNo != 0">
-			and a.member_no = #{memberNo}
+		<if test="memberNo > 0">
+			and a.MEMBER_NO = #{memberNo}
 		</if>
 	</where>
-	order by a.reg_date desc
 </select>
 
 <!-- 회원 관리 엑셀 다운로드 -->
@@ -774,6 +798,5 @@ SELECT COUNT(*) FROM member WHERE DATE(reg_date) = DATE(SYSDATE())
 	  from member
 	 where member_no = #{memberNo}
 </select>
-
 
 </mapper>

@@ -14,20 +14,14 @@ import com.naedam.admin.member.model.vo.Member;
 
 public interface BoardService {
 	
-	//게시판 등록
-	public int addBoard(Board board) throws Exception;
+	//게시판 프로세서
+	public void boardProcess(Map<String, Object> map) throws Exception;
 	
 	//게시글 등록
 	public int addPost(Post post) throws Exception;
 	
 	//게시글 답변 등록
 	public int addAnswerPost(Post post) throws Exception;
-	
-	//게시판 등록의 권한
-	public int addAuthority(BoardAuthority boardAuthority) throws Exception;
-	
-	//게시판 등록의 옵션
-	public int addOption(BoardOption boardOption) throws Exception;
 	
 	//게시판 등록의 번역
 	public int addTranslate(BoardTranslate boardTranslate) throws Exception;
@@ -88,11 +82,6 @@ public interface BoardService {
 	
 	//댓글 삭제
 	public void deleteComment(int commentNo) throws Exception;
-	
-	//게시판 수정(게시판, 권한, 옵션) 
-	public int updateBoard(Board board) throws Exception;
-	public int updateAuthority(BoardAuthority boardAuthority) throws Exception;
-	public int updateOption(BoardOption boardOption) throws Exception;
 	
 	//게시글 수정
 	public int updatePost(Post post) throws Exception;

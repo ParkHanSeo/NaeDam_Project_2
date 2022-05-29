@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+  <!-- 회원 등록 -->
+<insert id="userEnroll">
+	INSERT INTO member
+		(member_no,
+		 first_name,
+		 last_name,
+		 email,
+		 phone,
+		 reg_date,
+		 status,
+		 id,
+		 password,
+		 profile_img) 
+	VALUES
+		(NEXTVAL(seq_member_no),
+		#{firstName},
+		#{lastName},
+		#{email},
+		#{phone},
+		NOW(),
+		default,
+		#{id},
+		#{password},
+		NULL)
+		
+	<selectKey keyProperty="memberNo" resultType="_int" order="AFTER">
+		SELECT
+			LASTVAL(seq_member_no)
+		FROM
+			DUAL
+	</selectKey>
+</insert>
+
+<!-- 주소 등록 -->
+<insert id="userAddressEnroll">
+	INSERT INTO 
+		address(
+			address_no,
+			address_main, 
+			address_sub, 
+			address_zipcode
+			)
+		VALUES(
+			NEXTVAL(seq_address_no),
+		 	#{addressMain},
+		 	#{addressSub}, 
+		 	#{addressZipcode}
+		 	)
+	
+	<selectKey keyProperty="addressNo" resultType="_int" order="AFTER">
+		SELECT
+			LASTVAL(seq_address_no)
+		FROM
+			DUAL
+	</selectKey>
+</insert>
+
+<!-- 주소록 입력 -->
+<select id="userAddressBookEnroll">
+	INSERT INTO 
+		address_book(
+			address_book_no, 
+			address_no, 
+			member_no, 
+			address_book_name
+			)
+		VALUES(
+			NEXTVAL(seq_address_book_no),
+			#{addressNo},
+			#{memberNo},
+			default
+			)
+</select>
+
+<!-- 권한 등록 -->
+<select id="userAuthoritiesEnroll">
+	INSERT INTO
+		authorities(
+			authority,
+			member_no
+			)
+		VALUES(
+			'ROLE_USER',
+			#{memberNo}
+			)
+</select>
+
+<!-- 메모 공란 등록 -->
+<select id="userMemoEnroll">
+	INSERT INTO
+		member_memo(
+			member_memo_no,
+			member_no,
+			member_memo_content
+			)
+		VALUES(
+			NEXTVAL(seq_member_memo_no),
+			#{memberNo},
+			NULL
+			)
+</select>
+
+
+<select id="selectOneMemberByEmail" resultType="user">
+	SELECT
+		*
+	FROM
+		member
+	WHERE
+		email = #{email}
+</select>
+
+<select id="selectOneUserById" resultType="user">
+	SELECT
+		*
+	FROM
+		member
+	WHERE
+		id = #{id}
+</select>
+</mapper>

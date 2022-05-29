@@ -626,6 +626,7 @@ textarea {
 			success: function(result) {
 				if(result > 0) {
 					alert("메일 설정이 수정되었습니다.");
+					location.reload();
 				}
 			},
 			error:function(textStatus, errorThrown){

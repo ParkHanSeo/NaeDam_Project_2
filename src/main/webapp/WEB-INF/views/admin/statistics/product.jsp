@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
-<<<<<<< HEAD
-=======
 
->>>>>>> branch 'master' of https://github.com/dawnduck07/mir9.git
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 <jsp:param value="제품별 통계" name="title"/>
 </jsp:include>
