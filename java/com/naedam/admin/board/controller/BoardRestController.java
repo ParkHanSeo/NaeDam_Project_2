@@ -162,6 +162,20 @@ public class BoardRestController {
 		return boardFile;
 	}
 	
+	@PostMapping("json/boardProcess")
+	public Boolean deleteChoiceBoard(@RequestParam(value = "boardArr[]") List<String> boardArr, 
+									 @RequestParam("mode") String mode) throws Exception{
+		
+		Boolean result = false;
+		Map<String, Object> boardMap = new HashMap<>();
+		boardMap.put("boardArr", boardArr);
+		boardMap.put("mode", mode);
+		boardService.boardProcess(boardMap);
+		result = true;
+		return result;
+		
+	}	
+	
 	@GetMapping(value="json/deleteFile/{fileNo}")
 	public void deleteFile(@PathVariable("fileNo") int fileNo) throws Exception{
 		System.out.println("json/deleteFile 시작");

@@ -57,20 +57,17 @@ public class BoardController {
 	int pageUnit = 5;
 	int pageSize = 5;
 	
-	@PostMapping("addBoard")
-	public String addBoard(@ModelAttribute("board") Board board,
-						   @ModelAttribute("boardAuthority") BoardAuthority boardAuthority,
-						   @ModelAttribute("boardOption") BoardOption boardOption) throws Exception{
-		
-		System.out.println("board/addBoard 시작");
-		boardService.addBoard(board);
-		System.out.println("boardAuthority 확인 ::: "+boardAuthority);
-		boardAuthority.setAuthorityBoard(board);
-		boardService.addAuthority(boardAuthority);
-		boardOption.setOptionBoard(board);
-		boardService.addOption(boardOption);
-		
-		
+	@PostMapping("boardProcess")
+	public String boardProcess(@ModelAttribute("board") Board board,
+							   @ModelAttribute("boardAuthority") BoardAuthority boardAuthority,
+							   @ModelAttribute("boardOption") BoardOption boardOption,
+							   @RequestParam("mode") String mode) throws Exception {
+		Map<String, Object> boardMap = new HashMap<>();
+		boardMap.put("board", board);
+		boardMap.put("boardAuthority", boardAuthority);
+		boardMap.put("boardOption", boardOption);
+		boardMap.put("mode", mode);
+		boardService.boardProcess(boardMap);
 		return "redirect:/admin/board/listBoard";
 	}
 	
@@ -197,23 +194,6 @@ public class BoardController {
 		System.out.println("addComment 시작"); 
 	}
 	
-	@PostMapping("updateBoard")
-	public String updateBoard(@RequestParam("boardNo") int boardNo,
-			   @ModelAttribute("board") Board board,
-			   @ModelAttribute("boardAuthority") BoardAuthority boardAuthority,
-			   @ModelAttribute("boardOption") BoardOption boardOption) throws Exception{
-		
-		System.out.println("updateBoard 시작"); 	
-		
-		boardService.updateBoard(board);
-		boardAuthority.setAuthorityBoard(board);
-		boardService.updateAuthority(boardAuthority);
-		boardOption.setOptionBoard(board);
-		boardService.updateOption(boardOption);
-		
-		
-		return "redirect:/admin/board/listBoard";
-	}
 	
 	@PostMapping("updatePost")
 	public String updataPost(@ModelAttribute("post") Post post,
@@ -294,10 +274,7 @@ public class BoardController {
 	public String listBoard(@ModelAttribute("search") Search search, Board board, Model model) throws Exception {
 		
 		System.out.println("listBoard 시작");
-		//페이지 처리
-		if(search.getCurrentPage() ==0 ){
-			search.setCurrentPage(1);
-		}
+
 		List postCount = new ArrayList();
 		List<Board> board2 = boardService.getBoardTitle();
 		
@@ -305,10 +282,6 @@ public class BoardController {
 			int a = boardService.getTotalCount3(board2.get(i).getBoardNo());
 			postCount.add(a);
 		}
-		
-		
-		
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("search", search);
 		
@@ -332,7 +305,7 @@ public class BoardController {
 		
 		System.out.println("/listPost 시작");
 		
-		int limit = 5;
+		int limit = 10;
 		int offset = (cPage - 1) * limit;
 		
 		Board board2 = boardService.getBoardAllData(boardNo);
@@ -350,24 +323,6 @@ public class BoardController {
 		model.addAttribute("board2", board2);
 		model.addAttribute("pageCount",totalPostListCount);
 		return "admin/board/postList";
-	}
-	
-	@PostMapping("deleteChoiceBoard")
-	public void deleteChoiceBoard(@RequestParam(value = "boardArr[]") List<String> boardArr, 
-								  Board board) throws Exception{
-		
-		System.out.println("deleteChoiceBoard 시작");
-		
-		int result = 0;
-		int boardNo = 0;
-		
-		for(String i : boardArr) {
-			boardNo = Integer.parseInt(i);
-			board.setBoardNo(boardNo);
-			boardService.deleteChoiceBoard(board.getBoardNo());
-		}
-		result = 1;
-		
 	}
 
 	
@@ -404,10 +359,7 @@ public class BoardController {
 							@RequestParam("boardNo")int boardNo) throws Exception{
 		
 		System.out.println("addPostCopy 시작");
-		
 		Board board = new Board();
-		
-		
 		int result = 0;
 		int postNo = 0;
 		System.out.println("boardNo 확인 ::: "+boardNo);

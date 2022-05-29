@@ -310,10 +310,8 @@
   		  	 	 }
   		  	 	 
 	  		});		
-				alert("해당 자료가 삭제 되었습니다.")
-				//$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
-				//$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');
-				location.reload();
+				alert("해당 자료가 삭제 되었습니다.");
+				parent.location.reload();
 			}
         }
         
@@ -349,7 +347,7 @@
     		  	 	 },
     			 	 success : function(result){
     			 		if(result == true){
-    			 			location.reload();
+    			 			parent.location.reload();
     			 		}
     			  	 }
     	 		});	
@@ -389,7 +387,7 @@
     		  	 	 },
     			 	 success : function(result){
     			 		if(result == true){
-    			 			location.reload();
+    			 			parent.location.reload();
     			 		}
     			  	 }
     	 		});				

@@ -20,7 +20,8 @@
 		<result property="meta_title"			column="META_TITLE"			jdbcType="VARCHAR"></result>
 		<result property="meta_description"		column="META_DESCRIPTION"	jdbcType="VARCHAR"></result>
 		<result property="originNo"				column="ORIGIN_NO"			jdbcType="NUMERIC"></result>
-		<result property="ord"					column="ORD"			jdbcType="NUMERIC"></result>
+		<result property="ord"					column="ORD"				jdbcType="NUMERIC"></result>
+		<result property="menuAsc"				column="MENU_ASC"			jdbcType="NUMERIC"></result>		
 	</resultMap>
 	
 	<resultMap id="HeadSelectMap" type="head">
@@ -28,6 +29,7 @@
 		<result property="title"				column="TITLE"				jdbcType="VARCHAR"></result>
 		<result property="status"				column="STATUS"				jdbcType="VARCHAR"></result>
 		<result property="content"				column="CONTENT"			jdbcType="VARCHAR"></result>
+		<result property="headAsc"				column="HEAD_ASC"			jdbcType="NUMERIC"></result>
 	</resultMap>
 	
 	<resultMap id="BottomSelectMap" type="bottom">
@@ -68,7 +70,8 @@
 				  META_TITLE,
 				  META_DESCRIPTION,
 				  ORIGIN_NO,
-				  ORD)
+				  ORD,
+				  MENU_ASC)
 		VALUES(NEXTVAL(menu_seq),
 			   #{category_code},
 			   0,
@@ -94,7 +97,8 @@
 			   </if>
 			   <if test="ord != null and ord != '' ">
 			   	#{ord}
-			   </if>)
+			   </if>
+			   ,NEXTVAL(allAsc_seq))
 	</insert>
 	
 	<insert id="addHead" parameterType="head">
@@ -102,11 +106,13 @@
 		INTO HEAD(HEAD_NO,
 				  TITLE,
 				  STATUS,
-				  CONTENT)
+				  CONTENT,
+				  HEAD_ASC)
 		VALUES(NEXTVAL(head_seq),
 			   #{title : VARCHAR},
 			   #{status : VARCHAR},
-			   #{content : VARCHAR})
+			   #{content : VARCHAR},
+			   NEXTVAL(allAsc_seq))
 	</insert>
 	
 	<insert id="addRevision" parameterType="menu">
@@ -181,7 +187,7 @@
 		FROM menu
 		WHERE revision_code = 0
 		AND	  ORD = 1
-		ORDER BY code ASC
+		ORDER BY MENU_ASC ASC
 	</select>
 	
 	<select id="getMenuList2" resultType="hashmap" resultMap="MenuSelectMap">
@@ -191,7 +197,7 @@
 		AND   origin_no = #{menu.originNo}
 		AND   code != 1
 		AND   ORD = #{menu.ord}
-		ORDER BY code ASC
+		ORDER BY MENU_ASC ASC
 	</select>	
 	
 	
@@ -202,7 +208,7 @@
 		AND   origin_no = #{menu.originNo}
 		AND   code != 1
 		AND   ORD = 3
-		ORDER BY code ASC
+		ORDER BY MENU_ASC ASC
 	</select>
 	
 	<select id="getRevisionList" resultType="hashmap" resultMap="MenuSelectMap">
@@ -256,7 +262,7 @@
 	<select id="getHeadList" resultType="hashmap" resultMap="HeadSelectMap">
 		SELECT *
 		FROM head
-		ORDER BY HEAD_NO ASC;
+		ORDER BY HEAD_ASC ASC;
 	</select>
 	
 	<select id="getMenuCategoryList" resultType="hashmap" resultMap="MenuSelectMap">
@@ -264,7 +270,7 @@
 		FROM menu
 		WHERE ord = 1
 		AND revision_code = 0
-		ORDER BY code ASC
+		ORDER BY menu_asc ASC
 	</select>
 	
 	<select id="getMenuCategoryList2" resultType="hashmap" resultMap="MenuSelectMap">
@@ -272,7 +278,7 @@
 		FROM menu
 		WHERE ord = 2
 		AND revision_code = 0
-		ORDER BY code ASC
+		ORDER BY menu_asc ASC
 	</select>
 	 
 	<update id="updateMenu" parameterType="menu">
@@ -336,6 +342,38 @@
 		</set>
 		WHERE code = #{value}
 	</update>
+	
+	<update id="updateUpAsc" parameterType="map">
+		UPDATE MENU
+		<set>
+			MENU_ASC = #{menuUpAsc}
+		</set>
+		WHERE ORIGIN_NO = #{upMenuNo}
+	</update>	
+	
+	<update id="updateDownAsc" parameterType="map">
+		UPDATE MENU
+		<set>
+			MENU_ASC = #{menuDownAsc}
+		</set>
+		WHERE ORIGIN_NO = #{downMenuNo}
+	</update>
+	
+	<update id="updateHeadUpAsc" parameterType="map">
+		UPDATE HEAD
+		<set>
+			HEAD_ASC = #{headUpAsc}
+		</set>
+		WHERE HEAD_NO = #{upHeadNo}
+	</update>	
+	
+	<update id="updateHeadDownAsc" parameterType="map">
+		UPDATE HEAD
+		<set>
+			HEAD_ASC = #{headDownAsc}
+		</set>
+		WHERE HEAD_NO = #{downHeadNo}
+	</update>		
 	
 	<delete id="deleteChoiceHead" parameterType="int">
 		DELETE

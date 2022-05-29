@@ -243,6 +243,7 @@ public class BoardDaoImpl implements BoardDao {
 		sqlSession.update("board.updateUpAsc", map);
 	}
 
+
 	
 }
 
