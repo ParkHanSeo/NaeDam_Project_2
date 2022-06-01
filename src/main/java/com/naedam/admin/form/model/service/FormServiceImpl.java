@@ -60,6 +60,13 @@ public class FormServiceImpl implements FormService {
 		// TODO Auto-generated method stub
 		return formDao.formList();
 	}
+
+	//폼메일 리스트 카운트
+	@Override
+	public int formListCount() throws Exception {
+		// TODO Auto-generated method stub
+		return formDao.formListCount();
+	}
 	
 	//문항관리 리스트
 	@Override
@@ -67,6 +74,13 @@ public class FormServiceImpl implements FormService {
 		// TODO Auto-generated method stub
 		return formDao.itemList(formNo);
 	}
+
+	//문항관리 리스트 카운트
+	@Override
+	public int itemListCount(int formNo) throws Exception {
+		// TODO Auto-generated method stub
+		return formDao.itemListCount(formNo);
+	}	
 	
 	//폼게시물 리스트
 	@Override
@@ -180,5 +194,28 @@ public class FormServiceImpl implements FormService {
 		return formDao.updateFormPost(formPost);
 	}
 
+	//item down순서변경
+	@Override
+	public void updateDownAsc(Map<String, Object> map) throws Exception {
+		formDao.updateDownAsc(map);
+	}
+
+	//item up순서변경
+	@Override
+	public void updateUpAsc(Map<String, Object> map) throws Exception {
+		formDao.updateUpAsc(map);
+	}
+	
+	//formPost down순서변경
+	@Override
+	public void updateDownAsc2(Map<String, Object> map) throws Exception {
+		formDao.updateDownAsc2(map);
+	}
+
+	//formPost up순서변경
+	@Override
+	public void updateUpAsc2(Map<String, Object> map) throws Exception {
+		formDao.updateUpAsc2(map);
+	}
 
 }

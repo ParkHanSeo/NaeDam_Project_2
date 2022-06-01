@@ -80,6 +80,49 @@ public class MenuRestController {
 		return result;
 	}
 	
+	@PostMapping("json/updateUpAsc")
+	public Boolean updateUpAsc(@RequestParam("menuAsc") int menuAsc,
+							@RequestParam("menuUpAsc") int menuUpAsc,
+							@RequestParam("menuNo") int menuNo,
+							@RequestParam("upMenuNo") int upMenuNo) throws Exception{
+		System.out.println("updateUpAsc 시작");
+		Boolean result = false;
+		if(menuNo != 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map.put("menuUpAsc", menuUpAsc);
+			map.put("upMenuNo", menuNo);
+			map2.put("menuUpAsc", menuAsc);
+			map2.put("upMenuNo", upMenuNo);
+			menuService.updateUpAsc(map);
+			menuService.updateUpAsc(map2);
+			result = true;
+		}
+		return result;
+	}
+	
+	@PostMapping("json/updateDownAsc")
+	public Boolean updateDownAsc(@RequestParam("menuAsc") int menuAsc,
+							@RequestParam("menuDownAsc") int menuDownAsc,
+							@RequestParam("menuNo") int menuNo,
+							@RequestParam("downMenuNo") int downMenuNo) throws Exception{
+		System.out.println("json/updateDownAsc 시작");
+		Boolean result = false;
+		if(menuNo != 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map.put("menuDownAsc", menuDownAsc);
+			map.put("downMenuNo", menuNo);
+			map2.put("menuDownAsc", menuAsc);
+			map2.put("downMenuNo", downMenuNo);
+			menuService.updateDownAsc(map);
+			menuService.updateDownAsc(map2);
+			result = true;
+		}
+
+		return result;
+	}
+	
 }
 
 

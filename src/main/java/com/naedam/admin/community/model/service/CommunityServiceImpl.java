@@ -349,7 +349,7 @@ public class CommunityServiceImpl implements CommunityService {
 		int result = 0;
 		int insert = 0;
 		String template = json.getAsJsonObject().get("templateId").getAsString();
-
+		
 		// post 요청
 		String postUrl = "https://api-mail.cloud.toast.com/email/v2.0/appKeys/" + mailKey +  "/sender/mail";
 		String response = postRequest(postUrl, mailSecret, json);
@@ -385,7 +385,7 @@ public class CommunityServiceImpl implements CommunityService {
 			String contentStr = "";
 			if(template.contains("point")) { // 적립금
 				contentStr = "적립금 " + tem.getAsJsonObject().get("point_type").getAsString() + " : 적립금 " 
-							+ tem.getAsJsonObject().get("point").getAsString() + ", 종류 " 
+							+ tem.getAsJsonObject().get("point").getAsString() + "원, 종류 " 
 							+ tem.getAsJsonObject().get("point_type").getAsString();
 			}
 			else if(template.contains("coupon")) { // 쿠폰
