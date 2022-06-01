@@ -570,7 +570,7 @@ public class StatisticsController {
 		
 		LocalDate startDateLocal = LocalDate.parse(sbStartDate, formatter);
 		LocalDate endDateLocal = LocalDate.parse(sbEndDate, formatter);
-				
+		
 		int numOfDaysBetween = (int) ChronoUnit.YEARS.between(startDateLocal, endDateLocal.plusYears(1));
 		
 		List<LocalDate> localDate = IntStream.iterate(0, i -> i + 1)

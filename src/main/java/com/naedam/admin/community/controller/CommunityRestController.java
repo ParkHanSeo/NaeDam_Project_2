@@ -309,6 +309,7 @@ public class CommunityRestController {
 		return result;
 	}
 	
+	/*
 	// 회원가입, 아이디 찾기, 비밀번호 찾기 => 프론트단 구현 후
 	@PostMapping("/sendRegistMsg")
 	public int sendRegistMsg(@RequestBody String jsonStr) {
@@ -321,6 +322,7 @@ public class CommunityRestController {
 		// + tmp_password
 		return result;
 	}
+	*/
 	
 	// 적립금 관련 msg 발송 
 	@PostMapping("/sendPointMsg")
