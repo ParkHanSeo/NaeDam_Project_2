@@ -96,31 +96,9 @@ public class DeliveryController {
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@GetMapping("/updateDeliSet_Doseo")
-	public int updateDeliSetDoseo(String jsonStr) {
+	public int updateDeliSetDoseo(String jsonStr) throws Exception {
 		Map<String, Object> param = Mir9Utils.parseJsonStr(jsonStr);
-		String basicFee = (String)param.get("delivery_price");
-		String FreeShippingSettings = (String)param.get("delivery_limit");
-		int result = 0;
-		
-		DeliverySetting deliSet = new DeliverySetting();
-		deliSet.setBasicDeliveryFee(Integer.parseInt(basicFee.replace(",", "")));
-		deliSet.setExtraDeliFeeYn((String) param.get("delivery_extra_cost_area"));
-		deliSet.setFreeShippingSettings(Integer.parseInt(FreeShippingSettings.replace(",", "")));
-		
-		result = deliveryService.updateDeliverySettingByVo(deliSet);
-		
-		
-		ArrayList<String> doseoNoList = (ArrayList<String>) param.get("doseo_no");
-		ArrayList<String> extraFeeList = (ArrayList<String>) param.get("extra_fee");
-		
-		for(int i = 0; i < doseoNoList.size(); i++) {
-			Doseosangan doseo = new Doseosangan();
-			doseo.setDoseoNo(Integer.parseInt(doseoNoList.get(i)));
-			doseo.setExtraFee(Integer.parseInt(extraFeeList.get(i).replace(",", "")));
-			
-			result = deliveryService.updateDoseosanganByVo(doseo);
-		}
-		
+		int result = deliveryService.updateDeliverySettingByVo(param);
 		return result;
 	}
 	

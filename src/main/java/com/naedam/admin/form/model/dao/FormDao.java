@@ -65,13 +65,13 @@ public interface FormDao {
 	public List<ItemChoice> getItemChoice(int itemNo) throws Exception;
 	
 	//폼메일 선택삭제
-	public void deleteChoiceForm(int code) throws Exception;
+	public void deleteChoiceForm(List<Integer> code) throws Exception;
 	
 	//문항 선택삭제
-	public void deleteChoiceItem(int itemNo) throws Exception;
+	public void deleteChoiceItem(List<Integer> itemNo) throws Exception;
 	
 	//문항 게시글 선택삭제
-	public void deleteChoiceFormPost(int code) throws Exception;
+	public void deleteChoiceFormPost(List<Integer> code) throws Exception;
 	
 	//폼메일 수정
 	public int updateForm(Form form) throws Exception;
@@ -79,8 +79,11 @@ public interface FormDao {
 	//문항 수정
 	public int updateItem(Item item) throws Exception;
 	
-	//폼 디자인 수정
-	public int updateFormDesign(Form form) throws Exception;
+	//폼 디자인 리스트 수정
+	public int updateFormDesignList(Form form) throws Exception;
+	
+	//폼 디자인 쓰기 수정
+	public int updateFormDesignWrite(Form form) throws Exception;
 	
 	//폼 게시글 수정
 	public int updateFormPost(FormPost formPost) throws Exception;

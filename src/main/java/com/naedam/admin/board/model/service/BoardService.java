@@ -17,11 +17,8 @@ public interface BoardService {
 	//게시판 프로세서
 	public void boardProcess(Map<String, Object> map) throws Exception;
 	
-	//게시글 등록
-	public int addPost(Post post) throws Exception;
-	
-	//게시글 답변 등록
-	public int addAnswerPost(Post post) throws Exception;
+	//게시글 프로세서
+	public void postProcess(Map<String, Object> map) throws Exception;
 	
 	//게시판 등록의 번역
 	public int addTranslate(BoardTranslate boardTranslate) throws Exception;
@@ -37,9 +34,6 @@ public interface BoardService {
 	
 	//댓글 목록
 	public List<BoardComment> getCommentList(int postNo) throws Exception;
-	
-	//게시판 등록 글 수
-	public int getTotalCount2(Map<String, Object> map)throws Exception;
 	
 	//게시판 등록 글 수
 	public int getTotalCount3(int boardNo) throws Exception;
@@ -71,20 +65,11 @@ public interface BoardService {
 	//파일 데이터
 	public BoardFile getFileData(int fileNo) throws Exception;
 	
-	//게시판 선택 삭제
-	public void deleteChoiceBoard(int boardNo) throws Exception;
-	
-	//게시글 선택 삭제
-	public void deleteChoicePost(int postNo) throws Exception;
-	
 	//파일 삭제
 	public void deleteFile(int fileNo) throws Exception;
 	
 	//댓글 삭제
 	public void deleteComment(int commentNo) throws Exception;
-	
-	//게시글 수정
-	public int updatePost(Post post) throws Exception;
 	
 	//계층형 쿼리
 	public int updatePostReply(Post post) throws Exception;

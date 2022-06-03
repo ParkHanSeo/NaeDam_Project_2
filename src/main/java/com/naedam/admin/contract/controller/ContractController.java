@@ -35,8 +35,8 @@ public class ContractController {
 	
 	@PostMapping("/updateContract")
 	public String updateContract(Contract contract, RedirectAttributes redirectAttr) {
-		int result = contractService.updateContract(contract);
-		if(result > 0) redirectAttr.addFlashAttribute("msg", "약관이 수정되었습니다.");
+		contractService.updateContract(contract);
+		redirectAttr.addFlashAttribute("msg", "약관이 수정되었습니다.");
 		
 		return "redirect: /admin/setting/contract";
 	}

@@ -17,7 +17,7 @@ public class MapDaoImpl implements MapDao {
 	@Override
 	public Maps selectOneMapByMapNo(int mapNo) {
 		// TODO Auto-generated method stub
-		return session.selectOne("map.selectOneMapByMapNo");
+		return session.selectOne("map.selectOneMapByMapNo", mapNo);
 	}
 
 	@Override
