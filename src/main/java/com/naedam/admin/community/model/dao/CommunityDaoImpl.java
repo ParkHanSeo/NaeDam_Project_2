@@ -21,130 +21,114 @@ public class CommunityDaoImpl implements CommunityDao {
 	@Autowired
 	private SqlSession session;
 
-	// 리뷰 조회 + 검색
+	// 후기 목록 조회
 	@Override
-	public List<Review> reviewList(Map<Object, Object> param) {
+	public int totalReviewCount(Map<String, Object> param) {
+		return session.selectOne("review.totalReviewCount", param);
+	}
+	@Override
+	public List<Object> reviewList(Map<String, Object> param) {
 		return session.selectList("review.reviewList", param);
 	}
 	
-	// 모달 정보
+	// 후기 상세보기
 	@Override
 	public List<Review> reviewModal(int reviewCode) {
 		return session.selectList("review.reviewModal", reviewCode);
 	}
-
-	// 모달 이미지
 	@Override
 	public List<ReviewImg> reviewImgModal(int reviewCode) {
 		return session.selectList("review.reviewImgModal", reviewCode);
 	}
 
-	// 카테고리 조회
+	// 후기 삭제
 	@Override
 	public int selectCategory(String reviewCode) {
 		return session.selectOne("review.selectCategory", reviewCode);
 	}	
-	
-	// 이미지 삭제
 	@Override
 	public int imgDelete(String reviewCode) {
 		return session.delete("review.imgDelete", reviewCode);
 	}	
-	
-	// 리뷰 삭제
 	@Override
 	public int selectDelete(String reviewCode) {
 		return session.delete("review.selectDelete", reviewCode);
 	}
 	
-	// v_msg_info 조회
+	// SMS 목록 조회
 	@Override
-	public MsgInfo selectMsgInfo(long orderNo) {
-		return session.selectOne("sms.msgInfo", orderNo);
+	public int totalSmsCount(Map<String, Object> param) {
+		return session.selectOne("sms.totalSmsCount", param);
 	}
-	
-	// sms 자동 발송 체크 여부 조회
 	@Override
-	public List<SmsSetting> smsCheck(String templateId) {
-		return session.selectList("sms.smsCheck", templateId);
-	}
-
-	// email 자동 발송 체크 여부 조회
-	@Override
-	public List<EmailSetting> emailCheck(String templateId) {
-		return session.selectList("email.emailCheck", templateId);
-	}
-
-	// sms 자동 발송 여부 수정
-	@Override
-	public int smsAutoSend(HashMap<String, String> param) {
-		return session.update("sms.autoSend", param);
-	}
-	
-	// mail 자동 발송 여부 수정
-	@Override
-	public int mailAutoSend(HashMap<String, String> param) {
-		return session.update("email.autoSend", param);
-	}
-
-	// sms 등록
-	@Override
-	public int insertSms(HashMap<String, Object> param2) {
-		return session.insert("sms.insertSms", param2);
-	}
-
-	// sms setting 조회
-	@Override
-	public List<SmsSetting> selectSmsSetting() {
-		return session.selectList("sms.selectSmsSetting");
-	}
-	
-	// sms list 조회
-	@Override
-	public List<Sms> selectSmsList(HashMap<String, Object> param) {
+	public List<Object> selectSmsList(Map<String, Object> param) {
 		return session.selectList("sms.selectSmsList", param);
 	}
 	
-	// email 등록
-	@Override
-	public int insertEmail(HashMap<String, Object> param2) {
-		return session.insert("email.insertEmail", param2);
-	}	
-	
-	// email setting 조회
-	@Override
-	public List<EmailSetting> selectEmailSetting() {
-		return session.selectList("email.selectEmailSetting");
-	}
-
-	// email list 조회
-	@Override
-	public List<Email> selectEmailList(HashMap<String, Object> param) {
-		return session.selectList("email.selectEmailList", param);
-	}
-
-	// sms 이용 요금 조회
+	// SMS 이용 요금 조회
 	@Override
 	public int countBySendPhone(String phone) {
 		return session.selectOne("sms.countBySendPhone", phone);
 	}
 	
-	// review 전체 목록 개수
+	// SMS 자동발송 여부 조회
 	@Override
-	public int totalReviewCount(Map<Object, Object> param) {
-		return session.selectOne("review.totalReviewCount", param);
-	}
-
-	// sms 전체 목록 개수
-	@Override
-	public int totalSmsCount(HashMap<String, Object> param) {
-		return session.selectOne("sms.totalSmsCount", param);
-	}
-
-	// email 전체 목록 개수
-	@Override
-	public int totalEmailCount(HashMap<String, Object> param) {
-		return session.selectOne("email.totalEmailCount", param);
+	public List<Object> selectSmsSetting() {
+		return session.selectList("sms.selectSmsSetting");
 	}
 	
+	// SMS 설정 저장
+	@Override
+	public int smsAutoSend(Map<String, Object> setMod) {
+		return session.update("sms.autoSend", setMod);
+	}
+	
+	// Email 목록 조회
+	@Override
+	public int totalEmailCount(Map<String, Object> param) {
+		return session.selectOne("email.totalEmailCount", param);
+	}
+	@Override
+	public List<Object> selectEmailList(Map<String, Object> param) {
+		return session.selectList("email.selectEmailList", param);
+	}
+	
+	// Email 자동발송 여부 조회
+	@Override
+	public List<Object> selectEmailSetting() {
+		return session.selectList("email.selectEmailSetting");
+	}
+	
+	// Email 설정 저장
+	@Override
+	public int emailAutoSend(Map<String, Object> setMod) {
+		return session.update("email.autoSend", setMod);
+	}
+
+	// 회원 정보 v_msg_info 조회
+	@Override
+	public MsgInfo selectMsgInfo(long orderNo) {
+		return session.selectOne("sms.msgInfo", orderNo);
+	}
+	
+	// SMS 발송
+	@Override
+	public List<SmsSetting> smsAutoChecked(String templateId) {
+		return session.selectList("sms.smsCheck", templateId);
+	}
+	@Override
+	public int insertSms(HashMap<String, Object> param2) {
+		return session.insert("sms.insertSms", param2);
+	}
+	
+	// Email 발송
+	@Override
+	public List<EmailSetting> emailAutoChecked(String templateId) {
+		return session.selectList("email.emailCheck", templateId);
+	}
+	@Override
+	public int insertEmail(HashMap<String, Object> param2) {
+		return session.insert("email.insertEmail", param2);
+	}
+
 }

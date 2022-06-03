@@ -45,19 +45,9 @@ public class BoardRestController {
 	@PostMapping(value="json/addComment")
 	public void addComment(@RequestBody BoardComment boardComment)throws Exception{
 		System.out.println("/json/addComment 시작");
-	
 		Member member = boardService.getMemberData(boardComment.getCommentMemberNo());
 		boardComment.setCommentWriter(member.getLastName()+member.getFirstName());
-		
 		boardService.addComment(boardComment);
-	}
-	
-	@PostMapping(value="json/addPost")
-	@ResponseBody
-	public void addPost(@RequestBody Post post,
-					    @RequestParam(value="boardNo", required=false) int boardNo)throws Exception{
-		System.out.println("/json/addPost 시작");
-		System.out.println("post데이터 확인 ::: === "+post);
 	}
 	
 	@PostMapping(value="json/plupload")
@@ -90,53 +80,36 @@ public class BoardRestController {
 	
 	@GetMapping(value="json/getBoardAllData/{boardNo}")
 	public Board getBoardAllData(@PathVariable("boardNo") int boardNo, Model model) throws Exception{
-		
-		System.out.println("getBoardAllData 시작");
-		
-		System.out.println("데이터 확인 ::: "+boardService.getBoardAllData(boardNo));
-		
+		System.out.println("getBoardAllData 시작");		
 		return boardService.getBoardAllData(boardNo);
 	}
 	
-	@GetMapping(value="json/getMemberData")
-	public Member getMemberData() throws Exception{
-		
-		System.out.println("getMemberData 시작");
-		
-		
-		//아이디 값이 없기 때문에 일단 memberNo 2번으로
-		return boardService.getMemberData(2);
+	@GetMapping(value="json/getMemberData/{secNo}")
+	public Member getMemberData(@PathVariable("secNo") int secNo) throws Exception{
+		return boardService.getMemberData(secNo);
 	}
 	
 	@GetMapping(value="json/getPostData/{postNo}")
 	public Post getPostData(@PathVariable("postNo") int postNo)throws Exception{
-		
 		System.out.println("getPostData 시작");
-		
 		return boardService.getPostData(postNo);
 	}
 	
 	@GetMapping(value="json/getMemberData2/{memberNo}")
 	public Member getMemberData2(@PathVariable("memberNo") int memberNo) throws Exception{
-		
 		System.out.println("getMemberData2 시작");
-		
 		return boardService.getMemberData(memberNo);
 	}
 	
 	@GetMapping(value="json/getCommentList/{postNo}")
 	public List<BoardComment> getCommentList(@PathVariable("postNo") int postNo) throws Exception{
-		
 		System.out.println("json/getCommentList 시작");
-		
 		List<BoardComment> boardComment = boardService.getCommentList(postNo);
-		
 		return boardComment;
 	}
 	
 	@GetMapping(value="json/postViewCount/{postNo}")
 	public void postViewCount(@PathVariable("postNo") int postNo) throws Exception{
-		
 		System.out.println("json/postViewCount 시작");
 		Post post = boardService.getPostData(postNo);
 		post.setPostViewCount(post.getPostViewCount()+1);
@@ -145,27 +118,21 @@ public class BoardRestController {
 	
 	@GetMapping(value="json/postFileCount/{postNo}")
 	public void postFileCount(@PathVariable("postNo") int postNo) throws Exception{
-		
 		System.out.println("json/postFileCount 시작");
 		Post post = boardService.getPostData(postNo);
-		System.out.println("downloadCount 확인 ::: "+post.getPostDownloadCount()+1);
 		post.setPostDownloadCount(post.getPostDownloadCount()+1);
 		boardService.postFileCount(post);
 	}
 	
 	@GetMapping(value="json/getPostFile/{postNo}")
 	public List<BoardFile> getPostFile(@PathVariable("postNo") int postNo) throws Exception{
-		
 		System.out.println("json/getPostFile 시작");
 		List<BoardFile> boardFile =  boardService.getPostFile(postNo);
-		
 		return boardFile;
 	}
 	
 	@PostMapping("json/boardProcess")
-	public Boolean deleteChoiceBoard(@RequestParam(value = "boardArr[]") List<String> boardArr, 
-									 @RequestParam("mode") String mode) throws Exception{
-		
+	public Boolean boardProcess(@RequestParam(value = "boardArr[]") List<String> boardArr,  @RequestParam("mode") String mode) throws Exception{
 		Boolean result = false;
 		Map<String, Object> boardMap = new HashMap<>();
 		boardMap.put("boardArr", boardArr);
@@ -173,7 +140,22 @@ public class BoardRestController {
 		boardService.boardProcess(boardMap);
 		result = true;
 		return result;
-		
+	}	
+	
+	@PostMapping("json/postProcess")
+	public Boolean postProcess(@RequestParam(value = "postArr[]") List<String> postArr,
+							   @RequestParam(value = "boardNo", required = false, defaultValue= "0") int boardNo,
+							   @RequestParam("mode") String mode) throws Exception{
+		Post post = new Post();
+		Boolean result = false;
+		Map<String, Object> postMap = new HashMap<>();
+		postMap.put("postArr", postArr);
+		postMap.put("mode", mode);
+		postMap.put("boardNo", boardNo);
+		postMap.put("post", post);
+		boardService.postProcess(postMap);
+		result = true;
+		return result;
 	}	
 	
 	@GetMapping(value="json/deleteFile/{fileNo}")
@@ -191,9 +173,7 @@ public class BoardRestController {
 	@GetMapping(value="json/getAdminMenu")
 	public List<AdminMenu> getAdminMenu() throws Exception{
 		System.out.println("json/getAdminMenu 시작");
-		
 		List<AdminMenu> adminMenu = settingService.selectAdminMenuList();
-		
 		return adminMenu;
 	}
 	
@@ -208,9 +188,7 @@ public class BoardRestController {
 		String contentType = "image/jpg";
         File file = new File(saveFileName);
         long fileLength = file.length();
-        
-        System.out.println("확인 ==== --- :: "+fileName);
-        System.out.println("확인 ==== --- :: "+saveFileName);
+
         //파일의 크기와 같지 않을 경우 프로그램이 멈추지 않고 계속 실행되거나, 잘못된 정보가 다운로드 될 수 있다.
 
         response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
@@ -241,17 +219,15 @@ public class BoardRestController {
 							@RequestParam("upPostNo") int upPostNo) throws Exception{
 		System.out.println("updateUpAsc 시작");
 		Boolean result = false;
-		if(postNo != 0) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			Map<String, Object> map2 = new HashMap<String, Object>();
-			map.put("boardUpAsc", boardUpAsc);
-			map.put("upPostNo", postNo);
-			map2.put("boardUpAsc", boardAsc);
-			map2.put("upPostNo", upPostNo);
-			boardService.updateUpAsc(map);
-			boardService.updateUpAsc(map2);
-			result = true;
-		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map.put("boardUpAsc", boardUpAsc);
+		map.put("upPostNo", postNo);
+		map2.put("boardUpAsc", boardAsc);
+		map2.put("upPostNo", upPostNo);
+		boardService.updateUpAsc(map);
+		boardService.updateUpAsc(map2);
+		result = true;
 		return result;
 	}
 	
@@ -262,18 +238,15 @@ public class BoardRestController {
 							@RequestParam("downPostNo") int downPostNo) throws Exception{
 		System.out.println("json/updateDownAsc 시작");
 		Boolean result = false;
-		if(postNo != 0) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			Map<String, Object> map2 = new HashMap<String, Object>();
-			map.put("boardDownAsc", boardDownAsc);
-			map.put("downPostNo", postNo);
-			map2.put("boardDownAsc", boardAsc);
-			map2.put("downPostNo", downPostNo);
-			boardService.updateDownAsc(map);
-			boardService.updateDownAsc(map2);
-			result = true;
-		}
-
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map.put("boardDownAsc", boardDownAsc);
+		map.put("downPostNo", postNo);
+		map2.put("boardDownAsc", boardAsc);
+		map2.put("downPostNo", downPostNo);
+		boardService.updateDownAsc(map);
+		boardService.updateDownAsc(map2);
+		result = true;
 		return result;
 	}
 	

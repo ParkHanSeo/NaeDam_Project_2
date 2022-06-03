@@ -1,5 +1,6 @@
 package com.naedam.admin.delivery.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,9 +54,31 @@ public class DeliveryServiceImpl implements DeliveryService {
 	}
 
 	@Override
-	public int updateDeliverySettingByVo(DeliverySetting deliSet) {
+	public int updateDeliverySettingByVo(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		return deliveryDao.updateDeliverySettingByVo(deliSet);
+		String basicFee = (String)param.get("delivery_price");
+		String FreeShippingSettings = (String)param.get("delivery_limit");
+		int result = 0;
+		
+		DeliverySetting deliSet = new DeliverySetting();
+		deliSet.setBasicDeliveryFee(Integer.parseInt(basicFee.replace(",", "")));
+		deliSet.setExtraDeliFeeYn((String) param.get("delivery_extra_cost_area"));
+		deliSet.setFreeShippingSettings(Integer.parseInt(FreeShippingSettings.replace(",", "")));
+		
+		result = deliveryDao.updateDeliverySettingByVo(deliSet);
+		
+		
+		ArrayList<String> doseoNoList = (ArrayList<String>) param.get("doseo_no");
+		ArrayList<String> extraFeeList = (ArrayList<String>) param.get("extra_fee");
+		
+		for(int i = 0; i < doseoNoList.size(); i++) {
+			Doseosangan doseo = new Doseosangan();
+			doseo.setDoseoNo(Integer.parseInt(doseoNoList.get(i)));
+			doseo.setExtraFee(Integer.parseInt(extraFeeList.get(i).replace(",", "")));
+			
+			result = deliveryDao.updateDoseosanganByVo(doseo);
+		}
+		return result;
 	}
 
 	@Override
