@@ -1,5 +1,8 @@
 package com.naedam.admin.point.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,13 +24,13 @@ public class PointController {
 	private PointService pointService;
 	
 	@PostMapping("/updatePoints")
-	public String updatePoints(Point point, PointSave pointSave, PointUse pointUse, RedirectAttributes redirectAttr) {
-		int result = 0;
-		
-		result = pointService.updatePoint(point);
-		result = pointService.updatePointSave(pointSave);
-		result = pointService.updatePointUse(pointUse);
-		if(result > 0) redirectAttr.addFlashAttribute("msg", "적립금 정보가 변경되었습니다.");
+	public String updatePoints(Point point, PointSave pointSave, PointUse pointUse, RedirectAttributes redirectAttr) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("point", point);
+		map.put("pointSave", pointSave);
+		map.put("pointUse", pointUse);
+		Map<String, Object> resultMap = pointService.updatePoint(map);
+		redirectAttr.addFlashAttribute("msg", resultMap.get("msg"));
 		return "redirect:/admin/setting/point";
 	}
 }

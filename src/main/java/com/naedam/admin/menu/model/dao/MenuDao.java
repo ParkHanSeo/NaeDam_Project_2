@@ -76,7 +76,7 @@ public interface MenuDao {
 	public void updateRevision(int code) throws Exception;
 	
 	//메뉴 선택삭제
-	public void updateChoiceMenu(int code) throws Exception;
+	public void updateChoiceMenu(List<Integer> code) throws Exception;
 	
 	//메뉴 up순서변경
 	public void updateUpAsc(Map<String, Object> map)throws Exception;	
@@ -91,7 +91,7 @@ public interface MenuDao {
 	public void updateDownAsc(Map<String, Object> map)throws Exception;	
 	
 	//헤더 선택삭제
-	public void deleteChoiceHead(int headNo) throws Exception;
+	public void deleteChoiceHead(List<Integer> headNo) throws Exception;
 	
 	//리비젼의 메뉴 삭제
 	public void deleteMenu(int code) throws Exception;
