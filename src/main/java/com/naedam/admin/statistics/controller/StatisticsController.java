@@ -225,7 +225,6 @@ public class StatisticsController {
 	@RequestMapping(value="/product")
 	public String statisticsProduct(Model model, @ModelAttribute("search") Search search) throws Exception {
 		System.out.println("statistics/product 시작");
-		String type = "product";
 		ProductStatisticVo product = new ProductStatisticVo();
 		product.setRegStartdate(search.getStart_date());
 		product.setRegEnddate(search.getEnd_date());
@@ -233,9 +232,8 @@ public class StatisticsController {
 		map.put("search", search);
 		map.put("product", product);
 		Map<String, Object> resultMap = statisticsService.selectProductStatistics(map);
-		List<Category> categoryList = categoryService.selectProductCategory(type);
 		model.addAttribute("list", resultMap.get("list"));
-		model.addAttribute("list2", categoryList);
+		model.addAttribute("list2", resultMap.get("list2"));
 		return "admin/statistics/product";
 	}
 	
@@ -279,162 +277,55 @@ public class StatisticsController {
 	@GetMapping("/address_day")
 	public String statisticsAddress_day(Model model, Search search) throws Exception {
 		System.out.println("get/statistics/address_day 시작");
-		LocalDate now = LocalDate.now();
-		String startDate = now.minusDays(7).toString();
-		String endDate = now.toString();
-		search.setStart_date(startDate);
-		search.setEnd_date(endDate);
 		Map<String, Object> map = new HashMap<String, Object>();
-		AddressStatisticVo addressVo = new AddressStatisticVo();
-		addressVo.setAddressCategory(1);
+		LocalDate now = LocalDate.now();
+		search.setStart_date(now.minusDays(7).toString());
+		search.setEnd_date(now.toString());
 		map.put("search", search);
-		map.put("addressVo", addressVo);
-		List<AddressStatisticVo> resultList = new ArrayList<AddressStatisticVo>();
-		List<AreaVo> areaAddress = new ArrayList<AreaVo>(); 
-		areaAddress = statisticsService.selectAreaPayment(map);
-		List<AreaVo> area = statisticsService.selectArea();
+		map.put("mode", "address_day");
+		Map<String, Object> resultMap = statisticsService.statisticsAddress(map);
 
-		for(int i = 0; i < areaAddress.size(); i++) {
-			area.set(areaAddress.get(i).getAreaNo()-1, areaAddress.get(i));
-		}
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		LocalDate startDateLocal = LocalDate.parse(startDate, formatter);
-		LocalDate endDateLocal = LocalDate.parse(endDate, formatter);
-				
-		List<LocalDate> localDate = startDateLocal.datesUntil(endDateLocal.plusDays(1)).collect(Collectors.toList());
-		
-		for(int i = 0; i < localDate.size(); i++) {
-			map.put("date", localDate.get(i));
-			
-			AddressStatisticVo address = new AddressStatisticVo();
-			try {
-				address = statisticsService.selectAddressStatistics2(map);
-			} catch (Exception e) {
-				
-				e.printStackTrace();
-			}
-			if(address == null) {
-				address = new AddressStatisticVo();
-				address.setPaidAt(localDate.get(i));
-			}
-			resultList.add(address);
-		}
-		
-		
-		
-		model.addAttribute("list", resultList);
-		model.addAttribute("list2", area);
-		return "admin/statistics/address_day";
+		model.addAttribute("list", resultMap.get("resultList"));
+		model.addAttribute("list2", resultMap.get("area"));
+		return (String)resultMap.get("return");
 	}
 	
 	@PostMapping("/address_day")
 	public String statisticsAddress_day(Model model, HttpServletRequest request, Search search) throws Exception {
 		System.out.println("post/statistics/statisticsAddress_day 시작");
-		
+		Map<String, Object> map = new HashMap<String, Object>();
 		String startDate = request.getParameter("start_date");
 		String endDate = request.getParameter("end_date");
 		search.setStart_date(startDate);
 		search.setEnd_date(endDate);
-		Map<String, Object> map = new HashMap<String, Object>();
-		AddressStatisticVo addressVo = new AddressStatisticVo();
-		addressVo.setAddressCategory(1);
 		map.put("search", search);
-		map.put("addressVo", addressVo);
-		List<AddressStatisticVo> resultList = new ArrayList<AddressStatisticVo>();
-		List<AreaVo> areaAddress = new ArrayList<AreaVo>(); 
-		areaAddress = statisticsService.selectAreaPayment(map);
-		List<AreaVo> area = statisticsService.selectArea();
-
-		for(int i = 0; i < areaAddress.size(); i++) {
-			area.set(areaAddress.get(i).getAreaNo()-1, areaAddress.get(i));
-		}
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		LocalDate startDateLocal = LocalDate.parse(startDate, formatter);
-		LocalDate endDateLocal = LocalDate.parse(endDate, formatter);
-				
-		List<LocalDate> localDate = startDateLocal.datesUntil(endDateLocal.plusDays(1)).collect(Collectors.toList());
-		
-		for(int i = 0; i < localDate.size(); i++) {
-			map.put("date", localDate.get(i));
-			
-			AddressStatisticVo address = new AddressStatisticVo();
-			try {
-				address = statisticsService.selectAddressStatistics2(map);
-			} catch (Exception e) {
-				
-				e.printStackTrace();
-			}
-			if(address == null) {
-				address = new AddressStatisticVo();
-				address.setPaidAt(localDate.get(i));
-			}
-			resultList.add(address);
-		}
-		
-		model.addAttribute("list", resultList);
-		model.addAttribute("list2", area);
-		return "admin/statistics/address_day";
+		map.put("mode", "address_day");
+		Map<String, Object> resultMap = statisticsService.statisticsAddress(map);
+		model.addAttribute("list", resultMap.get("resultList"));
+		model.addAttribute("list2", resultMap.get("area"));
+		return (String)resultMap.get("return");
 	}	
 
 	@GetMapping("/address_month")
 	public String statisticsAddress_month(Model model, Search search) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		LocalDate now = LocalDate.now();
 		String startDate = now.minusMonths(1).toString();
 		String endDate = now.toString();
 		search.setStart_date(startDate);
 		search.setEnd_date(endDate);
-		Map<String, Object> map = new HashMap<String, Object>();
-		AddressStatisticVo addressVo = new AddressStatisticVo();
-		addressVo.setAddressCategory(2);
 		map.put("search", search);
-		map.put("addressVo", addressVo);
-		List<AddressStatisticVo> resultList = new ArrayList<AddressStatisticVo>();
-		List<AreaVo> areaAddress = new ArrayList<AreaVo>(); 
-		areaAddress = statisticsService.selectAreaPayment(map);
-		List<AreaVo> area = statisticsService.selectArea();
-
-		for(int i = 0; i < areaAddress.size(); i++) {
-			area.set(areaAddress.get(i).getAreaNo()-1, areaAddress.get(i));
-		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		LocalDate startDateLocal = LocalDate.parse(startDate, formatter);
-		LocalDate endDateLocal = LocalDate.parse(endDate, formatter);
-				
-		int numOfDaysBetween = (int) ChronoUnit.MONTHS.between(startDateLocal, endDateLocal.plusMonths(1));
-		
-		List<LocalDate> localDate = IntStream.iterate(0, i -> i + 1)
-						        	.limit(numOfDaysBetween)
-						        	.mapToObj(i -> startDateLocal.plusMonths(i))
-						        	.collect(Collectors.toList());
-		
-		for(int i = 0; i < localDate.size(); i++) {
-			map.put("date", localDate.get(i));
-			AddressStatisticVo address = new AddressStatisticVo();
-			try {
-				address = statisticsService.selectAddressStatistics2(map);
-			} catch (Exception e) {	
-				e.printStackTrace();
-			}
-			if(address == null) {
-				address = new AddressStatisticVo();
-				address.setPaidAt(localDate.get(i));
-			}
-			resultList.add(address);
-		}
-		model.addAttribute("list", resultList);
-		model.addAttribute("list2", area);
-		return "admin/statistics/address_month";
+		map.put("mode", "address_month");
+		Map<String, Object> resultMap = statisticsService.statisticsAddress(map);
+		model.addAttribute("list", resultMap.get("resultList"));
+		model.addAttribute("list2", resultMap.get("area"));
+		return (String)resultMap.get("return");
 	}
 	
 	@PostMapping("/address_month")
 	public String statisticsAddress_month(Model model, HttpServletRequest request, Search search) throws Exception {
 		System.out.println("post/statistics/statisticsAddress_month 시작");
-		
+		Map<String, Object> map = new HashMap<String, Object>();
 		String startDate = request.getParameter("start_date");
 		String endDate = request.getParameter("end_date");
 		StringBuffer sbStartDate = new StringBuffer();
@@ -443,106 +334,34 @@ public class StatisticsController {
 		sbEndDate.append(endDate);
 		search.setStart_date(sbStartDate.append("-01").substring(0, 10));
 		search.setEnd_date(sbEndDate.append("-01").substring(0, 10));
-		Map<String, Object> map = new HashMap<String, Object>();
-		AddressStatisticVo addressVo = new AddressStatisticVo();
 		map.put("search", search);
-		map.put("addressVo", addressVo);
-		addressVo.setAddressCategory(2);
-		List<AddressStatisticVo> resultList = new ArrayList<AddressStatisticVo>();
-		List<AreaVo> areaAddress = new ArrayList<AreaVo>(); 
-		areaAddress = statisticsService.selectAreaPayment(map);
-		List<AreaVo> area = statisticsService.selectArea();
-
-		for(int i = 0; i < areaAddress.size(); i++) {
-			area.set(areaAddress.get(i).getAreaNo()-1, areaAddress.get(i));
-		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		LocalDate startDateLocal = LocalDate.parse(sbStartDate, formatter);
-		LocalDate endDateLocal = LocalDate.parse(sbEndDate, formatter);
-				
-		int numOfDaysBetween = (int) ChronoUnit.MONTHS.between(startDateLocal, endDateLocal.plusMonths(1));
-		
-		List<LocalDate> localDate = IntStream.iterate(0, i -> i + 1)
-						        	.limit(numOfDaysBetween)
-						        	.mapToObj(i -> startDateLocal.plusMonths(i))
-						        	.collect(Collectors.toList());
-		
-		for(int i = 0; i < localDate.size(); i++) {
-			map.put("date", localDate.get(i));
-			AddressStatisticVo address = new AddressStatisticVo();
-			try {
-				address = statisticsService.selectAddressStatistics2(map);
-			} catch (Exception e) {	
-				e.printStackTrace();
-			}
-			if(address == null) {
-				address = new AddressStatisticVo();
-				address.setPaidAt(localDate.get(i));
-			}
-			resultList.add(address);
-		}
-		model.addAttribute("list", resultList);
-		model.addAttribute("list2", area);
-		return "admin/statistics/address_month";
+		map.put("mode", "address_month");
+		Map<String, Object> resultMap = statisticsService.statisticsAddress(map);
+		model.addAttribute("list", resultMap.get("resultList"));
+		model.addAttribute("list2", resultMap.get("area"));
+		return (String)resultMap.get("return");
 	}
 	
 	@GetMapping("/address_year")
 	public String statisticsAddress_year(Model model, Search search) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();		
 		LocalDate now = LocalDate.now();
 		String startDate = now.minusYears(4).toString();
 		String endDate = now.toString();
 		search.setStart_date(startDate);
-		search.setEnd_date(endDate);		
-		Map<String, Object> map = new HashMap<String, Object>();
-		AddressStatisticVo addressVo = new AddressStatisticVo();
-		addressVo.setAddressCategory(3);
+		search.setEnd_date(endDate);	
 		map.put("search", search);
-		map.put("addressVo", addressVo);
-		List<AddressStatisticVo> resultList = new ArrayList<AddressStatisticVo>();
-		List<AreaVo> areaAddress = new ArrayList<AreaVo>(); 
-		areaAddress = statisticsService.selectAreaPayment(map);
-		List<AreaVo> area = statisticsService.selectArea();
-
-		for(int i = 0; i < areaAddress.size(); i++) {
-			area.set(areaAddress.get(i).getAreaNo()-1, areaAddress.get(i));
-		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		LocalDate startDateLocal = LocalDate.parse(startDate, formatter);
-		LocalDate endDateLocal = LocalDate.parse(endDate, formatter);
-				
-		int numOfDaysBetween = (int) ChronoUnit.YEARS.between(startDateLocal, endDateLocal.plusYears(1));
-		
-		List<LocalDate> localDate = IntStream.iterate(0, i -> i + 1)
-						        	.limit(numOfDaysBetween)
-						        	.mapToObj(i -> startDateLocal.plusYears(i))
-						        	.collect(Collectors.toList());
-		
-		for(int i = 0; i < localDate.size(); i++) {
-			map.put("date", localDate.get(i));
-			AddressStatisticVo address = new AddressStatisticVo();
-			try {
-				address = statisticsService.selectAddressStatistics2(map);
-			} catch (Exception e) {
-				
-				e.printStackTrace();
-			}
-			if(address == null) {
-				address = new AddressStatisticVo();
-				address.setPaidAt(localDate.get(i));
-			}
-			resultList.add(address);
-		}
-		model.addAttribute("list", resultList);
-		model.addAttribute("list2", area);
-		return "admin/statistics/address_year";
+		map.put("mode", "address_year");
+		Map<String, Object> resultMap = statisticsService.statisticsAddress(map);
+		model.addAttribute("list", resultMap.get("resultList"));
+		model.addAttribute("list2", resultMap.get("area"));
+		return (String)resultMap.get("return");
 	}
 	
 	@PostMapping("/address_year")
 	public String statisticsAddress_year(Model model, HttpServletRequest request, Search search) throws Exception {
 		System.out.println("post/statistics/statisticsAddress_year 시작");
-		
+		Map<String, Object> map = new HashMap<String, Object>();		
 		LocalDate now = LocalDate.now();
 		String startDate = request.getParameter("start_date");
 		String endDate = request.getParameter("end_date");
@@ -552,49 +371,11 @@ public class StatisticsController {
 		sbEndDate.append(endDate);
 		search.setStart_date(sbStartDate.append("-01-01").substring(0, 10));
 		search.setEnd_date(sbEndDate.append("-01-01").substring(0, 10));		
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		AddressStatisticVo addressVo = new AddressStatisticVo();
-		addressVo.setAddressCategory(3);
 		map.put("search", search);
-		map.put("addressVo", addressVo);
-		List<AddressStatisticVo> resultList = new ArrayList<AddressStatisticVo>();
-		List<AreaVo> areaAddress = new ArrayList<AreaVo>(); 
-		areaAddress = statisticsService.selectAreaPayment(map);
-		List<AreaVo> area = statisticsService.selectArea();
-
-		for(int i = 0; i < areaAddress.size(); i++) {
-			area.set(areaAddress.get(i).getAreaNo()-1, areaAddress.get(i));
-		}
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		LocalDate startDateLocal = LocalDate.parse(sbStartDate, formatter);
-		LocalDate endDateLocal = LocalDate.parse(sbEndDate, formatter);
-		
-		int numOfDaysBetween = (int) ChronoUnit.YEARS.between(startDateLocal, endDateLocal.plusYears(1));
-		
-		List<LocalDate> localDate = IntStream.iterate(0, i -> i + 1)
-						        	.limit(numOfDaysBetween)
-						        	.mapToObj(i -> startDateLocal.plusYears(i))
-						        	.collect(Collectors.toList());
-		
-		for(int i = 0; i < localDate.size(); i++) {
-			map.put("date", localDate.get(i));
-			AddressStatisticVo address = new AddressStatisticVo();
-			try {
-				address = statisticsService.selectAddressStatistics2(map);
-			} catch (Exception e) {
-				
-				e.printStackTrace();
-			}
-			if(address == null) {
-				address = new AddressStatisticVo();
-				address.setPaidAt(localDate.get(i));
-			}
-			resultList.add(address);
-		}
-		model.addAttribute("list", resultList);
-		model.addAttribute("list2", area);
-		return "admin/statistics/address_year";
+		map.put("mode", "address_year");
+		Map<String, Object> resultMap = statisticsService.statisticsAddress(map);
+		model.addAttribute("list", resultMap.get("resultList"));
+		model.addAttribute("list2", resultMap.get("area"));
+		return (String)resultMap.get("return");
 	}
 }

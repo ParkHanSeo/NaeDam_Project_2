@@ -1,6 +1,8 @@
 package com.naedam.admin.point.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,14 @@ public class pointServiceImpl implements PointService {
 	private PointDao pointDao;
 
 	@Override
-	public int updatePoint(Point point) {
+	public Map<String, Object> updatePoint(Map<String, Object> map) {
 		// TODO Auto-generated method stub
-		return pointDao.updatePoint(point);
+		Map<String, Object> resultMap = new HashMap<>();
+		pointDao.updatePoint((Point)map.get("point"));
+		pointDao.updatePointSave((PointSave)map.get("pointSave"));
+		pointDao.updatePointUse((PointUse)map.get("pointUse"));
+		resultMap.put("msg", "적립금 정보가 변경되었습니다.");
+		return resultMap;
 	}
 
 	@Override
@@ -39,12 +46,6 @@ public class pointServiceImpl implements PointService {
 	public List<MemberPointExcelForm> selectMemberPointExcelForm(String memberId) {
 		// TODO Auto-generated method stub
 		return pointDao.selectMemberPointExcelForm(memberId);
-	}
-
-	@Override
-	public int insertMemberPoint(MemberPoint memberPoint) {
-		// TODO Auto-generated method stub
-		return pointDao.insertMemberPoint(memberPoint);
 	}
 
 	@Override

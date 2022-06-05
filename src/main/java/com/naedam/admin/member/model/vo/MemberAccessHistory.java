@@ -19,6 +19,7 @@ public class MemberAccessHistory implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private int accessHistoryNo;
+	private int accessHistoryNoDesc;
 	private String accessHistoryId;
 	private String accessHistoryName;
 	private String accessHistoryIp;

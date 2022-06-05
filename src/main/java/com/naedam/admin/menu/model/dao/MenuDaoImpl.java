@@ -148,7 +148,7 @@ public class MenuDaoImpl implements MenuDao {
 	
 	//메뉴 선택 삭제 후 리비젼
 	@Override
-	public void updateChoiceMenu(int code) throws Exception {
+	public void updateChoiceMenu(List<Integer> code) throws Exception {
 		sqlSession.update("menu.updateChoiceMenu", code);
 	}
 	
@@ -160,7 +160,7 @@ public class MenuDaoImpl implements MenuDao {
 	
 	//헤더관리 선택삭제
 	@Override
-	public void deleteChoiceHead(int headNo) throws Exception {
+	public void deleteChoiceHead(List<Integer> headNo) throws Exception {
 		sqlSession.delete("menu.deleteChoiceHead", headNo);
 	}
 

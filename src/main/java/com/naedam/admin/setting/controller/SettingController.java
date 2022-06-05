@@ -74,38 +74,28 @@ public class SettingController {
 
 	@GetMapping("/point")
 	public void point(Model model) {
-		Point point = settingService.selectPoint();
-		PointUse pointUse = settingService.selectPointUse();
-		PointSave pointSave = settingService.selectPointSave();
-
-		model.addAttribute("point", point);
-		model.addAttribute("pointUse", pointUse);
-		model.addAttribute("pointSave", pointSave);
+		Map<String, Object> resultMap = settingService.selectPoint();
+		model.addAttribute("point", resultMap.get("point"));
+		model.addAttribute("pointUse", resultMap.get("pointUse"));
+		model.addAttribute("pointSave", resultMap.get("pointSave"));
 	}
 
 	@GetMapping("/coupon")
-	public void coupon(Model model) {
+	public void coupon(Model model, HttpServletRequest request) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		List<Coupon> couponList = settingService.selectCouponListByParam(param);
-
-		model.addAttribute("couponList", couponList);
+		param.put("mode", "1");
+		Map<String, Object> resultMap = settingService.selectCouponListByParam(param, request);
+		model.addAttribute("couponList", resultMap.get("couponList"));
 	}
 
 	@PostMapping("/coupon")
 	@SuppressWarnings("rawtypes")
 	public void coupon(HttpServletRequest request, Model model) {
 		Map<String, Object> param = new HashMap<String, Object>();
-
-		Enumeration params = request.getParameterNames();
-		while (params.hasMoreElements()) {
-			String name = (String) params.nextElement();
-			param.put(name, request.getParameter(name));
-		}
-
-		List<Coupon> couponList = settingService.selectCouponListByParam(param);
-
-		model.addAttribute("couponList", couponList);
-		model.addAttribute("param", param);
+		param.put("mode", "2");
+		Map<String, Object> resultMap = settingService.selectCouponListByParam(param, request);
+		model.addAttribute("couponList", resultMap.get("couponList"));
+		model.addAttribute("param",resultMap.get("param"));
 	}
 
 	@GetMapping("/popup")
@@ -123,14 +113,9 @@ public class SettingController {
 		param.put("end_date", request.getParameter("end_date"));
 		param.put("field", request.getParameter("field"));
 		param.put("keyword", request.getParameter("keyword"));
-
-		log.debug("param = {}", param);
-
 		List<Popup> popupList = settingService.selectPopupListByParam(param);
-
 		model.addAttribute("param", param);
 		model.addAttribute("popupList", popupList);
-
 		return "/admin/setting/popup";
 	}
 
@@ -148,7 +133,6 @@ public class SettingController {
 	@GetMapping("/history")
 	public void history(Model model) {
 		List<History> historyList = settingService.selectHistoryList();
-
 		model.addAttribute("historyList", historyList);
 	}
 
@@ -168,20 +152,16 @@ public class SettingController {
 	public String deliverySertting(Model model) {
 		DeliverySetting deliverySetting = settingService.selectOneDeliverySetting();
 		List<Doseosangan> doseosanganList = settingService.selectDoseosanganList();
-
 		model.addAttribute("deliverySetting", deliverySetting);
 		model.addAttribute("doseosanganList", doseosanganList);
-
 		return "admin/setting/deliverySetting";
 	}
 
 	@GetMapping("/delivery_company")
 	public String deliveryCompany(Model model) {
-
 		List<DeliveryCompany> deliveryCompanyList = settingService.selectDeliveryCompanyList();
 		model.addAttribute("deliveryCompanyList", deliveryCompanyList);
 		model.addAttribute("companyListCnt", deliveryCompanyList.size());
-
 		return "admin/setting/deliveryCompany";
 	}
 
@@ -190,11 +170,9 @@ public class SettingController {
 		List<AdminMenu> adminMenuList = settingService.selectAdminMenuList();
 		List<Locale> localeList = settingService.selectLocaleList();
 		AdminSetting adminSetting = settingService.selectAdminSetting();
-
 		model.addAttribute("adminSetting", adminSetting);
 		model.addAttribute("adminMenuList", adminMenuList);
 		model.addAttribute("localeList", localeList);
-
 	}
 
 	@GetMapping("/img_view")
@@ -221,36 +199,12 @@ public class SettingController {
 	@PostMapping("/process.do")
 	public String process(HttpServletRequest request, AdminSetting adminSetting, DeliveryNotice deliveryNotice,
 			AdminMenu adminMenu) {
-		int result = 0;
-		String mode = request.getParameter("mode");
-		if (mode.equals("info")) {
-			String phone = request.getParameter("mobile1") + request.getParameter("mobile2")
-					+ request.getParameter("mobile3");
-			String callerId = request.getParameter("tel1") + request.getParameter("tel2")
-					+ request.getParameter("tel3");
-			adminSetting.setPhone(phone);
-			adminSetting.setCallerId(callerId);
-			if (adminSetting.getIsDiscount() == null)
-				adminSetting.setIsDiscount("N");
-
-			List<String> menuList = Arrays.asList(request.getParameterValues("admin_menu_list[]"));
-			result = settingService.updateAdminMenuAllN();
-			for (String menuNo : menuList) {
-				result = settingService.updateAdminMenu(menuNo);
-			}
-			List<String> localeList = Arrays.asList(request.getParameterValues("locale_list[]"));
-			result = settingService.updateLocaleAllN();
-			for (String localeCode : localeList) {
-				result = settingService.updateLocaleChoosen(localeCode);
-			}
-
-			result = settingService.updateLocaleDefault(request.getParameter("default_locale"));
-			result = settingService.updateAdminSetting(adminSetting);
-
-		} else if (mode.equals("updateGuide")) {
-			result = settingService.updateDeliveryNotice(deliveryNotice);
-		}
-
+		Map<String, Object> map = new HashMap<>();
+		map.put("mode", request.getParameter("mode"));
+		map.put("request", request);
+		map.put("adminSetting", adminSetting);
+		map.put("deliveryNotice", deliveryNotice);
+		int result = settingService.infoProcess(map);
 		return "redirect:/admin/setting/info";
 	}
 
@@ -454,58 +408,20 @@ public class SettingController {
 	// 임원 리스트 
 	@GetMapping("/staff.do")
 	public void staffList(@RequestParam(defaultValue = "1") int cPage, Model model) {
-		try {
-			// 임원 리스트 게시물
-			List<Staff> resultStaffList = settingService.selectStaffList();
-			model.addAttribute("resultStaffList", resultStaffList);
-			
-			// 전체 게시물 수
-			int totalStaffListCount = settingService.selectStaffListCount();
-			model.addAttribute("totalStaffListCount", totalStaffListCount);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Map<String, Object> resultMap = settingService.selectStaffList();
+		model.addAttribute("resultStaffList",resultMap.get("resultStaffList"));
+		model.addAttribute("totalStaffListCount",resultMap.get("totalStaffListCount"));
 	}
 	
 	// 임원 등록/수정
 	@PostMapping("/staff_process.do")
-	public String staffProcess(Staff staff, RedirectAttributes redirectAttribute, HttpServletRequest request) {
-		int result = 0;
-		String msg = null;
-		String mode = request.getParameter("mode");
-
-		try {
-			if (mode.equals("insert")) {
-				int resultInsertStaff = settingService.insertStaff(staff);
-			} else if (mode.equals("update")) {
-				int resultUpdateStaff = settingService.updateStaff(staff);
-				if (resultUpdateStaff > 0) {
-					msg = "수정 되었습니다.";
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "redirect:/admin/setting/staff.do";
-	}
-
-	// 임원 삭제
-	@PostMapping("/staff_delete.do")
-	public String staffDelete(@RequestParam int[] staffNo, RedirectAttributes redirectAttribute, HttpServletRequest request) {
-		int result = 0;
-		String msg = null;
-		String mode = request.getParameter("mode");
-
-		try {
-			if (mode.equals("delete")) {
-				int resultDeleteStaff = settingService.deleteStaff(staffNo);
-				if (resultDeleteStaff > 0) {
-					msg = "삭제 되었습니다.";
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public String staffProcess(@RequestParam(value="staffNo", required = false) int[] staffNo, Staff staff, RedirectAttributes redirectAttribute, HttpServletRequest request) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("staff", staff);
+		map.put("mode", request.getParameter("mode"));
+		map.put("staffNo", staffNo);
+		Map<String, Object> resultMap = settingService.staffProcess(map);
+		redirectAttribute.addFlashAttribute("msg", (String)resultMap.get("msg"));
 		return "redirect:/admin/setting/staff.do";
 	}
 
@@ -640,8 +556,8 @@ public class SettingController {
 		}
 
 		// 임원 리스트 게시물
-		List<Staff> staffList = settingService.selectStaffList();
-		resultMap.put("staffList", staffList);
+		Map<String, Object> map = settingService.selectStaffList();
+		resultMap.put("staffList", map.get("resultStaffList"));
 
 		return resultMap;
 	}
