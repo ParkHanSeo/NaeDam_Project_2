@@ -103,6 +103,7 @@
 		}
 		form_register.target = 'iframe_process';
 		form_register.submit();
+		alert("약관이 수정되었습니다.")
 	}
 	function setData() {
 		// 정보

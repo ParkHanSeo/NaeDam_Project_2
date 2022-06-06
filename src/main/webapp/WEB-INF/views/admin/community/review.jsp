@@ -29,6 +29,7 @@
 	                    <label style="margin-top:5px;">총 ${ reviewList.size() }건</label>
 	                    <div class="box-tools pull-right" style="margin-bottom:5px;">
 	                        <form name="form_search" method="post" action="${pageContext.request.contextPath }/admin/comm/review?${_csrf.parameterName}=${_csrf.token}">
+	                        <input type="hidden" name="mode" value="review">
 	                        <div class="has-feedback">
 	                            <span>
 	                                <input type="text" name="keyword" id="keyword" value="${ param.keyword == null ? '' : param.keyword }" class="form-control input-sm" placeholder="검색"/>
@@ -50,7 +51,6 @@
 	
 	                    <table class="table table-bordered table-hover">
 	                        <form name="form_list" method="post" action="${pageContext.request.contextPath }/admin/comm/delete?${_csrf.parameterName}=${_csrf.token}">
-	                            <input type="hidden" name="mode" id="mode">
 	                            <input type="hidden" name="review_code" value="<br /><b>Notice</b>:  Undefined variable: review_code in <b>/home/demoshop/public_html/html/admin/community/review.html</b> on line <b>45</b><br />">
 	                            <thead>
 		                            <tr>
@@ -67,18 +67,18 @@
 	                            <!-- 리뷰가 있을 경우 조회하기 -->
 	                            <tbody>
 	                                <c:choose>
-                                   		<c:when test="${ empty reviewList and empty param.keyword }">
+                                   		<c:when test="${ empty commList and empty param.keyword }">
                                    			<tr>
 	                                        	<td colspan="10"><br>등록된 후기가 없습니다.<br><br></td>
 	                                        </tr>
                                    		</c:when>
-                                   		<c:when test="${ empty reviewList and !empty param.keyword}">
+                                   		<c:when test="${ empty commList and !empty param.keyword}">
                                    			<tr>
 	                                        	<td colspan="10"><br>검색된 후기가 없습니다.<br><br></td>
 	                                        </tr>
                                    		</c:when>
                                    		<c:otherwise>
-                                   			<c:forEach var="review" items="${ reviewList }"> 
+                                   			<c:forEach var="review" items="${ commList }"> 
 	                                        	<tr>
 		                                            <td><input type="checkbox" name="list[]" value="${ review.reviewCode }"/></td> 
 		                                            <td>${ review.reviewCode }</td>
@@ -111,7 +111,8 @@
 	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog">
 	        <div class="modal-content">
-	            <form name="form_register" method="post" action="?tpf=admin/community/review_process" enctype="multipart/form-data">
+	            <form name="form_register" enctype="multipart/form-data">
+	            	<input type="hidden" name="mode" id="modalMode" value="reviewModal">
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		                <h4 class="modal-title" id="myModalLabelPortfolio">주문후기 관리</h4>
@@ -159,9 +160,9 @@
 	// 비동기로 모달에 값 불러오기
 	function setData(reviewCode){
 		$.ajax({
-			url: "${pageContext.request.contextPath}/admin/comm/review_modal",
-			type: 'get',
-			data: { reviewCode : reviewCode },
+			url: "${pageContext.request.contextPath}/admin/comm/load/reviewModal",
+			type: "get",
+			data: {reviewCode : reviewCode}	,
 			success: function(result){
 				// 작성자, 한줄 후기, 구매 후기
 				$("#name").val(result.review[0].writer);

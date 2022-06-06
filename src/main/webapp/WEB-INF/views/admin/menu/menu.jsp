@@ -60,8 +60,9 @@ body.modal-open {
 	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
     <div class="modal-dialog" style="width:90%;">
         <div class="modal-content">
-            <form name="form_register" method="post" onsubmit="return false;" action="/admin/menu/addMenu?${_csrf.parameterName}=${_csrf.token}">
-            <input type="hidden" name="mode" value="insertMenu">
+            <form name="form_register" method="post" onsubmit="return false;" action="/admin/menu/menuProcess?${_csrf.parameterName}=${_csrf.token}">
+            <input type="hidden" name="mode" value="insert">
+            <input type="hidden" name="part" value="menu">
             <input type="hidden" name="originNo" id="originCode">
             <input type="hidden" name="ord" id="ordCode">
             
@@ -142,8 +143,9 @@ body.modal-open {
 	<div class="modal fade" id="modalContent2" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" style="width:90%;">
         <div class="modal-content">
-            <form name="form_register2" method="post" onsubmit="return false;" action="/admin/menu/updateMenu?${_csrf.parameterName}=${_csrf.token}">
-            <input type="hidden" name="mode" value="insertMenu">
+            <form name="form_register2" method="post" onsubmit="return false;" action="/admin/menu/menuProcess?${_csrf.parameterName}=${_csrf.token}">
+            <input type="hidden" name="mode" value="update">
+            <input type="hidden" name="part" value="menu">
             <input type="hidden" name="code" id="getCode">
             
             <input type="hidden" name="locale" value="ko">
@@ -658,40 +660,46 @@ body.modal-open {
             });
         }
         function deleteRevision(code) {
+        	
+        	var menuArr = new Array();
+        	var mode = "delete";
+        	var part = "revision";
+        	menuArr.push(code);
+        	
     		if(!confirm("해당 리비젼 정보를 정말 삭제하시겠습니까?")){
     			alert("취소 되었습니다.");
     			return;
     		}else{
         		$.ajax({
-        			url : "/admin/menu/json/deleteMenu/"+code,
-        			method : "GET",
-        			dataType : "JSON",	
-        			headers : {
-        				"Accept" : "application/json",
-        				"Content-Type" : "application/json"	 						
-        			} ,
-        			success : function(result){
+     			 	 url : "/admin/menu/json/menuProcess?${_csrf.parameterName}=${_csrf.token}",
+    	  		  	 type : "POST",
+      		  	 	 data : { 
+      		  	 		menuArr : menuArr,
+      		  	 		mode,
+      		  	 		part
+      		  	 	 },
+        			 success : function(result){
         				alert("해당 메뉴가 삭제 되었습니다.")
-        				$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
-    					$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');
-        				$(obj).parents('tr').remove();
-        			}
+        				$("tr[id='revisionDelete"+code+"']").remove();
+        			 }
         			
         		})
-        		
-          		//$("span[id='"+fileNo+"']").remove();
         		}
             
         }
         function fncRestore(code){
-        	$.ajax({
-    			url : "/admin/menu/json/updateRevision/"+code,
-    			method : "GET",
-    			dataType : "JSON",	
-    			headers : {
-    				"Accept" : "application/json",
-    				"Content-Type" : "application/json"	 						
-    			} ,
+        	var menuArr = new Array();
+        	var mode = "update";
+        	var part = "revision";
+        	menuArr.push(code);
+    		$.ajax({
+			 	 url : "/admin/menu/json/menuProcess?${_csrf.parameterName}=${_csrf.token}",
+	  		  	 type : "POST",
+ 		  	 	 data : { 
+ 		  	 		menuArr : menuArr,
+ 		  	 		mode,
+ 		  	 		part
+ 		  	 	 },
     			success : function(result){
     				alert("메뉴가 복구 되었습니다.")
     				$('#modalContent2').modal('hide');

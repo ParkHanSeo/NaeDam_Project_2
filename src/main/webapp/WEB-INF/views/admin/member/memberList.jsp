@@ -51,8 +51,9 @@
 									</select>
 								</div>
 							</div>
-						<form:form id="memberDeleteFrm" name="memberDeleteFrm" action="${pageContext.request.contextPath}/admin/member/memberDelete.do" method="POST">
+						<form:form id="memberDeleteFrm" name="memberDeleteFrm" action="${pageContext.request.contextPath}/admin/member/memberProcess" method="POST">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+							<input type="hidden" name="mode" value="delete"/>
 							<table class="table table-bordered table-hover checkbox-group">
 								<thead>
 									<tr>
@@ -135,12 +136,13 @@
 			<div class="modal-content">
             	<input type="hidden" id="addressNo" name="addressNo" value="" />
             	<input type="hidden" id="memberNo" name="memberNo" value="" />
-            	<form name="memberInsertModalFrm" id="memberInsertModalFrm" method="POST" action="${pageContext.request.contextPath}/admin/member/memberInsertModalFrm.do?${_csrf.parameterName}=${_csrf.token}">
+            	<form name="memberInsertModalFrm" id="memberInsertModalFrm" method="POST" action="${pageContext.request.contextPath}/admin/member/memberProcess?${_csrf.parameterName}=${_csrf.token}">
 	               <div class="modal-header">
 	                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	                  <h4 class="modal-title" id="myModalLabel">회원 등록</h4>
 	               </div>
-	               <div class="modal-body">
+	               <div class="modal-body" name="modalBody">
+	               	<input type="hidden" id="mode" name="mode" value="" />	
 	                  <h4>
 	                     <p class="text-light-blue">
 	                        <i class="fa fa-fw fa-info-circle"></i> 회원정보
@@ -348,18 +350,17 @@ function downloadExcel() {
     form_download.search_data.value = $('#form_search').serialize();
     form_download.submit();
 }
-
 // 내역보기
 $("button[id^='btn_']").on('click', function(e){
 	var memberNo = $(e.target).val();
 	location.href = `${pageContext.request.contextPath}/admin/member/memberPointList/\${memberNo}`; // \$ : "EL이 아니라 JavaScript $다."를 표시
 });
-
 // 상세보기 모달
 $(document).on("click", ".detailBtn", function(e){
 	var memberNo = $(e.target).val();
 	
 	$("[name=id]").prop("readonly", true);
+	$("input[name='mode']").val("update");
 	$("#btnCheckId").hide();
 	$("#display_status").show();
 	$("#display_last_login_date").show();
@@ -388,7 +389,11 @@ $(document).on("click", ".detailBtn", function(e){
 			var loginDate = res.loginDate;
 			var updateDate = res.updateDate;
 			var totalPoint = res.totalPoint + res.pointName;
-			
+			console.log(memberMemo)
+			var display = '<input type="hidden" id="memberNo" name="memberNo" value="'+member.memberNo+'" />'
+						+ '<input type="hidden" id="addressNo" name="addressNo" value="'+address.addressNo+'" />'
+						+ '<input type="hidden" id="memberMemoNo" name="memberMemoNo" value="'+memberMemo.memberMemoNo+'" />';
+		    $("div[name='modalBody']").append(display);
 			$("[name=memberNo]").val(member.memberNo);
 			$("[name=id]").val(member.id);
 			$("[name=lastName]").val(member.lastName);
@@ -412,39 +417,42 @@ $(document).on("click", ".detailBtn", function(e){
 		error : console.log
 	});
 });
-
 // 상세보기 저장
 function update(){
 	var id = $("#id").val();
 	var password = $("#password").val();
+	console.log("password = " + password);
 	var passwordCheck = $("#passwordCheck").val();
 	var firstName = $("#firstName").val();
 	var lastName = $("#lastName").val();
-	var memberMemoContent = $("#memberMemoContent").val();
 	var authority = $("#memberGradeChk option:selected").val();
-	var addressNo = $("#addressNo").val();
-	var addressMain = $("#address_main").val();
-	var addressSub = $("#address_sub").val();
-	var addressZipcode = $("#address_zipcode").val();
-	var memberNo = $("#memberNo").val();
-	var status = $("#status").val();
-
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
 	
-	if(password != ''){
-		// 비밀번호 유효성 검사
-		if(!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,15}$/.test(password)){
-			alert("비밀번호는 8 ~ 15 글자 이내로 공백 없이 영문자, 숫자, 특수문자를 혼합하여 입력해주세요.");
-			$("#password").focus();
-			return false;
-		}
-		// 비밀번호 확인 공란 확인
-		if(passwordCheck == ''){
-			alert("비밀번호가 확인이 입력되지 않았습니다.");
-			$("#passwordCheck").focus();
-			return false;	
-		}
+	// 아이디 공란 확인
+	if(id == ''){
+		alert("아이디가 입력되지 않았습니다.");
+		$("#id").focus();
+		return false;
+	}
+	
+	// 비밀번호 공란 확인
+	if(password == ''){
+		alert("비밀번호가 입력되지 않았습니다.");
+		$("#password").focus();
+		return false;
+	}
+	
+	// 비밀번호 유효성 검사
+	if(!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,15}$/.test(password)){
+		alert("비밀번호는 8 ~ 15 글자 이내로 공백 없이 영문자, 숫자, 특수문자를 혼합하여 입력해주세요.");
+		$("#password").focus();
+		return false;
+	}
+	
+	// 비밀번호 확인 공란 확인
+	if(passwordCheck == ''){
+		alert("비밀번호가 확인이 입력되지 않았습니다.");
+		$("#passwordCheck").focus();
+		return false;
 	}
 	
 	// 비밀번호 일치 확인
@@ -468,7 +476,6 @@ function update(){
 	}
 	
 	// 휴대폰 번호 유효성 검사
-	var mobile1 = $("#mobile1").val();
 	var mobile2 = $("#mobile2").val();
 	var mobile3 = $("#mobile3").val();
 	
@@ -482,7 +489,6 @@ function update(){
 		$("#mobile1").focus();
 		return false;
 	}
-
 	// 이메일 유효성 검사
 	var email = $("#email").val();
 	var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
@@ -493,49 +499,16 @@ function update(){
 		return false;
 	}
 	
-	const result = {
-			memberNo : memberNo,
-			id : id,
-			password : password,
-			firstName : firstName,
-			lastName : lastName,
-			mobile1 : mobile1,
-			mobile2 : mobile2,
-			mobile3 : mobile3,
-			email : email,
-			addressNo : addressNo,
-			addressZipcode : addressZipcode,
-			addressMain : addressMain,
-			addressSub : addressSub,
-			memberMemoContent : memberMemoContent,
-			status : status,
-			authority : authority
-	};
-	
-	const data = JSON.stringify(result);
-	
-	$.ajax({
-		url : `${pageContext.request.contextPath}/admin/member/memberUpdate.do`,
-		method : "POST",
-		data : data,
-		contentType : "application/json; charset=utf-8",
-		beforeSend : function(xhr){
-			xhr.setRequestHeader(header, token);
-		},
-		success(data){
-			alert("해당 회원이 수정 되었습니다.");
-			location.reload();
-		}, 
-		error : console.log
-	});
-	
-		$(window).unbind("beforeunload");
+	$(window).unbind("beforeunload");
+	$(document.memberInsertModalFrm).submit();
 }
-
-
 // 등록 모달창
 function onclickInsert(){
 	$("#modalRegister").modal();
+	$("input[name='mode']").val("insert");
+	$("input[name='memberNo']").remove();
+	$("input[name='addressNo']").remove();
+	$("input[name='memberMemoNo']").remove();
 	$('[name=id]').prop('readonly', false);
 	$("#btnCheckId").show();
 	$("#display_status").hide();
@@ -546,7 +519,6 @@ function onclickInsert(){
 	$("#btnUpdate").hide();
 	memberInsertModalFrm.reset();
 };
-
 // 아이디 중복 확인
 function onclickCheckId(){
 	var id = $("#id").val();
@@ -592,8 +564,6 @@ function onclickCheckId(){
 	});
 	
 };
-
-
 // 저장
 function register(){
 	var id = $("#id").val();
@@ -645,7 +615,6 @@ function register(){
 		$("#firstName").focus();
 		return false;
 	}
-
 	// 성 공란 확인
 	if(lastName == ''){
 		alert("성이 입력되지 않았습니다.");
@@ -667,7 +636,6 @@ function register(){
 		$("#mobile1").focus();
 		return false;
 	}
-
 	// 이메일 유효성 검사
 	var email = $("#email").val();
 	var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
@@ -681,26 +649,21 @@ function register(){
 	$(window).unbind("beforeunload");
 	$(document.memberInsertModalFrm).submit();
 }
-
-
 // 주소 입력
 function callAddress() {
     new daum.Postcode({
         oncomplete: function(data) {
             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
             // 각 주소의 노출 규칙에 따라 주소를 조합한다.
             // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
             var addr = ''; // 주소 변수
             var extraAddr = ''; // 참고항목 변수
-
             //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
             if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
                 addr = data.roadAddress;
             } else { // 사용자가 지번 주소를 선택했을 경우(J)
                 addr = data.jibunAddress;
             }
-
             // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
             if(data.userSelectedType === 'R'){
                 // 법정동명이 있을 경우 추가한다. (법정리는 제외)
@@ -718,7 +681,6 @@ function callAddress() {
                 }
             
             } 
-
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
             document.getElementById('address_zipcode').value = data.zonecode;
             document.getElementById("address_main").value = addr;
@@ -727,15 +689,12 @@ function callAddress() {
         }
     }).open();
 }
-
-
 // 타입별 검색
 $("#keyword").keydown(function(keyNum){
 	if(keyNum.keyCode == 13){
 		pagingMember();
 	}
 });
-
 function pagingMember(cPage){
 	var keyword = $('input[name=keyword]').val(); // 검색어
 	var type = $('select[name=type]').val(); // 검색 타입
@@ -764,8 +723,6 @@ function pagingMember(cPage){
 	});
 	
 };
-
-
 // 체크박스 전체 선택
 $(".checkbox-group").on("click", "#checkAll", ((e)=>{
 	let checked = $(e.target).is(":checked");
@@ -776,8 +733,6 @@ $(".checkbox-group").on("click", "#checkAll", ((e)=>{
 		$(e.target).parents(".checkbox-group").find("input:checkbox").prop("checked", false);
 	}
 }));
-
-
 // 체크박스 개별 선택
 $(document).on("click", ".member-is-checked", function(){
 	let isChecked = true;
@@ -788,8 +743,6 @@ $(document).on("click", ".member-is-checked", function(){
 	
 	$("#checkAll").prop("checked", isChecked);	
 });
-
-
 // 선택삭제
 $(document).on("click", "#memberListDeleteBtn", function(){
 	let isChecked = false;
@@ -813,18 +766,17 @@ $(document).on("click", "#memberListDeleteBtn", function(){
 		$(document.memberDeleteFrm).submit();
 });
 
-
 //쿠폰 모달
 function onclickCoupon() {
-	
+	// 선택된 회원 번호 담기
 	var check = [];
-	
 	$("input[name='list[]']").each(function(){
-		if($(this).prop("checked")) { // 체크된 memberNo
+		if($(this).prop("checked")) { 
 			check.push($(this).val()); 
 		}
 	});
 	
+	// 모달창에 정보 담기
 	if(check.length > 0) {
 		for(var i = 0; i < check.length; i++) {
 			$("input[name='member_code']").val(check);
@@ -832,82 +784,67 @@ function onclickCoupon() {
 		}	
 	}
 	else {
-		alert('항목이 없습니다.');
+		alert("쿠폰을 지급할 회원을 선택해주세요.");
         return false;
 	}
 	
+	// 모달창 띄우기
     $("#modalCoupon").modal({backdrop:"static", show:true});
-	
 }
 
 // 쿠폰 지급
 function registerCoupon() {
-    if(formCoupon.coupon_code.value == '') { 
-    	alert('쿠폰이 선택되지 않았습니다.'); 
+    if(formCoupon.coupon_code.value == "") { 
+    	alert("쿠폰이 선택되지 않았습니다."); 
     	formCoupon.coupon_code.focus(); 
     	return false;
     }
     
     // 발송 체크 여부
-    var smsCheck = "";
-    var emailCheck = "";
-    
-    if($("input[name='couponSms']").prop("checked")) {
-    	smsCheck = "y";
-    }
-    else {
-    	smsCheck = "n";
-    }
-    
-    if($("input[name='couponEmail']").prop("checked")) {
-    	emailCheck = "y";
-    }
-    else {
-    	emailCheck = "n";
-    }
-    
-    // data = 회원 번호 + 쿠폰 + 체크 
-    var data = {
-    	mode : "coupon",
-    	memberCode : $("input[name='member_code']").val(),
-    	couponCode : $("select[name='coupon_code']").val(),
-    	smsCheck : smsCheck,
-    	emailCheck : emailCheck
-    };
-    
-    var jsonStr = JSON.stringify(data);
-    
-    $.ajax({
-    	url: "${pageContext.request.contextPath}/admin/comm/sendCouponMsg",
-    	method: "POST",
-		contentType : "application/json; charset=utf-8",
-		headers: {
-			"${_csrf.headerName}" : "${_csrf.token}"
-		},
-		data: jsonStr,
-    	success: function(result) {
-    		if(result > 0) {
+    $("input[name='couponSms'], input[name='couponEmail']").each(function() {
+    	if($(this).is(":checked")) { // 자동 발송이 체크
+    		$(this).attr("value", "y");
+    	}
+    	else {
+    		$(this).attr("value", "n");
+    	}
+    });
+
+	// 쿠폰 지급
+	var data = {
+		memberCode : $("input[name='member_code']").val(),
+		couponCode : $("select[name='coupon_code']").val(),
+		smsCheck : $("input[name='couponSms']").val(),
+		emailCheck : $("input[name='couponEmail']").val()
+	};
+	var jsonStr = JSON.stringify(data);
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/admin/comm/send/coupon",
+		method : "POST",
+		headers : {"${_csrf.headerName}" : "${_csrf.token}"},
+		contentType : "application/json;charset=utf-8",
+		data : jsonStr,
+		success : function(result) {
+			var set = result.sendCoupon;
+			if(set == "success") {
     			alert("쿠폰이 정상 지급되었습니다.");
     			location.reload();
     		}
-    	},
-    	error: function(textStatus, errorThrown) {
-    		alert("쿠폰을 지급할 수 없습니다. 관리자에게 문의해주세요.");
-    	}
-    });
-}
-
-// 적립금 모달
-function onclickPoint() {
-	
-	var check = [];
-	
-	$("input[name='list[]']").each(function(){
-		if($(this).prop("checked")) { // 체크된 memberNo
-			check.push($(this).val()); 
 		}
 	});
+}
+// 적립금 모달
+function onclickPoint() {
+	// 선택된 회원 번호 담기
+	var check = [];
+	$("input[name='list[]']").each(function(){
+		if($(this).prop("checked")) { 
+			check.push($(this).val()); 
+		}
+	});	
 	
+	// 모달창에 정보 담기
 	if(check.length > 0) {
 		for(var i = 0; i < check.length; i++) {
 			$("input[name='member_code']").val(check);
@@ -915,76 +852,67 @@ function onclickPoint() {
 		}	
 	}
 	else {
-		alert('항목이 없습니다.');
+		alert("적립금을 지급할 회원을 선택해주세요.");
         return false;
 	}
 	
-    $('#modalPoint').modal({backdrop:'static', show:true});
+	// 모달 띄우기
+    $("#modalPoint").modal({backdrop:"static", show:true});
 }
-
 // 적립금 지급
 function registerPoint() {
-    if(formPoint.point.value == '') { 
-    	alert('적립금이 입력되지 않았습니다.'); 
+    if(formPoint.point.value == "") { 
+    	alert("적립금이 입력되지 않았습니다."); 
     	formPoint.point.focus(); 
     	return false;
     }
-    if(formPoint.content.value == '') { 
-    	alert('메모가 입력되지 않았습니다.'); 
+    if(formPoint.content.value == "") { 
+    	alert("메모가 입력되지 않았습니다."); 
     	formPoint.content.focus(); 
     	return false;
     }
-   
+    
     // 발송 체크 여부
-    var smsCheck = "";
-    var emailCheck = "";
-    
-    if($("input[name='pointSms']").prop("checked")) {
-    	smsCheck = "y";
-    }
-    else {
-    	smsCheck = "n";
-    }
-    
-    if($("input[name='pointEmail']").prop("checked")) {
-    	emailCheck = "y";
-    }
-    else {
-    	emailCheck = "n";
-    }
+    $("input[name='pointSms'], input[name='pointEmail']").each(function() {
+    	if($(this).is(":checked")) { // 자동 발송이 체크
+    		$(this).attr("value", "y");
+    	}
+    	else {
+    		$(this).attr("value", "n");
+    	}
+    });
 
-    // data = 회원 번호 + 지급 형태 + 적립금 + 메모 + 체크 
+    // 적립금 지급
     var data = {
-    	mode : "point",
     	memberCode : $("input[name='member_code']").val(),
     	type : $("select[name='plus_minus_type']").val(),
     	point : $("input[name='point']").val(),
     	content : $("input[name='content']").val(),
-    	smsCheck : smsCheck,
-    	emailCheck : emailCheck
+    	smsCheck : $("input[name='pointSms']").val(),
+    	emailCheck : $("input[name='pointEmail']").val()
     };
-    
     var jsonStr = JSON.stringify(data);
     
     $.ajax({
-    	url: "${pageContext.request.contextPath}/admin/comm/sendPointMsg",
-    	method: "POST",
-		contentType : "application/json; charset=utf-8",
-		headers: {
-			"${_csrf.headerName}" : "${_csrf.token}"
-		},
-		data: jsonStr,
+    	url: "${pageContext.request.contextPath}/admin/comm/send/point",
+    	method : "POST",
+		headers : {"${_csrf.headerName}" : "${_csrf.token}"},
+		contentType : "application/json;charset=utf-8",
+		data : jsonStr,
     	success: function(result) {
-    		if(result > 0) {
+    		var set = result.sendPoint;
+    		if(set == "success") {
     			alert("적립금이 정상 지급/차감되었습니다.");
     			location.reload();
     		}
-    	},
-    	error: function(textStatus, errorThrown) {
-    		alert("적립금을 지급할 수 없습니다. 관리자에게 문의해주세요.");
     	}
     });
-
 }
+
+$("#modalRegister").on("hidden.bs.modal", function(){
+	$("input[name='memberNo']").remove();
+	$("input[name='addressNo']").remove();
+	$("input[name='memberMemoNo']").remove();
+});
 </script>
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

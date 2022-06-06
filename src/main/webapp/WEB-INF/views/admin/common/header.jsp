@@ -276,12 +276,12 @@ function logoutSubmit(){
 								</a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/admin/head/headList">
+								<a href="${pageContext.request.contextPath}/admin/menu/headList">
 									<i class="fa fa-circle-o"></i> 헤더 관리
 								</a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/admin/bottom/bottomList">
+								<a href="${pageContext.request.contextPath}/admin/menu/bottomList">
 									<i class="fa fa-circle-o"></i> 하단 관리
 								</a>
 							</li>
@@ -426,7 +426,7 @@ function logoutSubmit(){
 								</a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/admin/comm/email_list">
+								<a href="${pageContext.request.contextPath}/admin/comm/emailList">
 									<i class="fa fa-circle-o"></i> 메일 발송 내역
 								</a>
 							</li>
@@ -436,7 +436,7 @@ function logoutSubmit(){
 								</a>
 							</li>
 							<li>
-								<a href="${pageContext.request.contextPath}/admin/comm/sms_list">
+								<a href="${pageContext.request.contextPath}/admin/comm/smsList">
 									<i class="fa fa-circle-o"></i> SMS 발송 내역
 								</a>
 							</li>

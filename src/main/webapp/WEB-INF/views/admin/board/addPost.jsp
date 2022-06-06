@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <script>
 	$(function() {
@@ -106,7 +106,7 @@
 				//alert(postName[i])
 			}	
 			alert("게시글이 등록 되었습니다.")
-			$("form[name='addPostForm']").attr("method", "POST").attr("action", "/admin/board/addPost?${_csrf.parameterName}=${_csrf.token}").submit();
+			$("form[name='addPostForm']").attr("method", "POST").attr("action", "/admin/board/postProcess?${_csrf.parameterName}=${_csrf.token}").submit();
 		}else if("${board2.option.optionMass}" == "y"){
 			var postFile = $("input[id='postName']").length;
 			var postTitle = $("input[id='postTitle']").val();
@@ -127,7 +127,7 @@
 			}	
 			
 			alert("게시글이 등록 되었습니다.")
-			$("form[name='addPostForm']").attr("method", "POST").attr("action", "/admin/board/addPost2?${_csrf.parameterName}=${_csrf.token}").submit();	
+			$("form[name='addPostForm']").attr("method", "POST").attr("action", "/admin/board/postProcess?${_csrf.parameterName}=${_csrf.token}").submit();	
 		}
 	}
 	
@@ -141,7 +141,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form name="addPostForm" method="post" enctype="multipart/form-data">
-            
+            <input type="hidden" name="mode" id="mode" value="insert">
+            <input type="hidden" name="secNo" value="<sec:authentication property='principal.memberNo'/>">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="myModalLabelPortfolio">게시물 관리</h4>
@@ -217,13 +218,13 @@
                     <button type="button" class="btn btn-primary btn-xs" onclick="fucAddFile();"><span class="glyphicon glyphicon-plus"></span> 파일추가</button><br>
                 </p>
                     <div id="list_file" name="listFile">
-                    	<input type="file" name="postName" id="postName" class="form-control input-sm" style="width:100%; display:inline; margin-bottom:10px;" >
+                    	
                     </div>
                 </c:if>
                 <c:if test="${board2.option.optionMass eq 'y'}">
                 <p id="diplay-plupload">
                     <span id="file_list">
-                    	<input type="hidden" name="postName" id="postName" class="form-control input-sm" style="width:100%; display:inline; margin-bottom:10px;" >
+                    	
                     </span>            
                 </p>  
 					<div id="uploader"></div>                              

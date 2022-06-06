@@ -29,7 +29,8 @@
                     <div class="box-body">
                         <label style="margin-top:5px;">총 ${ total }건</label>
                         <div class="box-tools pull-right" style="margin-bottom:5px;">
-                            <form name="form_search" method="post" action="${pageContext.request.contextPath }/admin/comm/email_list?${_csrf.parameterName}=${_csrf.token}">
+                            <form name="form_search" method="post" action="${pageContext.request.contextPath }/admin/comm/emailList?${_csrf.parameterName}=${_csrf.token}">
+                            <input type="hidden" name="mode" value="emailList">
                             <div class="has-feedback">
                                 <span>
                                     <input type="text" name="keyword" id="keyword" value="${ param.keyword == null ? '' : param.keyword }" class="form-control input-sm" placeholder="검색" />
@@ -73,18 +74,18 @@
                             </thead>
                             <tbody>
 								<c:choose>
-									<c:when test="${ empty emailList and empty param.keyword }">
+									<c:when test="${ empty commList and empty param.keyword }">
 										<tr>
 											<td colspan="7">발송한 email이 없습니다.</td>
 										</tr>
 									</c:when>
-									<c:when test="${ empty emailList and !empty param.keyword }">
+									<c:when test="${ empty commList and !empty param.keyword }">
 										<tr>
 											<td colspan="7">검색된 email 발송 내역이 없습니다.</td>
 										</tr>
 									</c:when>
 									<c:otherwise>
-										<c:forEach var="e" items="${ emailList }">
+										<c:forEach var="e" items="${ commList }">
 											<tr>
 				                                <td>${ e.emailCode }</td>
 				                                <td>${ e.receiveCode }</td>

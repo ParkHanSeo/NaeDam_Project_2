@@ -164,23 +164,27 @@
 		$('button[name="deleteSchedule"]').on("click", function(){
 			  
 			  var scheduleNo = $('input[name="getSchedulNo"]').val();
-				
+			  var scheduleMode = "delete";
 			  if(!confirm("해당 일정을 정말 삭제하시겠습니까?")){
 					return;
 					
 			  }else{
-	  		  $.ajax({
-		    			url : "/admin/schedule/json/deleteSchedule/"+scheduleNo,
-		    			method : "GET",
-		    			dataType : "JSON",	
-		    			headers : {
-		    				"Accept" : "application/json",
-		    				"Content-Type" : "application/json"	 						
-		    			} ,
-		    			success : function(JSONData, status){
-		    				alert("일정이 삭제 되었습니다.")
-		    				location.reload();
-		    			}
+	       		  $.ajax({
+	       			  url : "/admin/schedule/json/scheduleProcess?${_csrf.parameterName}=${_csrf.token}",
+	       			  method : "POST",
+	       			  data: JSON.stringify({
+	       				  'scheduleNo':scheduleNo,
+	       				  'scheduleMode':scheduleMode
+	       		  	  }),
+	       			  dataType : 'JSON',
+	       			  headers : {
+	       				  "Accept" : "application/json",
+	       				  "Content-Type" : "application/json"	 						
+	       			  } ,
+	    			  success : function(JSONData, status){
+	    				  alert("일정이 삭제 되었습니다.")
+	    				  location.reload();
+	    			  }
 		    			
 		      })
 		      
@@ -273,12 +277,12 @@
         	  var scheduleStartTime = moment(arg.event.start).format('HH:mm');
         	  var scheduleEndTime = moment(arg.event.end).format('HH:mm');
         	  var scheduleColor = arg.event.backgroundColor;
-        	  
+        	  var scheduleMode = "update";
         	  var startDate = scheduleStartDate+" "+scheduleStartTime;
         	  var endDate = scheduleEndDate+" "+scheduleEndTime;
         	  
        		  $.ajax({
-       			  url : "/admin/schedule/json/updateSchedule?${_csrf.parameterName}=${_csrf.token}",
+       			  url : "/admin/schedule/json/scheduleProcess?${_csrf.parameterName}=${_csrf.token}",
        			  method : "POST",
        			  data: JSON.stringify({
        				  'scheduleStartDate':startDate,
@@ -286,7 +290,8 @@
        				  'scheduleColor':scheduleColor,
        				  'scheduleTitle':scheduleTitle,
        				  'scheduleContents':scheduleContents,
-       				  'scheduleNo':scheduleNo
+       				  'scheduleNo':scheduleNo,
+       				  'scheduleMode':scheduleMode
        		  	  }),
        			  dataType : 'JSON',
        			  headers : {
@@ -325,7 +330,7 @@
 		        		var scheduleColor = $("select[name='scheduleColor']").val();
 		        		var scheduleTitle = $("input[name='scheduleTitle']").val();
 		        		var scheduleContents = $("textarea[name='scheduleContents']").val();
-		        	
+		        		var scheduleMode = "insert";
 		        		var schedule = {
 		        				scheduleStartDate:scheduleStartDate,
 		        				scheduleEndDate:scheduleEndDate,
@@ -335,17 +340,17 @@
 		        		};
 		        		var startDate = scheduleStartDate+" "+scheduleStartTime;
 		        		var endDate = scheduleEndDate+" "+scheduleEndTime;
-
-		        		
+						var mode = "insert";
 		        		$.ajax({
-		        			url : "/admin/schedule/json/addSchedule?${_csrf.parameterName}=${_csrf.token}",
+		        			url : "/admin/schedule/json/scheduleProcess?${_csrf.parameterName}=${_csrf.token}",
 		        			method : "POST",
 		        			data: JSON.stringify({
 		        				'scheduleStartDate':startDate,
 		        				'scheduleEndDate':endDate,
 		        				'scheduleColor':scheduleColor,
 		        				'scheduleTitle':scheduleTitle,
-		        				'scheduleContents':scheduleContents
+		        				'scheduleContents':scheduleContents,
+		        				'scheduleMode':scheduleMode
 		        			}),
 		        			dataType : 'JSON',
 		        			headers : {

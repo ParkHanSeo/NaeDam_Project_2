@@ -57,8 +57,9 @@
 							</select>
 						</div>
 					</div>
-					<form:form id="accessHistoryDeleteFrm" name="accessHistoryDeleteFrm" action="${pageContext.request.contextPath}/admin/member/accessHistoryDelete.do" method="POST">
+					<form:form id="accessHistoryDeleteFrm" name="accessHistoryDeleteFrm" action="${pageContext.request.contextPath}/admin/member/memberProcess.do" method="POST">
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+						<input type="hidden" name="mode" value="historyDelete" />
 						<table class="table table-bordered table-hover checkbox-group">
 							<thead>
 								<tr>
@@ -75,7 +76,7 @@
 								<c:forEach items="${memberAccessHistoryList}" var="history" varStatus="status" >
 									<tr>
 										<td style="width: 30px;"><input type="checkbox" class="member-is-checked" name="" value="${history.accessHistoryNo}" data-target="${history.accessHistoryNo}" /></td>
-										<td style="width: 60px;">${history.accessHistoryNo}</td>
+										<td style="width: 60px;">${history.accessHistoryNoDesc}</td>
 										<td style="width: 110px;">${history.accessHistoryId}</td>
 										<td style="width: 110px;">${history.accessHistoryName}</td>
 										<td style="width: 110px;">${history.accessHistoryIp}</td>
@@ -177,7 +178,7 @@ $(document).on("click", "#accessHistoryDeleteBtn", function(){
 		let target = $(item).data("target");
 		
 		if($(item).is(":checked")){
-			$(item).after(`<input type="hidden" name="accessHistoryNo" value="\${target}"/>`);
+			$(item).after(`<input type="hidden" name="memberNo" value="\${target}"/>`);
 		}
 	});
 	

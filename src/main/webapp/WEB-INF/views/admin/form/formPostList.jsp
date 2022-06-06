@@ -123,9 +123,9 @@
 	    <div class="modal-dialog" style="width:800px;">
 	        <div class="modal-content">
 	            <form name="formRegister" method="post" onsubmit="return false;" action="/admin/form/addFormPost?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
-		            <input type="hidden" name="mode" id="mode" value="insertReply">
+		            <input type="hidden" name="mode" id="mode" value="insert">
+		            <input type="hidden" name="part" id="part" value="formPost">
 		            <input type="hidden" name="formNo" id="formNo" value="${formNo}">
-		            <input type="hidden" name="locale" id="locale">
 		            
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -141,12 +141,12 @@
 			                        <td class="menu">${item.label}</td>
 			                        <c:if test="${item.input_type == 'text' || item.input_type == 'tel' || item.input_type == 'email'}">
 				                        <td align="left">
-											<input type="${item.input_type}" name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm">          
+											<input type="${item.input_type}" name="data${item.itemNo}" id="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm">          
 				                        </td>
 			                        </c:if>
 			                        <c:if test="${item.input_type == 'textarea'}">
 			                        	<td align="left">
-			                        		<textarea name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>
+			                        		<textarea name="data${item.itemNo}" id="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>
 			                        	</td>
 			                        </c:if>
 			                        <c:if test="${item.input_type == 'webeditor'}">
@@ -158,7 +158,7 @@
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<select name="data${item.itemNo}" class="form-control input-sm">
+				                        		<select name="data${item.itemNo}" id="data${item.itemNo}" class="form-control input-sm">
 				                        			<option value="">선택하세요</option>
 				                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
 				                        				<option value="${exNum}">${exNum}</option>
@@ -173,7 +173,7 @@
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
 				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
 												  <p>
-							                        <input type="radio" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+							                        <input type="radio" name="data${item.itemNo}" id="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
 							                        <label>${exNum}</label>
 							                      </p>		
 				                        		</c:forEach>
@@ -186,7 +186,7 @@
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
 				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
 												  <p>
-							                        <input type="checkbox" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+							                        <input type="checkbox" name="data${item.itemNo}" id="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
 							                        <label>${exNum}</label>
 							                      </p>		
 				                        		</c:forEach>
@@ -195,12 +195,12 @@
 			                        </c:if>
 									<c:if test="${item.input_type == 'date'}">
 										<td align="left">
-											<input type="text" id="datepicker" name="data${item.itemNo}" readonly="" style="width:100px;" class="hasDatepicker">
+											<input type="text" name="data${item.itemNo}" id="data${item.itemNo}" readonly="" style="width:100px;" class="hasDatepicker">
 										</td>
 									</c:if>	
 									<c:if test="${item.input_type == 'file'}">
 										<td align="left">
-											<input type="file" id="${item.itemNo}" name="file[]" style="width:80%; float:left;">
+											<input type="file" id="data${item.itemNo}" name="file[]" style="width:80%; float:left;">
 										</td>
 									</c:if>
 			                    </tr>
@@ -210,7 +210,7 @@
 		            </div><!-- /.modal-body -->
 		            
 		            <div class="modal-footer">
-		            	<button type="button" onclick="registerForm();" class="btn btn-primary">저장하기</button>
+		            	<button type="button" onclick="registerForm(${formNo});" class="btn btn-primary">저장하기</button>
 		            </div><!-- /.modal-footer -->
 	            </form><!-- /.formRegister -->
 	        </div><!-- /.modal-content -->
@@ -239,24 +239,24 @@
 			                        <td class="menu">${item.label}</td>
 			                        <c:if test="${item.input_type == 'text' || item.input_type == 'tel' || item.input_type == 'email'}">
 				                        <td align="left">
-											<input type="${item.input_type}" name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm">          
+											<input type="${item.input_type}" name="data${item.itemNo}" id="2data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm">          
 				                        </td>
 			                        </c:if>
 			                        <c:if test="${item.input_type == 'textarea'}">
 			                        	<td align="left">
-			                        		<textarea name="data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>
+			                        		<textarea name="data${item.itemNo}" id="2data${item.itemNo}" placeholder="${item.placeholder}" class="form-control input-sm" style="padding:5px; line-height:20px; width:100%; height:200px;"></textarea>
 			                        	</td>
 			                        </c:if>
 			                        <c:if test="${item.input_type == 'webeditor'}">
 			                        	<td align="left">
-			                        		<textarea id="content19" name="data${item.itemNo}" id="ckEditor2" placeholder="${item.placeholder}" style="padding: 5px; line-height: 20px; width: 100%; height: 200px;"></textarea>
+			                        		<textarea id="content19" name="data${item.itemNo}" id="ckEditor2" id="2data${item.itemNo}" placeholder="${item.placeholder}" style="padding: 5px; line-height: 20px; width: 100%; height: 200px;"></textarea>
 			                        	</td>
 			                        </c:if>
 			                        <c:if test="${item.input_type == 'select'}">
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<select name="data${item.itemNo}" class="form-control input-sm">
+				                        		<select name="data${item.itemNo}" id="2data${item.itemNo}" class="form-control input-sm">
 				                        			<option value="">선택하세요</option>
 				                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
 				                        				<option value="${exNum}">${exNum}</option>
@@ -271,7 +271,7 @@
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
 				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
 												  <p>
-							                        <input type="radio" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+							                        <input type="radio" name="data${item.itemNo}" id="2data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
 							                        <label>${exNum}</label>
 							                      </p>		
 				                        		</c:forEach>
@@ -284,7 +284,7 @@
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
 				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
 												  <p>
-							                        <input type="checkbox" name="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+							                        <input type="checkbox" name="data${item.itemNo}" id="2data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
 							                        <label>${exNum}</label>
 							                      </p>		
 				                        		</c:forEach>
@@ -293,12 +293,12 @@
 			                        </c:if>
 									<c:if test="${item.input_type == 'date'}">
 										<td align="left">
-											<input type="text" id="datepicker" name="data${item.itemNo}" readonly="" style="width:100px;" class="hasDatepicker">
+											<input type="text" id="datepicker" name="data${item.itemNo}" id="2data${item.itemNo}" readonly="" style="width:100px;" class="hasDatepicker">
 										</td>
 									</c:if>	
 									<c:if test="${item.input_type == 'file'}">
 										<td align="left">
-											<input type="file" id="${item.itemNo}" name="file[]" style="width:80%; float:left;">
+											<input type="file" id="${item.itemNo}" name="file[]" id="2data${item.itemNo}" style="width:80%; float:left;">
 										</td>
 									</c:if>
 			                    </tr>
@@ -458,18 +458,59 @@
     }    
 	
     // 등록 모달 저장
-    function registerForm() {
-        formRegister.target = 'iframe_process';
-        formRegister.submit();
-        alert("등록 되었습니다.");
-        location.reload();
+    function registerForm(formNo) {
+    	var formArr = new Array();
+    	var mode = "insert";
+    	var part = "formPost";
+    	var data = "";
+    	<c:forEach var="item" items="${tr}" varStatus="status" >
+    		data = $("#data"+${item.itemNo}+"").val();
+    		formArr.push(data);
+    	</c:forEach>
+    	
+  		$.ajax({
+			 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
+ 		  	 type : "POST",
+		  	 data : { 
+		  	 	formArr : formArr,
+		  	 	mode,
+		  	 	part,
+		  	 	formNo
+		  	 },
+		 	 success : function(result){
+					alert("항목이 등록 되었습니다.")
+					location.reload();    		 		
+		  	 }
+		  	 	 
+ 		});	
+    	
     }
     // 등록 모달 저장
     function registerForm2() {
-        formRegister2.target = 'iframe_process';
-        formRegister2.submit();
-        alert("수정 되었습니다.");
-        location.reload();
+    	var formArr = new Array();
+    	var mode = "update";
+    	var part = "formPost";
+    	var data = "";
+    	<c:forEach var="item" items="${tr}" varStatus="status" >
+    		data = $("#2data"+${item.itemNo}+"").val();
+    		formArr.push(data);
+    	</c:forEach>
+    	
+  		$.ajax({
+			 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
+ 		  	 type : "POST",
+		  	 data : { 
+		  	 	formArr : formArr,
+		  	 	mode,
+		  	 	part,
+		  	 	formNo
+		  	 },
+		 	 success : function(result){
+					alert("항목이 수정 되었습니다.")
+					location.reload();    		 		
+		  	 }
+		  	 	 
+ 		});
     }    
     $(function(){
 	    /* datepicker */
@@ -625,12 +666,14 @@
 	function deleteChoiceFormPost(formNo) {
 		
 		var formNo = ${formNo};
-		var formPostArr = new Array();
+		var formArr = new Array();
+		var mode = "delete";
+		var part = "formPost";
 		
 		$("input[class='formPostNo']:checked").each(function(){
-			formPostArr.push($(this).val());
+			formArr.push($(this).val());
 			});
-		if(formPostArr.length == 0){
+		if(formArr.length == 0){
 			alert("항목을 선택하셔야 합니다.");
 			return;
 		}
@@ -640,18 +683,21 @@
 			
 		}else{
   		$.ajax({
-		 	 url : "/admin/form/deleteChoiceFormPost?${_csrf.parameterName}=${_csrf.token}",
+		 	 url : "/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}",
  		  	 type : "POST",
 	  	 	 data : { 
-	  	 	 formPostArr : formPostArr 
+	  	 		formArr : formArr,
+	  	 		mode,
+	  	 		part,
+	  	 		formNo
 	  	 	 },
 	 		 success : function(result){
-	 		
+	 			alert("해당 자료가 삭제 되었습니다.")
+				location.href = "/admin/form/formPostList?formNo="+formNo;
 	  	 	 }
 		  	 	 
   		});		
-			alert("해당 자료가 삭제 되었습니다.")
-			location.href = "/admin/form/formPostList?formNo="+formNo;
+
 		}		
 		
 	};

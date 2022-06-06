@@ -57,12 +57,12 @@
   		  	 		mode
   		  	 	 },
     		 	 success : function(result){
-    		 		
+   					alert("해당 자료가 삭제 되었습니다.")
+   					location.href = "/admin/board/listBoard";    		 		
   		  	 	 }
   		  	 	 
 	  		});		
-				alert("해당 자료가 삭제 되었습니다.")
-				location.href = "/admin/board/listBoard";
+
 			}
 	  		//location.href = "mir9/board/listBoard";
 		})	
