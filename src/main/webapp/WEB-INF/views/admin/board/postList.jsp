@@ -70,6 +70,7 @@
 		$("#deleteChoicePost").on("click", function(){
 			
 			var postArr = new Array();
+			var mode = "delete";
 			var boardNo = $("input[name='boardNo']").val();
 						
 			$("input[class='postNo']:checked").each(function(){
@@ -85,16 +86,18 @@
 				
 			}else{
 	  		$.ajax({
-  			 	 url : "/admin/board/deleteChoicePost?${_csrf.parameterName}=${_csrf.token}",
+  			 	 url : "/admin/board/json/postProcess?${_csrf.parameterName}=${_csrf.token}",
 	  		  	 type : "POST",
-  		  	 	 data : { postArr : postArr },
+  		  	 	 data : { postArr : postArr,
+  		  	 		 	  mode
+  		  	 		  	},
     		 	 success : function(result){
-   		   	 		
+   			  		alert("게시글이 삭제 되었습니다.")
+   			  		location.href = "/admin/board/postList?boardNo="+boardNo;
   		  	 	 }
   		  	 	 
 	  		});		
-	  		alert("게시글이 삭제 되었습니다.")
-	  		location.href = "/admin/board/postList?boardNo="+boardNo;
+
 			}
 		})
 		
@@ -102,10 +105,9 @@
 	})
 	
 	function fncPost(){
-		
+		var secNo = $("input[name='secNo']").val();
 		$.ajax({
-			
-			url : "/admin/board/json/getMemberData",
+			url : "/admin/board/json/getMemberData/"+secNo,
 			method : "GET",
 			dataType : "JSON",
 			headers : {

@@ -15,6 +15,8 @@
 		$("#deleteChoiceForm").on("click", function(){
 			
 			var formArr = new Array();
+			var mode = "delete";
+			var part = "form";
 			
 			$("input[class='formNo']:checked").each(function(){
 				formArr.push($(this).val());
@@ -29,18 +31,19 @@
 				
 			}else{
 	  		$.ajax({
-  			 	 url : "/admin/form/deleteChoiceForm?${_csrf.parameterName}=${_csrf.token}",
+  			 	 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
 	  		  	 type : "POST",
   		  	 	 data : { 
-  		  	 		formArr : formArr 
+  		  	 		formArr : formArr,
+  		  	 		mode,
+  		  	 		part
   		  	 	 },
     		 	 success : function(result){
-    		 		
+   					alert("해당 자료가 삭제 되었습니다.")
+   					location.href = "/admin/form/list";    		 		
   		  	 	 }
   		  	 	 
 	  		});		
-				alert("해당 자료가 삭제 되었습니다.")
-				location.href = "/admin/form/list";
 			}			
 		});
 		
@@ -48,6 +51,8 @@
 	
 	function formCopy(){
 		var formArr = new Array();
+		var mode = "copy";
+		var part = "form";
 		
 		$("input[class='formNo']:checked").each(function(){
 			formArr.push($(this).val());
@@ -62,15 +67,19 @@
 			
 		}else{
   		$.ajax({
-			 url : "/admin/form/json/formCopy?${_csrf.parameterName}=${_csrf.token}",
+			 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
   		  	 type : "POST",
 	  	 	 data : { 
-	  	 		formArr : formArr 
+	  	 		formArr : formArr,
+	  	 		mode,
+	  	 		part
 	  	 	 },
-		 	 success : function(result){}	 
+		 	 success : function(result){
+				alert("해당 자료가 복제 되었습니다.")
+				location.href = "/admin/form/list";
+		 	 }	 
   		});		
-			alert("해당 자료가 복제 되었습니다.")
-			location.href = "/admin/form/list";
+
 		}		
 	}
 </script>
@@ -182,9 +191,9 @@
 	<div class="modal fade" id="modalRegister" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width:600px;">
 	        <div class="modal-content">
-	            <form name="form" method="post" action="/admin/form/addForm?${_csrf.parameterName}=${_csrf.token}">
-		            <input type="hidden" name="mode" id="mode">
-		            <input type="hidden" name="code">
+	            <form name="addForm" method="post" action="/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}">
+		            <input type="hidden" name="mode" value="insert">
+		            <input type="hidden" name="part" value="form">
 		            <input type="hidden" name="locale" value="<br/><b>Notice</b>: Undefined variable: locale in <b>/home/demoshop/public_html/html/admin/form/manage.html</b> on line <b>85</b><br/>">
 		            
 		            <div class="modal-header">
@@ -250,8 +259,9 @@
 	<div class="modal fade" id="modalRegister2" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width:600px;">
 	        <div class="modal-content">
-	            <form name="form2" method="post" action="/admin/form/updateForm?${_csrf.parameterName}=${_csrf.token}">
-		            <input type="hidden" name="mode" id="mode">
+	            <form name="updateForm" method="post" action="/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}">
+		            <input type="hidden" name="mode" value="update">
+		            <input type="hidden" name="part" value="form">
 		            <input type="hidden" name="formNo">
 		            <input type="hidden" name="locale" value="<br/><b>Notice</b>: Undefined variable: locale in <b>/home/demoshop/public_html/html/admin/form/manage.html</b> on line <b>85</b><br/>">
 		            
@@ -382,38 +392,34 @@
 	
 	// 모달 내용 저장
 	function register() {
-	    if(form.title.value == "") { 
+	    if(addForm.title.value == "") { 
 	    	alert("제목이 입력되지 않았습니다."); 
-	    	form.title.focus(); 
+	    	addForm.title.focus(); 
 	    	return false;
 	    }
-	    if($("input[name=is_agree]").is(":checked") && form.agree_content.value == "") { 
+	    if($("input[name=is_agree]").is(":checked") && addForm.agree_content.value == "") { 
 	    	alert("약관정보가 입력되지 않았습니다."); 
-	    	form.agree_content.focus(); 
+	    	addForm.agree_content.focus(); 
 	    	return false;
 	    }
-	    form.target = 'iframe_process';
-	    form.submit();
-	    alert("등록 되었습니다.");
-	    location.reload();
+	    alert("폼메일이 등록 되었습니다.");
+	    $("form[name='addForm']").submit();
 	}
 	
 	// 모달 내용 저장
 	function register2() {
-	    if(form2.title.value == "") { 
+	    if(updateForm.title.value == "") { 
 	    	alert("제목이 입력되지 않았습니다."); 
-	    	form2.title.focus(); 
+	    	updateForm.title.focus(); 
 	    	return false;
 	    }
-	    if($("input[name=is_agree]").is(":checked") && form2.agree_content.value == "") { 
+	    if($("input[name=is_agree]").is(":checked") && updateForm.agree_content.value == "") { 
 	    	alert("약관정보가 입력되지 않았습니다."); 
-	    	form2.agree_content.focus(); 
+	    	updateForm.agree_content.focus(); 
 	    	return false;
 	    }
-	    form2.target = 'iframe_process';
-	    form2.submit();
-	    alert("수정 되었습니다.");
-	    location.reload();
+	    alert("폼메일이 수정 되었습니다.");
+	    $("form[name='updateForm']").submit();
 	}	
 	
 	

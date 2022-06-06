@@ -5,7 +5,7 @@
 <mapper namespace="review">
   
 	<!-- 리뷰 조회 + 검색 --> 
-	<select id="totalReviewCount" parameterType="hashmap" resultType="int">
+	<select id="totalReviewCount" parameterType="map" resultType="int">
 		select COUNT(*)
 		  from (select r.review_code,
 					   r.order_no,

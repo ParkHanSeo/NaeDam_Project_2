@@ -53,8 +53,8 @@
      					</select>
                         </div>
                     </div>
-                    <form name="form_list" method="POST" action="${pageContext.request.contextPath}/admin/setting/staff_delete.do?${_csrf.parameterName}=${_csrf.token}">
-			            <input type="hidden" name="mode" id="mode">
+                    <form name="form_list" method="POST" action="${pageContext.request.contextPath}/admin/setting/staff_process.do?${_csrf.parameterName}=${_csrf.token}">
+			            <input type="hidden" name="mode" id="mode" value="delete">
 	                    <table class="table table-bordered table-hover checkbox-group">
 				            <thead>
 			                    <tr>

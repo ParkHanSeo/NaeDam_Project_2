@@ -542,25 +542,24 @@
 	
 	<!-- 자동발송msg -->
 	function sendAutoMsg(orderNo, statusNo) {
-		
-		console.log("======자동발송msg 함수 실행되나?======");
+		var data = {
+			orderNo : orderNo,
+			statusNo : statusNo
+		};
+		var jsonStr = JSON.stringify(data);
 		
 		$.ajax({
-			url: "${pageContext.request.contextPath}/admin/comm/sendMsg",
-			headers: {
-				"${_csrf.headerName}" : "${_csrf.token}"
-			},
-			method: "POST",
-			data: {
-				orderNo : orderNo,
-				statusNo : statusNo
-			},
-			success: function(data){
-				if(data > 0) {
+			url : "${pageContext.request.contextPath}/admin/comm/send/order",
+			method : "POST",
+			headers : {"${_csrf.headerName}" : "${_csrf.token}"},
+			contentType : "application/json;charset=utf-8",
+			data : jsonStr,
+			success: function(result){
+				var set = result.sendOrder;
+				if(set == "success") {
 					console.log("메시지 자동 발송 성공");
 				}
-			},
-			error: console.log
+			}
 		});
 	}
 	

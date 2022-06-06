@@ -520,16 +520,20 @@
 		WHERE  file_no = #{file_no}
 	</select>
 	
-	<delete id="deleteChoiceBoard" parameterType="int">
+	<delete id="deleteChoiceBoard">
 		DELETE
 		FROM board
-		WHERE board_no = #{value}
+		WHERE <foreach collection="list" item="boardNo" open="(" close=")" separator="or">
+				board_no = #{boardNo}
+			  </foreach>
 	</delete>
 	
-	<delete id="deleteChoicePost" parameterType="int">
+	<delete id="deleteChoicePost">
 		DELETE
 		FROM post
-		WHERE post_no = #{value}
+		WHERE <foreach collection="list" item="postNo" open="(" close=")" separator="or">
+				post_no = #{postNo}
+			  </foreach> 
 	</delete>
 	
 	<delete id="deleteFile" parameterType="int">

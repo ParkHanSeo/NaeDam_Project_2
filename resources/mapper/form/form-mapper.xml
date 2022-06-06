@@ -234,14 +234,21 @@
 		WHERE ITEM_NO = #{itemNo}
 	</update>
 	
-	<update id="updateFormDesign" parameterType="form">
+	<update id="updateFormDesignList" parameterType="form">
 		UPDATE FORM
 		<set>
-			HTML_DESIGN_LIST = #{html_design_list},
-			HTML_DESIGN_WRITE = #{html_design_write}
+			HTML_DESIGN_LIST = #{html_design_list}
 		</set>
 		WHERE form_no = #{formNo}
 	</update>
+	
+	<update id="updateFormDesignWrite" parameterType="form">
+		UPDATE FORM
+		<set>
+			HTML_DESIGN_WRITE = #{html_design_write}
+		</set>
+		WHERE form_no = #{formNo}
+	</update>	
 	
 	<update id="updateFormPost" parameterType="formPost">
 		UPDATE FORM_POST
@@ -285,21 +292,27 @@
 		WHERE CODE = #{downFormPostNo}
 	</update>	
 	
-	<delete id="deleteChoiceForm" parameterType="int">
+	<delete id="deleteChoiceForm">
 		DELETE
 		FROM form
-		WHERE form_no = #{value}
+		WHERE <foreach collection="list" item="formNo" open="(" close=")" separator="or">
+				form_no = #{formNo}
+			  </foreach>
 	</delete>
 	
-	<delete id="deleteChoiceItem" parameterType="int">
+	<delete id="deleteChoiceItem">
 		DELETE
 		FROM ITEM
-		WHERE ITEM_NO = #{value}
+		WHERE <foreach collection="list" item="itemNo" open="(" close=")" separator="or">
+				ITEM_NO = #{itemNo}
+			  </foreach>
 	</delete>
 	
 	<delete id="deleteChoiceFormPost" parameterType="int">
 		DELETE
 		FROM FORM_POST
-		WHERE CODE = #{value}
+		WHERE <foreach collection="list" item="code" open="(" close=")" separator="or">
+				CODE = #{code}
+			  </foreach>
 	</delete>
 </mapper>

@@ -36,19 +36,18 @@
 	                <div class="btn-group pull-right">
 	      <button type="button" id="locale_ko" onclick="setLocale('ko')" class="btn btn-primary"><i class="fa fa-globe" aria-hidden="true"></i> 한국어</button>      <button type="button" id="locale_en" onclick="setLocale('en')" class="btn btn-default"><i class="fa fa-globe" aria-hidden="true"></i> ENG</button>      <button type="button" id="locale_zh" onclick="setLocale('zh')" class="btn btn-default"><i class="fa fa-globe" aria-hidden="true"></i> 中国</button>      <button type="button" id="locale_vn" onclick="setLocale('vn')" class="btn btn-default"><i class="fa fa-globe" aria-hidden="true"></i> Tiếng việt</button>                </div>
 	                </div>
-	
-	                <table class="table table-bordered">
-	                <form name="form_register" method="post" action="/admin/bottom/updateBottom?${_csrf.parameterName}=${_csrf.token}">
-	                <input type="hidden" name="mode" value="makeBottom">
-	                <input type="hidden" name="locale" value="ko">
-	                <tbody><tr>
-	                    <td>
-	                    	<textarea name="content" id="content-editor" rows="10" cols="80" "></textarea>
-	                    </td>
-	                </tr>
-	                
-	                </tbody>
-	                </table>
+					<form name="form_register" method="post" action="/admin/menu/menuProcess?${_csrf.parameterName}=${_csrf.token}">
+		                <table class="table table-bordered">
+			                <input type="hidden" name="mode" value="update">
+			                <input type="hidden" name="part" value="bottom">
+			                <tbody>
+				                <tr>
+				                    <td>
+				                    	<textarea name="content" id="content-editor" rows="10" cols="80" "></textarea>
+				                    </td>
+				                </tr>
+			                </tbody>
+		                </table>
 	                </form>
 	
 	                <br>
@@ -147,7 +146,7 @@
         function setData() {
             // 정보
             $.ajax({
-            	url:'/admin/bottom/json/getBottom?${_csrf.parameterName}=${_csrf.token}',
+            	url:'/admin/menu/json/getBottom?${_csrf.parameterName}=${_csrf.token}',
                 type:'post',
                 dataType:'json',
                 data:{

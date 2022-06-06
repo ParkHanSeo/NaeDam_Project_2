@@ -335,12 +335,14 @@
 		WHERE code = #{value}
 	</update>
 	
-	<update id="updateChoiceMenu" parameterType="int">
+	<update id="updateChoiceMenu">
 		UPDATE menu
 		<set>
 			REVISION_CODE = 2
 		</set>
-		WHERE code = #{value}
+		WHERE <foreach collection="list" item="menuNo" open="(" close=")" separator="or">
+				code = #{menuNo}
+			  </foreach>		
 	</update>
 	
 	<update id="updateUpAsc" parameterType="map">
@@ -375,10 +377,12 @@
 		WHERE HEAD_NO = #{downHeadNo}
 	</update>		
 	
-	<delete id="deleteChoiceHead" parameterType="int">
+	<delete id="deleteChoiceHead">
 		DELETE
 		FROM head
-		WHERE head_no = #{value}
+		WHERE <foreach collection="list" item="headNo" open="(" close=")" separator="or">
+				head_no = #{headNo}
+			  </foreach>		
 	</delete>
 	
 	<delete id="deleteMenu" parameterType="int">

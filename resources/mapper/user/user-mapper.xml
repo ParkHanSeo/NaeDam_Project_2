@@ -81,9 +81,30 @@
 <select id="userAuthoritiesEnroll">
 	INSERT INTO
 		authorities(
-			authority = 
+			authority,
+			member_no
+			)
+		VALUES(
+			'ROLE_USER',
+			#{memberNo}
 			)
 </select>
+
+<!-- 메모 공란 등록 -->
+<select id="userMemoEnroll">
+	INSERT INTO
+		member_memo(
+			member_memo_no,
+			member_no,
+			member_memo_content
+			)
+		VALUES(
+			NEXTVAL(seq_member_memo_no),
+			#{memberNo},
+			NULL
+			)
+</select>
+
 
 <select id="selectOneMemberByEmail" resultType="user">
 	SELECT

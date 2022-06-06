@@ -195,7 +195,7 @@ function register() {
     if (form_register.mode.value == 'insert') {
         if(form_register.file1.value == '') { alert('파일이 입력되지 않았습니다.'); form_register.file1.focus(); return false;}
     }
-    if($('[name=imgUrl]').val() == '') return false;
+    //if($('[name=imgUrl]').val() == '') return false;
     form_register.target = 'iframe_process';
     form_register.submit();
 }

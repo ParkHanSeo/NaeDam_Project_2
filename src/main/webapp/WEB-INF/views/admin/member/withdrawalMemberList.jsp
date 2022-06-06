@@ -63,8 +63,9 @@
 							</select>
 						</div>
 					</div>
-					<form:form id="withdrawalDeleteFrm" name="withdrawalDeleteFrm" action="${pageContext.request.contextPath}/admin/member/memberDelete.do" method="POST">
+					<form:form id="withdrawalDeleteFrm" name="withdrawalDeleteFrm" action="${pageContext.request.contextPath}/admin/member/memberProcess" method="POST">
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+						<input type="hidden" name="mode" value="withdrawalDelete"/>
 						<table class="table table-bordered table-hover checkbox-group">
 							<thead>
 								<tr>
@@ -127,13 +128,14 @@
 		<div class="modal-content">
 			<input type="hidden" id="addressNo" name="addressNo" value="" />
 			<input type="hidden" id="memberNo" name="memberNo" value="" />
-			<input type="hidden" name="mode"> 
 			<input type="hidden" name="member_code">
+			<form name="memberInsertModalFrm" id="memberInsertModalFrm" method="POST" action="${pageContext.request.contextPath}/admin/member/memberProcess?${_csrf.parameterName}=${_csrf.token}">
+				<input type="hidden" name="mode" value="withdrawalUpdate"/>
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h4 class="modal-title" id="myModalLabel">회원 등록</h4>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body" name="modalBody">
 					<h4>
 						<p class="text-light-blue">
 							<i class="fa fa-fw fa-info-circle"></i> 회원정보
@@ -246,6 +248,7 @@
 						</tr>
 					</table>
 				</div>
+				</form>
 			</div>
 		<div class="modal-footer">
 			<button type="button" onclick="update()" class="btn btn-primary">저장</button>
@@ -369,7 +372,10 @@ $(document).on("click", ".detailWithdrawalBtn", function(e){
 			var loginDate = res.loginDate;
 			var updateDate = res.updateDate;
 			var withdrawalDate = res.withdrawalDate;
-			
+ 			var display = '<input type="hidden" id="memberNo" name="memberNo" value="'+withdrawalMemberEntity.memberNo+'" />'
+						+ '<input type="hidden" id="addressNo" name="addressNo" value="'+address.addressNo+'" />'
+						+ '<input type="hidden" id="memberMemoNo" name="memberMemoNo" value="'+memberMemo.memberMemoNo+'" />';
+			$("div[name='modalBody']").append(display);	
 			$("[name=memberNo]").val(withdrawalMemberEntity.memberNo);
 			$("[name=id]").val(withdrawalMemberEntity.id);
 			$("[name=lastName]").val(withdrawalMemberEntity.lastName);
@@ -444,34 +450,38 @@ function callAddress() {
 function update(){
 	var id = $("#id").val();
 	var password = $("#password").val();
+	console.log("password = " + password);
 	var passwordCheck = $("#passwordCheck").val();
 	var firstName = $("#firstName").val();
 	var lastName = $("#lastName").val();
-	var memberMemoContent = $("#memberMemoContent").val();
 	var authority = $("#memberGradeChk option:selected").val();
-	var addressNo = $("#addressNo").val();
-	var addressMain = $("#address_main").val();
-	var addressSub = $("#address_sub").val();
-	var addressZipcode = $("#address_zipcode").val();
-	var memberNo = $("#memberNo").val();
-	var status = $("#status").val();
-	var reason = $("#reason").val();
-	var token = $("meta[name='_csrf']").attr("content");
-	var header = $("meta[name='_csrf_header']").attr("content");
 	
-	if(password != ''){
-		// 비밀번호 유효성 검사
-		if(!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,15}$/.test(password)){
-			alert("비밀번호는 8 ~ 15 글자 이내로 공백 없이 영문자, 숫자, 특수문자를 혼합하여 입력해주세요.");
-			$("#password").focus();
-			return false;
-		}
-		// 비밀번호 확인 공란 확인
-		if(passwordCheck == ''){
-			alert("비밀번호가 확인이 입력되지 않았습니다.");
-			$("#passwordCheck").focus();
-			return false;	
-		}
+	// 아이디 공란 확인
+	if(id == ''){
+		alert("아이디가 입력되지 않았습니다.");
+		$("#id").focus();
+		return false;
+	}
+	
+	// 비밀번호 공란 확인
+	if(password == ''){
+		alert("비밀번호가 입력되지 않았습니다.");
+		$("#password").focus();
+		return false;
+	}
+	
+	// 비밀번호 유효성 검사
+	if(!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,15}$/.test(password)){
+		alert("비밀번호는 8 ~ 15 글자 이내로 공백 없이 영문자, 숫자, 특수문자를 혼합하여 입력해주세요.");
+		$("#password").focus();
+		return false;
+	}
+	
+	// 비밀번호 확인 공란 확인
+	if(passwordCheck == ''){
+		alert("비밀번호가 확인이 입력되지 않았습니다.");
+		$("#passwordCheck").focus();
+		return false;
 	}
 	
 	// 비밀번호 일치 확인
@@ -495,7 +505,6 @@ function update(){
 	}
 	
 	// 휴대폰 번호 유효성 검사
-	var mobile1 = $("#mobile1").val();
 	var mobile2 = $("#mobile2").val();
 	var mobile3 = $("#mobile3").val();
 	
@@ -504,13 +513,11 @@ function update(){
 		$("#mobile1").focus();
 		return false;
 	}
-	
 	if(!/^([0-9]{3,4})$/.test(mobile2) || !/^([0-9]{4})$/.test(mobile3)){
 		alert("휴대폰 번호를 정확하게 입력해주세요.");
 		$("#mobile1").focus();
 		return false;
 	}
-
 	// 이메일 유효성 검사
 	var email = $("#email").val();
 	var regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
@@ -521,45 +528,14 @@ function update(){
 		return false;
 	}
 	
-	const result = {
-			memberNo : memberNo,
-			id : id,
-			password : password,
-			firstName : firstName,
-			lastName : lastName,
-			mobile1 : mobile1,
-			mobile2 : mobile2,
-			mobile3 : mobile3,
-			email : email,
-			addressNo : addressNo,
-			addressZipcode : addressZipcode,
-			addressMain : addressMain,
-			addressSub : addressSub,
-			memberMemoContent : memberMemoContent,
-			status : status,
-			authority : authority,
-			reason : reason
-	};
-	
-	const data = JSON.stringify(result);
-	
-	$.ajax({
-		url : `${pageContext.request.contextPath}/admin/member/withdrawalMemberUpdate.do`,
-		method : "POST",
-		data : data,
-		contentType : "application/json; charset=utf-8",
-		beforeSend : function(xhr){
-			xhr.setRequestHeader(header, token);
-		},
-		success(data){
-			alert("해당 회원이 수정 되었습니다.");
-			location.reload();
-		}, 
-		error : console.log
-	});
-	
-		$(window).unbind("beforeunload");
+	$(window).unbind("beforeunload");
+	$(document.memberInsertModalFrm).submit();
 }
+$("#modalRegister").on("hidden.bs.modal", function(){
+	$("input[name='memberNo']").remove();
+	$("input[name='addressNo']").remove();
+	$("input[name='memberMemoNo']").remove();
+});
 
 </script>
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

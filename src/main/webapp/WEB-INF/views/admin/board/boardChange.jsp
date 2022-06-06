@@ -40,22 +40,25 @@
 	
 	function funPostChange(){
 		var postArr = new Array();
+		var mode = "change";
 		var boardNo = $("select[name='boardNoChange']").val();
 		$("input[class='postNo']:checked").each(function(){
 			postArr.push($(this).val());
 		});
   		$.ajax({
-			 	 url : "/admin/board/addPostChange?${_csrf.parameterName}=${_csrf.token}",
+			 	 url : "/admin/board/json/postProcess?${_csrf.parameterName}=${_csrf.token}",
   		  	 	 type : "POST",
 		  	 	 data : { 
 		  	 		 postArr : postArr, 
-		  	 		 boardNo
+		  	 		 boardNo,
+		  	 		 mode
 		  	 	 },
 		 		 success : function(result){   	 		
+		 	  		alert("게시물 이전이 완료되었습니다.")
+		 	  		location.href = "/admin/board/postList?boardNo="+boardNo;		 			 
 		  	 	 }  	 	 
   		});		
-  		alert("게시물 이전이 완료되었습니다.")
-  		location.href = "/admin/board/postList?boardNo="+boardNo;
+
 	}	
 	
 	

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <style>
 	p {
@@ -79,15 +79,16 @@
 
 	function funReply(){	
 		$("span[name='board_sub_title']").text('답변');
-		$("button[name='display_reply']").css("display", "none")
-		$("button[name='updatePost']").attr("onclick", "funReply2();")
+		$("button[name='display_reply']").css("display", "none");
+		$("button[name='updatePost']").attr("onclick", "funReply2();");
+		$("input[name='mode']").val('answer');
 		var append = $("#getPostTitle").val();
 		$("#getPostTitle").val(" RE   :   "+append);
 	}
 	
 	function funReply2(){	
 		alert("답변 등록이 완료되었습니다.")
-		$("form[name='getPostForm']").attr("method", "POST").attr("action", "/admin/board/addAnswerPost?${_csrf.parameterName}=${_csrf.token}").submit();
+		$("form[name='getPostForm']").attr("method", "POST").attr("action", "/admin/board/postProcess?${_csrf.parameterName}=${_csrf.token}").submit();
 	}
 	
 	function fncDeleteThombnail(){
@@ -111,7 +112,7 @@
 				alert(postName[i])
 			}
 			alert("수정 되었습니다.");
-			$("form[name='getPostForm']").attr("method", "POST").attr("action", "/admin/board/updatePost?${_csrf.parameterName}=${_csrf.token}").submit();
+			$("form[name='getPostForm']").attr("method", "POST").attr("action", "/admin/board/postProcess?${_csrf.parameterName}=${_csrf.token}").submit();
 		}else if("${board2.option.optionMass}" == "y"){
 			var postFile = $("input[id='getPostFile']").length;
 			var postName = new Array(postFile);
@@ -121,7 +122,7 @@
 				alert(postName[i])
 			}
 			alert("수정 되었습니다.");
-			$("form[name='getPostForm']").attr("method", "POST").attr("action", "/admin/board/updatePost2?${_csrf.parameterName}=${_csrf.token}").submit();
+			$("form[name='getPostForm']").attr("method", "POST").attr("action", "/admin/board/postProcess?${_csrf.parameterName}=${_csrf.token}").submit();
 		}
 	}
 	
@@ -172,10 +173,11 @@
 	}
 	
 	function fncAddComment(){
-			
+		
+		var secNo = $("input[name='secNo']").val();
+
 		$.ajax({
-			
-			url : "/admin/board/json/getMemberData",
+			url : "/admin/board/json/getMemberData/"+secNo,
 			method : "GET",
 			dataType : "JSON",
 			headers : {
@@ -389,6 +391,8 @@
             <input type="hidden" name="postLayer" id="getPostLayer" >
             <input type="hidden" name="postAsc" id="getPostAsc" >
             <input type="hidden" name="postOriginNo" id="getPostOriginNo" >
+            <input type="hidden" name="mode" id="mode" value="update">
+            <input type="hidden" name="secNo" value="<sec:authentication property='principal.memberNo'/>">            
             <div class="modal-header">
                 <button type="button" name="x" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="myModalLabelPortfolio">게시물 관리</h4>
