@@ -39,7 +39,7 @@
 	sock.onmessage = onMessage;
 	sock.onclose = onClose;
 	sock.onopen = onOpen;
-	
+	console.log(sock.onmessage+"   확인 ")
 
 	
 	function sendMessage() {
@@ -87,7 +87,7 @@
 	}
 	//채팅창에서 나갔을 때
 	function onClose(evt) {
-		
+		alert("접근 close")
 		var user = '${userid}';
 		var str = user + " 님이 퇴장하셨습니다.";
 		
@@ -95,7 +95,7 @@
 	}
 	//채팅창에 들어왔을 때
 	function onOpen(evt) {
-		
+		alert("접근 open")
 		var user = '${userid}';
 		var str = user + "님이 입장하셨습니다.";
 		
