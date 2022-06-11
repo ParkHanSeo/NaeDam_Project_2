@@ -24,9 +24,28 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardDao boardDao;
 
-	@Override
-	public int addBoard(Board board) throws Exception {
-		return boardDao.addBoard(board);
+	public void boardProcess(Map<String, Object> map) throws Exception {
+			Board board = (Board) map.get("board");
+			BoardAuthority boardAuthority = (BoardAuthority) map.get("boardAuthority");
+			BoardOption boardOption = (BoardOption) map.get("boardOption");			
+		if("insert".equals(map.get("mode"))) {
+			boardDao.addBoard(board);
+			boardAuthority.setAuthorityBoard(board);
+			boardOption.setOptionBoard(board);
+			boardDao.addAuthority(boardAuthority);
+			boardDao.addOption(boardOption);
+		}else if("update".equals(map.get("mode"))) {
+			boardDao.updateBoard(board);
+			boardAuthority.setAuthorityBoard(board);
+			boardOption.setOptionBoard(board);
+			boardDao.updateAuthority(boardAuthority);
+			boardDao.updateOption(boardOption);
+		}else if("delete".equals(map.get("mode"))) {
+			List<String> boardArr = (List<String>) map.get("boardArr");
+			for(String i : boardArr) {
+				boardDao.deleteChoiceBoard(Integer.parseInt(i));
+			}
+		}
 	}
 	
 	@Override
@@ -37,16 +56,6 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int addAnswerPost(Post post) throws Exception {
 		return boardDao.addAnswerPost(post);
-	}
-
-	@Override
-	public int addAuthority(BoardAuthority boardAuthority) throws Exception {
-		return boardDao.addAuthority(boardAuthority);
-	}
-
-	@Override
-	public int addOption(BoardOption boardOption) throws Exception {
-		return boardDao.addOption(boardOption);
 	}
 	
 	@Override
@@ -152,21 +161,6 @@ public class BoardServiceImpl implements BoardService {
 	public void deleteComment(int commentNo) throws Exception {
 		boardDao.deleteComment(commentNo);
 	}
-
-	@Override
-	public int updateBoard(Board board) throws Exception {
-		return boardDao.updateBoard(board);
-	}
-
-	@Override
-	public int updateAuthority(BoardAuthority boardAuthority) throws Exception {
-		return boardDao.updateAuthority(boardAuthority);
-	}
-
-	@Override
-	public int updateOption(BoardOption boardOption) throws Exception {
-		return boardDao.updateOption(boardOption);
-	}
 	
 	@Override
 	public int updatePost(Post post) throws Exception {
@@ -215,6 +209,8 @@ public class BoardServiceImpl implements BoardService {
 	public void updateUpAsc(Map<String, Object> map) throws Exception {
 		boardDao.updateUpAsc(map);
 	}
+
+
 
 
 }

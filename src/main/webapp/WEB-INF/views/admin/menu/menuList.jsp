@@ -156,7 +156,7 @@
             parent.$('#displayMeta').hide();
             parent.objEditor.setData('');
             parent.is_revision = false;
-            parent.form_register.mode.value = 'insertMenu';
+            parent.form_register.mode.value = 'insert';
             //parent.form_register.category_code.value = '';
             parent.$('input:radio[name=icon_code]').attr('checked', false);
             parent.$('#previewLink').hide();
@@ -285,7 +285,8 @@
         function updateChoiceMenu(code){
         	
         	var menuArr = new Array();
-        	
+        	var mode = "delete";
+        	var part = "menu";
 			$("input[class='code']:checked").each(function(){
 				menuArr.push($(this).val());
  			});
@@ -300,20 +301,20 @@
 				
 			}else{
 	  		$.ajax({
-  			 	 url : "/admin/menu/updateChoiceMenu?${_csrf.parameterName}=${_csrf.token}",
+  			 	 url : "/admin/menu/json/menuProcess?${_csrf.parameterName}=${_csrf.token}",
 	  		  	 type : "POST",
   		  	 	 data : { 
-  		  	 		menuArr : menuArr 
+  		  	 		menuArr : menuArr,
+  		  	 		mode,
+  		  	 		part
   		  	 	 },
     		 	 success : function(result){
     		 		
   		  	 	 }
   		  	 	 
 	  		});		
-				alert("해당 자료가 삭제 되었습니다.")
-				//$('#iframe_tree').attr('src', '${pageContext.request.contextPath}/admin/menu/tree');
-				//$('#iframe_list').attr('src', '${pageContext.request.contextPath}/admin/menu/menuList');
-				location.reload();
+				alert("해당 자료가 삭제 되었습니다.");
+				parent.location.reload();
 			}
         }
         
@@ -349,7 +350,7 @@
     		  	 	 },
     			 	 success : function(result){
     			 		if(result == true){
-    			 			location.reload();
+    			 			parent.location.reload();
     			 		}
     			  	 }
     	 		});	
@@ -389,7 +390,7 @@
     		  	 	 },
     			 	 success : function(result){
     			 		if(result == true){
-    			 			location.reload();
+    			 			parent.location.reload();
     			 		}
     			  	 }
     	 		});				

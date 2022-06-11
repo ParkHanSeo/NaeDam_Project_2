@@ -24,4 +24,5 @@ public class FormPost implements Serializable {
 	private String itemData;
 	private String itemInput;
 	private String date;
+	private int formPostAsc;
 }

@@ -39,9 +39,9 @@
 	                </div>
 	
 	                <table class="table table-bordered">
-	                <form name="form_register" method="post" action="/admin/bottom/updateMeta?${_csrf.parameterName}=${_csrf.token}">
-	                <input type="hidden" name="mode" value="makeMeta">
-	                <input type="hidden" name="locale" value="ko">
+	                <form name="form_register" method="post" action="/admin/menu/menuProcess?${_csrf.parameterName}=${_csrf.token}">
+	                <input type="hidden" name="mode" value="update">
+	                <input type="hidden" name="part" value="meta">
 	                <tbody><tr>
 	                    <td class="menu">title</td>
 	                    <td align="left"><input type="text" name="meta_title" value="" class="form-control input-sm"></td>
@@ -77,7 +77,7 @@
         function setData() {
             // 정보
             $.ajax({
-            	url:'/admin/bottom/json/getMeta?${_csrf.parameterName}=${_csrf.token}',
+            	url:'/admin/menu/json/getMeta?${_csrf.parameterName}=${_csrf.token}',
                 type:'post',
                 dataType:'json',
                 data:{

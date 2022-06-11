@@ -25,11 +25,11 @@
             <div class="box">
                 <div class="box-body">
                 <div class="col-xs-3" style="padding:0 5px 0 0;">
-                <iframe name="tree" id="iframe_tree" src="${pageContext.request.contextPath }/admin/product/tree_model?stp=pc" width="100%" scrolling="auto" frameborder="1"></iframe>
+                <iframe name="tree" id="iframe_tree" src="${pageContext.request.contextPath }/admin/product/tree_model?stp=pc" width="100%" height="794" scrolling="auto" frameborder="1"></iframe>
                 </div>
 
                 <div class="col-xs-9" style="padding:0 5px 0 0;">
-                <iframe name="list" id="iframe_list" src="${pageContext.request.contextPath }/admin/product/productCategory_sub" width="100%" scrolling="auto" frameborder="1"></iframe>
+                <iframe name="list" id="iframe_list" src="${pageContext.request.contextPath }/admin/product/productCategory_sub" width="100%" height="794" scrolling="auto" frameborder="1"></iframe>
                 </div>
                 </div><!-- /.box-body -->
             </div><!-- /.box -->

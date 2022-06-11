@@ -1,7 +1,12 @@
 package com.naedam.admin.setting.model.service;
 
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +20,6 @@ import com.naedam.admin.delivery.model.vo.DeliverySetting;
 import com.naedam.admin.delivery.model.vo.Doseosangan;
 import com.naedam.admin.history.model.vo.History;
 import com.naedam.admin.map.model.vo.Maps;
-import com.naedam.admin.point.model.vo.Point;
 import com.naedam.admin.point.model.vo.PointSave;
 import com.naedam.admin.point.model.vo.PointUse;
 import com.naedam.admin.popup.model.vo.Popup;
@@ -42,6 +46,63 @@ public class SettingServiceImpl implements SettingService {
 	@Autowired
 	public SettingDao settingDao;
 
+	@Override
+	public Map<String, Object> staffProcess(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		Map<String, Object> resultMap = new HashMap<>();
+		Staff staff = (Staff) map.get("staff");
+		if("insert".equals(map.get("mode"))) {
+			settingDao.insertStaff(staff);
+			resultMap.put("msg", "등록 되었습니다.");
+		}else if("update".equals(map.get("mode"))) {
+			settingDao.updateStaff(staff);
+			resultMap.put("msg", "수정 되었습니다.");
+		}else if("delete".equals(map.get("mode"))) {
+			settingDao.deleteStaff((int[])map.get("staffNo"));
+			resultMap.put("msg", "삭제 되었습니다.");
+		}
+		
+		return resultMap;
+	}
+	
+	@Override
+	public int infoProcess(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		Map<String, Object> resultMap = new HashMap<>();
+		AdminSetting adminSetting = (AdminSetting) map.get("adminSetting");
+		DeliveryNotice deliveryNotice = (DeliveryNotice) map.get("deliveryNotice");
+		HttpServletRequest request = (HttpServletRequest) map.get("request");
+		int result = 0;
+		if("info".equals(map.get("mode"))) {
+			String phone = request.getParameter("mobile1") + request.getParameter("mobile2")
+					+ request.getParameter("mobile3");
+			String callerId = request.getParameter("tel1") + request.getParameter("tel2")
+					+ request.getParameter("tel3");
+			adminSetting.setPhone(phone);
+			adminSetting.setCallerId(callerId);
+			if (adminSetting.getIsDiscount() == null)
+				adminSetting.setIsDiscount("N");
+		
+			List<String> menuList = Arrays.asList(request.getParameterValues("admin_menu_list[]"));
+			result = settingDao.updateAdminMenuAllN();
+			for (String menuNo : menuList) {
+				result = settingDao.updateAdminMenu(menuNo);
+			}
+			List<String> localeList = Arrays.asList(request.getParameterValues("locale_list[]"));
+			result = settingDao.updateLocaleAllN();
+			for (String localeCode : localeList) {
+				result = settingDao.updateLocaleChoosen(localeCode);
+			}
+		
+			result = settingDao.updateLocaleDefault(request.getParameter("default_locale"));
+			result = settingDao.updateAdminSetting(adminSetting);			
+		}else if("updateGuide".equals(map.get("mode"))) {
+			result = settingDao.updateDeliveryNotice(deliveryNotice);
+		}
+		
+		return result;
+	}
+	
 	@Override
 	public List<DeliveryCompany> selectDeliveryCompanyList() {
 		// TODO Auto-generated method stub
@@ -91,15 +152,27 @@ public class SettingServiceImpl implements SettingService {
 	}
 
 	@Override
-	public List<Coupon> selectCouponListByParam(Map<String, Object> param) {
+	public Map<String, Object> selectCouponListByParam(Map<String, Object> map, HttpServletRequest request) {
 		// TODO Auto-generated method stub
-		return settingDao.selectCouponListByParam(param);
+		Map<String, Object> param = new HashMap<String, Object>();
+		Enumeration params = request.getParameterNames();
+		while (params.hasMoreElements()) {
+			String name = (String) params.nextElement();
+			param.put(name, request.getParameter(name));
+		}
+		List<Coupon> couponList = settingDao.selectCouponListByParam(param);
+		param.put("couponList", couponList);
+		return param;
 	}
 
 	@Override
-	public Point selectPoint() {
+	public Map<String, Object> selectPoint() {
 		// TODO Auto-generated method stub
-		return settingDao.selectPoint();
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("point", settingDao.selectPoint());
+		resultMap.put("pointUse", settingDao.selectPointUse());
+		resultMap.put("pointSave", settingDao.selectPointSave());
+		return resultMap;
 	}
 
 	@Override
@@ -281,24 +354,19 @@ public class SettingServiceImpl implements SettingService {
 		return settingDao.updateSnsSetting(snsSetting);
 	}
 	
-	@Override
-	public int insertStaff(Staff staff) {
-		return settingDao.insertStaff(staff);
-	}
+
 
 	@Override 
-	public List<Staff> selectStaffList() { 
-		return settingDao.selectStaffList(); 
+	public Map<String, Object> selectStaffList() { 
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("resultStaffList", settingDao.selectStaffList());
+		resultMap.put("totalStaffListCount", settingDao.totalStaffListCount());
+		return resultMap; 
 	}
 
 	@Override
 	public int selectStaffListCount() {
 		return settingDao.totalStaffListCount();
-	}
-
-	@Override
-	public int deleteStaff(int[] staffNo) {
-		return settingDao.deleteStaff(staffNo);
 	}
 
 	@Override
@@ -324,11 +392,6 @@ public class SettingServiceImpl implements SettingService {
 	@Override
 	public int deleteStaffImg(int staffNo) {
 		return settingDao.deleteStaffImg(staffNo);
-	}
-
-	@Override
-	public int updateStaff(Staff staff) {
-		return settingDao.updateStaff(staff);
 	}
 
 	@Override

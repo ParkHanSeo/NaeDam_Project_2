@@ -19,7 +19,7 @@
 	</select>
 	
 	<!-- 자동 발송 여부 수정 -->	
-	<update id="autoSend" parameterType="hashmap">
+	<update id="autoSend" parameterType="map">
 		update sms_setting
 		   set is_send = #{send}
 			 , is_send_admin = #{sendAdmin}
@@ -55,7 +55,7 @@
 		select *
 		  from sms_setting
 	</select>
-	<select id="totalSmsCount" parameterType="hashmap" resultType="int">
+	<select id="totalSmsCount" parameterType="map" resultType="int">
 		select COUNT(*)
 		  from tb_sms
 		 <where>
@@ -73,7 +73,7 @@
 			</if>
 		</where>
 	</select>
-	<select id="selectSmsList" parameterType="hashmap" resultType="sms">
+	<select id="selectSmsList" parameterType="map" resultType="sms">
 		select b.*
 		  from (select @ROWNUM:=@ROWNUM+1 as rowNum, a.* 
 				  from (select @ROWNUM:=0,

@@ -36,7 +36,7 @@
 		$("#deleteChoiceBoard").on("click", function(){
 			
 			var boardArr = new Array();
-			
+			var mode = "delete";
 			$("input[class='boardNo']:checked").each(function(){
 				boardArr.push($(this).val());
  			});
@@ -50,18 +50,19 @@
 				
 			}else{
 	  		$.ajax({
-  			 	 url : "/admin/board/deleteChoiceBoard?${_csrf.parameterName}=${_csrf.token}",
+  			 	 url : "/admin/board/json/boardProcess?${_csrf.parameterName}=${_csrf.token}",
 	  		  	 type : "POST",
   		  	 	 data : { 
-  		  	 		boardArr : boardArr 
+  		  	 		boardArr : boardArr,
+  		  	 		mode
   		  	 	 },
     		 	 success : function(result){
-    		 		
+   					alert("해당 자료가 삭제 되었습니다.")
+   					location.href = "/admin/board/listBoard";    		 		
   		  	 	 }
   		  	 	 
 	  		});		
-				alert("해당 자료가 삭제 되었습니다.")
-				location.href = "/admin/board/listBoard";
+
 			}
 	  		//location.href = "mir9/board/listBoard";
 		})	
@@ -147,7 +148,7 @@
 		}
 		
 		alert("게시판이 수정 되었습니다.")
-		$("form[name='updateBoardForm']").attr("method", "POST").attr("action", "/admin/board/updateBoard?${_csrf.parameterName}=${_csrf.token}").submit();
+		$("form[name='updateBoardForm']").attr("method", "POST").attr("action", "/admin/board/boardProcess?${_csrf.parameterName}=${_csrf.token}").submit();
 	}
 	
 	function onclickView(boardNo){
@@ -157,6 +158,11 @@
 	window.copyURL = function(boardNo){
 		prompt("이 게시판의 URL 입니다. Ctrl+C를 눌러 복사하세요", "http://localhost:8080/admin/board/postList?boardNo="+boardNo)
 	}
+	
+	function iframeReload(){
+		location.reload();
+	}
+	
 	
 
 

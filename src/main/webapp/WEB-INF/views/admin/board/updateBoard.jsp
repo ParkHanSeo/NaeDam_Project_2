@@ -10,7 +10,7 @@
 			<div class="modal-dialog" style="width:600px;">
         <div class="modal-content">
             <form name="form" method="post">
-            <input type="hidden" name="mode" id="mode">
+            <input type="hidden" name="mode" id="mode" value="update">
             <input type="hidden" name="boardNo" id="boardNo2">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

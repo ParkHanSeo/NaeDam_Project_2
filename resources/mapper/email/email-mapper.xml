@@ -12,7 +12,7 @@
 	</select>
 
 	<!-- 자동 발송 여부 수정 -->
-	<update id="autoSend" parameterType="hashmap">
+	<update id="autoSend" parameterType="map">
 		update email_setting
 		   set is_send = #{send}
 			 , is_send_admin = #{sendAdmin}
@@ -48,7 +48,7 @@
 		select *
 		  from email_setting
 	</select>	
-	<select id="totalEmailCount" parameterType="hashmap" resultType="int">
+	<select id="totalEmailCount" parameterType="map" resultType="int">
 		select COUNT(*)
 		  from tb_email
 		  <where>
@@ -66,7 +66,7 @@
 				</if>
 			</where>
 	</select>
-	<select id="selectEmailList" parameterType="hashmap" resultType="email">
+	<select id="selectEmailList" parameterType="map" resultType="email">
 		select b.*
 		  from (select @ROWNUM:=@ROWNUM+1 as rowNum, a.* 
 				  from (select @ROWNUM:=0,

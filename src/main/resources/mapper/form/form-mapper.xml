@@ -17,7 +17,7 @@
 	
 	<resultMap type="item" id="itemSelectMap">
 		<result property="itemNo"			column="ITEM_NO"		jdbcType="NUMERIC"></result>
-		<result property="form.formNo"		column="FORM_NO"	jdbcType="NUMERIC"></result>
+		<result property="form.formNo"		column="FORM_NO"		jdbcType="NUMERIC"></result>
 		<result property="label"			column="LABEL"			jdbcType="VARCHAR"></result>
 		<result property="input_type"		column="INPUT_TYPE"		jdbcType="VARCHAR"></result>
 		<result property="placeholder"		column="PLACEHOLDER"	jdbcType="VARCHAR"></result>
@@ -26,6 +26,7 @@
 		<result property="input_example"	column="INPUT_EXAMPLE"	jdbcType="VARCHAR"></result>
 		<result property="check_type"		column="CHECK_TYPE"		jdbcType="VARCHAR"></result>
 		<result property="is_show"			column="IS_SHOW"		jdbcType="VARCHAR"></result>
+		<result property="itemAsc"			column="ITEM_ASC"		jdbcType="NUMERIC"></result>
 	</resultMap>
 	
 	<resultMap type="itemChoice" id="itemChoiceSelectMap">
@@ -40,7 +41,8 @@
 		<result property="itemNo"			column="item_no"		jdbcType="VARCHAR"></result>
 		<result property="itemData"			column="ITEM_DATA"		jdbcType="VARCHAR"></result>
 		<result property="itemInput"		column="ITEM_INPUT"		jdbcType="VARCHAR"></result>
-		<result property="date"				column="date"			jdbcType="VARCHAR"></result>		
+		<result property="date"				column="date"			jdbcType="VARCHAR"></result>
+		<result property="formPostAsc"		column="FORM_POST_ASC"	jdbcType="NUMERIC"></result>		
 	</resultMap>
 	
 	<insert id="addForm" parameterType="form">
@@ -73,7 +75,8 @@
 				  HTML_CLASS,
 				  INPUT_EXAMPLE,
 				  CHECK_TYPE,
-				  IS_SHOW)
+				  IS_SHOW,
+				  ITEM_ASC)
 		VALUES(NEXTVAL(item_seq),
 			   #{form.formNo},
 			   #{label},
@@ -83,7 +86,8 @@
 			   #{html_class},
 			   #{input_example},
 			   #{check_type},
-			   #{is_show})
+			   #{is_show},
+			   NEXTVAL(allAsc_seq))
 		<selectKey keyProperty="itemNo" resultType="int" order="AFTER">
 			SELECT LASTVAL(item_seq) from dual
 		</selectKey>			   
@@ -106,13 +110,15 @@
 					   item_no,
 					   item_data,
 					   item_input,
-					   date)
+					   date,
+					   form_post_asc)
 		VALUES(NEXTVAL(form_post_seq),
 			   #{form.formNo},
 			   #{itemNo},
 			   #{itemData},
 			   #{itemInput},
-			   sysdate())
+			   sysdate(),
+			   NEXTVAL(allAsc_seq))
 	</insert>
 	
 	<insert id="addFormPostCopy" parameterType="formPost">
@@ -122,21 +128,33 @@
 					   item_no,
 					   item_data,
 					   item_input,
-					   date)
+					   date,
+					   form_post_asc)
 		VALUES(NEXTVAL(form_post_seq),
 			   #{form.formNo},
 			   #{itemNo},
 			   #{itemData},
 			   #{itemInput},
-			   #{date})
+			   #{date},
+			   NEXTVAL(allAsc_seq))
 	</insert>	
 	
 	<select id="formList" resultMap="formSelectMap">
 		SELECT * FROM form ORDER BY form_no ASC
 	</select>
 	
+	<select id="formListCount" resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(SELECT * FROM form ORDER BY form_no ASC) countTable		
+	</select>
+	
 	<select id="itemList" parameterType="int" resultMap="itemSelectMap">
-		SELECT * FROM ITEM WHERE FORM_NO = #{form.formNo} ORDER BY ITEM_NO ASC
+		SELECT * FROM ITEM WHERE FORM_NO = #{form.formNo} ORDER BY ITEM_ASC ASC
+	</select>
+	
+	<select id="itemListCount" parameterType="int" resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(SELECT * FROM ITEM WHERE FORM_NO = #{form.formNo} ORDER BY ITEM_ASC ASC) countTable	
 	</select>
 	
 	<select id="formPostList" parameterType="int" resultMap="formPostSelectMap">
@@ -144,6 +162,7 @@
 		WHERE fp.form_no = f.form_no 
 		AND i.item_no = fp.item_no 
 		AND fp.form_no = #{value}
+		ORDER BY fp.form_post_asc ASC
 	</select>
 	
 	<select id="formPostListCount" parameterType="int" resultType="int">
@@ -233,6 +252,38 @@
 		</set>
 		WHERE CODE = #{code}
 	</update>
+	
+	<update id="updateUpAsc" parameterType="map">
+		UPDATE ITEM
+		<set>
+			ITEM_ASC = #{itemUpAsc}
+		</set>
+		WHERE ITEM_NO = #{upItemNo}
+	</update>	
+	
+	<update id="updateDownAsc" parameterType="map">
+		UPDATE ITEM
+		<set>
+			ITEM_ASC = #{itemDownAsc}
+		</set>
+		WHERE ITEM_NO = #{downItemNo}
+	</update>
+	
+	<update id="updateUpAsc2" parameterType="map">
+		UPDATE FORM_POST
+		<set>
+			FORM_POST_ASC = #{formPostUpAsc}
+		</set>
+		WHERE CODE = #{upFormPostNo}
+	</update>	
+	
+	<update id="updateDownAsc2" parameterType="map">
+		UPDATE FORM_POST
+		<set>
+			FORM_POST_ASC = #{formPostDownAsc}
+		</set>
+		WHERE CODE = #{downFormPostNo}
+	</update>	
 	
 	<delete id="deleteChoiceForm" parameterType="int">
 		DELETE

@@ -22,6 +22,7 @@ public class Head implements Serializable {
 	private String title;
 	private String status;
 	private String content;
+	private int headAsc;
 	
 	
 }

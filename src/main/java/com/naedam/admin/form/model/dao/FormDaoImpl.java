@@ -1,6 +1,7 @@
 package com.naedam.admin.form.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -58,6 +59,12 @@ public class FormDaoImpl implements FormDao {
 		// TODO Auto-generated method stub
 		return session.selectList("form.formList");
 	}
+
+	//폼메일 리스트 카운트
+	@Override
+	public int formListCount() throws Exception {
+		return session.selectOne("form.formListCount");
+	}
 	
 	//문항관리 리스트
 	@Override
@@ -65,6 +72,12 @@ public class FormDaoImpl implements FormDao {
 		// TODO Auto-generated method stub
 		return session.selectList("form.itemList", formNo);
 	}
+
+	//문항관리 리스트 카운트
+	@Override
+	public int itemListCount(int formNo) throws Exception {
+		return session.selectOne("form.itemListCount", formNo);
+	}	
 	
 	//폼게시물 리스트
 	@Override
@@ -132,21 +145,21 @@ public class FormDaoImpl implements FormDao {
 	
 	//폼메일 선택삭제
 	@Override
-	public void deleteChoiceForm(int formNo) throws Exception {
+	public void deleteChoiceForm(List<Integer> formNo) throws Exception {
 		// TODO Auto-generated method stub
 		session.delete("form.deleteChoiceForm", formNo);
 	}
 	
 	//문항 선택삭제
 	@Override
-	public void deleteChoiceItem(int itemNo) throws Exception {
+	public void deleteChoiceItem(List<Integer> itemNo) throws Exception {
 		// TODO Auto-generated method stub
 		session.delete("form.deleteChoiceItem", itemNo);
 	}
 	
 	//문항 게시글 선택삭제
 	@Override
-	public void deleteChoiceFormPost(int code) throws Exception {
+	public void deleteChoiceFormPost(List<Integer> code) throws Exception {
 		// TODO Auto-generated method stub
 		session.delete("form.deleteChoiceFormPost", code);
 	}	
@@ -165,12 +178,19 @@ public class FormDaoImpl implements FormDao {
 		return session.update("form.updateItem", item);
 	}
 	
-	//폼 디자인 수정
+	//폼 디자인 리스트 수정
 	@Override
-	public int updateFormDesign(Form form) throws Exception {
+	public int updateFormDesignList(Form form) throws Exception {
 		// TODO Auto-generated method stub
-		return session.update("form.updateFormDesign", form);
+		return session.update("form.updateFormDesignList", form);
 	}
+	
+	//폼 디자인 쓰기 수정
+	@Override
+	public int updateFormDesignWrite(Form form) throws Exception {
+		// TODO Auto-generated method stub
+		return session.update("form.updateFormDesignWrite", form);
+	}	
 	
 	//폼 게시글 수정
 	@Override
@@ -178,7 +198,26 @@ public class FormDaoImpl implements FormDao {
 		// TODO Auto-generated method stub
 		return session.update("form.updateFormPost", formPost);
 	}
+	
+	//item down순서변경
+	public void updateDownAsc(Map<String, Object> map) throws Exception {
+		session.update("form.updateDownAsc", map);
+	}
 
+	//item up순서변경
+	public void updateUpAsc(Map<String, Object> map) throws Exception {
+		session.update("form.updateUpAsc", map);
+	}
+	
+	//formPost down순서변경
+	public void updateDownAsc2(Map<String, Object> map) throws Exception {
+		session.update("form.updateDownAsc2", map);
+	}
+
+	//formPost up순서변경
+	public void updateUpAsc2(Map<String, Object> map) throws Exception {
+		session.update("form.updateUpAsc2", map);
+	}
 
 
 }

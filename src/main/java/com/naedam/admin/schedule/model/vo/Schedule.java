@@ -29,4 +29,5 @@ public class Schedule implements Serializable {
 	private String scheduleStartDate;
 	private String scheduleEndDate;
 	private String scheduleColor;
+	private String scheduleMode;
 }

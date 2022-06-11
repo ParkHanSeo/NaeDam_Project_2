@@ -33,7 +33,7 @@ public class Menu implements Serializable {
 	private String is_meta;	
 	private String meta_title;
 	private String meta_description;
-	
+	private int menuAsc;
 	private int originNo;
 	private int ord;
 	

@@ -16,6 +16,21 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Autowired
 	private ScheduleDao scheduleDao;
 
+	//일정관리 프로세서
+	public String scheduleProcess(Map<String, Object> map) throws Exception{
+		Schedule schedule = (Schedule) map.get("schedule");
+		if("insert".equals(schedule.getScheduleMode())) {
+			scheduleDao.addSchedule(schedule);
+		}else if("update".equals(schedule.getScheduleMode())) {
+			scheduleDao.updateSchedule(schedule);
+		}else if("delete".equals(schedule.getScheduleMode())) {
+			scheduleDao.deleteSchedule(schedule.getScheduleNo());
+		}
+		
+		
+		return "";
+	}
+	
 	@Override
 	public int addSchedule(Schedule schedule) throws Exception {
 		return scheduleDao.addSchedule(schedule);
@@ -45,18 +60,4 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

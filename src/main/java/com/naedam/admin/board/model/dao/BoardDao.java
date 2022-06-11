@@ -81,10 +81,10 @@ public interface BoardDao {
 	public Member getMemberData(int memberNo) throws Exception;
 	
 	//게시판 선택 삭제
-	public void deleteChoiceBoard(int boardNo) throws Exception;
+	public void deleteChoiceBoard(List<Integer> boardNo) throws Exception;
 	
 	//게시글 선택 삭제
-	public void deleteChoicePost(int postNo) throws Exception;
+	public void deleteChoicePost(List<Integer> postNo) throws Exception;
 	
 	//파일 삭제
 	public void deleteFile(int fileNo) throws Exception;
@@ -105,6 +105,12 @@ public interface BoardDao {
 	
 	//계층형 쿼리
 	public int updatePostReply(Post post) throws Exception;
+
+	//up순서변경
+	public void updateUpAsc(Map<String, Object> map)throws Exception;	
+	
+	//down순서변경
+	public void updateDownAsc(Map<String, Object> map)throws Exception;
 	
 	//조회수
 	public int postViewCount(Post post) throws Exception;

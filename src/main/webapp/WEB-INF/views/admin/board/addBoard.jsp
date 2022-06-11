@@ -20,7 +20,7 @@
 				return;
 			}
 			alert("게시판이 등록 되었습니다.")
-			$("form[name='addBoard']").attr("method", "POST").attr("action", "/admin/board/addBoard?${_csrf.parameterName}=${_csrf.token}").submit();
+			$("form[name='addBoard']").attr("method", "POST").attr("action", "/admin/board/boardProcess?${_csrf.parameterName}=${_csrf.token}").submit();
 			
 		}
 		
@@ -38,7 +38,7 @@
     <div class="modal-dialog" style="width:600px;">
         <div class="modal-content">
             <form name="addBoard" method="post">
-            <input type="hidden" name="mode" id="mode">
+            <input type="hidden" name="mode" id="mode" value="insert">
             <input type="hidden" name="board_code" id="board_code">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

@@ -26,7 +26,15 @@
 				 order by r.review_code ASC) as a
 		<where>
 			<if test="keyword != '' and keyword != null">
-				${field} LIKE CONCAT('%', #{keyword}, '%')
+				<choose>
+					<when test="field eq 'total'">
+						a.writer LIKE CONCAT('%', #{keyword}, '%') || 
+						productName LIKE CONCAT('%', #{keyword}, '%')
+					</when>
+					<otherwise>
+						${field} LIKE CONCAT('%', #{keyword}, '%')
+					</otherwise>
+				</choose>
 			</if>
 		</where>
 	</select>	
@@ -53,7 +61,15 @@
 								 order by r.review_code ASC) as a
 						 <where>
 							<if test="keyword != '' and keyword != null">
-								${field} LIKE CONCAT('%', #{keyword}, '%')
+								<choose>
+									<when test="field eq 'total'">
+										a.writer LIKE CONCAT('%', #{keyword}, '%') || 
+										productName LIKE CONCAT('%', #{keyword}, '%')
+									</when>
+									<otherwise>
+										${field} LIKE CONCAT('%', #{keyword}, '%')
+									</otherwise>
+								</choose>
 							</if>
 						</where>) as b) as c
 		 where c.rowNum BETWEEN #{startRow} AND #{endRow}

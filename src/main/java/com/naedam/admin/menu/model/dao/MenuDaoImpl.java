@@ -148,7 +148,7 @@ public class MenuDaoImpl implements MenuDao {
 	
 	//메뉴 선택 삭제 후 리비젼
 	@Override
-	public void updateChoiceMenu(int code) throws Exception {
+	public void updateChoiceMenu(List<Integer> code) throws Exception {
 		sqlSession.update("menu.updateChoiceMenu", code);
 	}
 	
@@ -160,7 +160,7 @@ public class MenuDaoImpl implements MenuDao {
 	
 	//헤더관리 선택삭제
 	@Override
-	public void deleteChoiceHead(int headNo) throws Exception {
+	public void deleteChoiceHead(List<Integer> headNo) throws Exception {
 		sqlSession.delete("menu.deleteChoiceHead", headNo);
 	}
 
@@ -170,34 +170,27 @@ public class MenuDaoImpl implements MenuDao {
 		sqlSession.delete("menu.deleteMenu", code);
 	}
 
+	//메뉴 down순서변경
+	public void updateDownAsc(Map<String, Object> map) throws Exception {
+		sqlSession.update("menu.updateDownAsc", map);
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	//메뉴 up순서변경
+	public void updateUpAsc(Map<String, Object> map) throws Exception {
+		sqlSession.update("menu.updateUpAsc", map);
+	}
 	
+	//헤드 down순서변경
+	public void updateHeadDownAsc(Map<String, Object> map) throws Exception {
+		sqlSession.update("menu.updateHeadDownAsc", map);
+	}
+
+	//헤드 up순서변경
+	public void updateHeadUpAsc(Map<String, Object> map) throws Exception {
+		sqlSession.update("menu.updateHeadUpAsc", map);
+	}	
+
+
 }
 
 

@@ -1,6 +1,7 @@
 package com.naedam.admin.form.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.naedam.admin.form.model.vo.Form;
 import com.naedam.admin.form.model.vo.FormPost;
@@ -27,6 +28,9 @@ public interface FormDao {
 	//폼메일 리스트
 	public List<Form> formList() throws Exception;
 	
+	//폼메일 리스트 카운트
+	public int formListCount() throws Exception;
+	
 	//폼게시물 리스트
 	public List<FormPost> formPostList(int formNo, int offset, int limit) throws Exception;
 	
@@ -41,6 +45,9 @@ public interface FormDao {
 	
 	//문항관리 리스트
 	public List<Item> itemList(int formNo) throws Exception;
+
+	//문항관리 리스트 카운트
+	public int itemListCount(int formNo) throws Exception;
 	
 	//폼메일 정보
 	public Form getForm(int formNo) throws Exception;
@@ -58,13 +65,13 @@ public interface FormDao {
 	public List<ItemChoice> getItemChoice(int itemNo) throws Exception;
 	
 	//폼메일 선택삭제
-	public void deleteChoiceForm(int code) throws Exception;
+	public void deleteChoiceForm(List<Integer> code) throws Exception;
 	
 	//문항 선택삭제
-	public void deleteChoiceItem(int itemNo) throws Exception;
+	public void deleteChoiceItem(List<Integer> itemNo) throws Exception;
 	
 	//문항 게시글 선택삭제
-	public void deleteChoiceFormPost(int code) throws Exception;
+	public void deleteChoiceFormPost(List<Integer> code) throws Exception;
 	
 	//폼메일 수정
 	public int updateForm(Form form) throws Exception;
@@ -72,9 +79,24 @@ public interface FormDao {
 	//문항 수정
 	public int updateItem(Item item) throws Exception;
 	
-	//폼 디자인 수정
-	public int updateFormDesign(Form form) throws Exception;
+	//폼 디자인 리스트 수정
+	public int updateFormDesignList(Form form) throws Exception;
+	
+	//폼 디자인 쓰기 수정
+	public int updateFormDesignWrite(Form form) throws Exception;
 	
 	//폼 게시글 수정
 	public int updateFormPost(FormPost formPost) throws Exception;
+	
+	//item up순서변경
+	public void updateUpAsc(Map<String, Object> map)throws Exception;	
+	
+	//item down순서변경
+	public void updateDownAsc(Map<String, Object> map)throws Exception;
+	
+	//formPost up순서변경
+	public void updateUpAsc2(Map<String, Object> map)throws Exception;	
+	
+	//formPost down순서변경
+	public void updateDownAsc2(Map<String, Object> map)throws Exception;
 }

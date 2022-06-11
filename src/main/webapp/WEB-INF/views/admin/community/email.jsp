@@ -34,28 +34,15 @@ textarea {
 		    <div class="col-xs-12">
 		        <div class="box">
 		            <div class="box-body">
-	
-		                <form name="form_register" method="post" action="${pageContext.request.contextPath}/admin/comm/email?${_csrf.parameterName}=${_csrf.token}">
-			                <input type="hidden" name="mode" value="updateEmail">
+		                <form name="form_register">
 			                <input type="hidden" name="locale" value="ko">
-			                
-			                <c:forEach var="setting" items="${ emailSetting }">
-			                	<input type="hidden" name="setTemplateId" value="${ setting.templateId }" >
-			                	<input type="hidden" name="setIsSend" value="${ setting.isSend }" >
-			                	<input type="hidden" name="setIsSendAdmin" value="${ setting.isSendAdmin }" >
-			                </c:forEach>
-			
 							<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 메일 발송 문구 설정 </p></h4>
 			                <div style="text-align:right;">
-			                	<!-- 
-			                	언어 설정 (대기)
 								<button type="button" id="locale_ko" onclick="parent.location.href='${pageContext.request.contextPath}/admin/comm/email?locale=ko'" class="btn btn-primary"><i class="fa fa-globe" aria-hidden="true"></i> 한국어</button>
 								<button type="button" id="locale_en" onclick="parent.location.href='${pageContext.request.contextPath}/admin/comm/email?locale=en'" class="btn btn-default"><i class="fa fa-globe" aria-hidden="true"></i> ENG</button>
 								<button type="button" id="locale_zh" onclick="parent.location.href='${pageContext.request.contextPath}/admin/comm/email?locale=zh'" class="btn btn-default"><i class="fa fa-globe" aria-hidden="true"></i> 中国</button>
 								<button type="button" id="locale_vn" onclick="parent.location.href='${pageContext.request.contextPath}/admin/comm/email?locale=vn'" class="btn btn-default"><i class="fa fa-globe" aria-hidden="true"></i> Tiếng việt</button>                
-								-->
 							</div></br>
-			
 							<table class="table table-bordered table-hover">
 								<thead>
 				                    <tr>
@@ -76,15 +63,12 @@ textarea {
 				                </thead>
 				                <tbody>
 				      				<tr>
-				      					<!-- action에 해당하는 이름값 class로 분리하기 -->
 					                    <input type="hidden" class="join" name="code" value="join" />
-					                    <input type="hidden" class="join" name="code" value="join_admin" />
 										<td class="content">회원가입</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="join" name="is_send" />
 					                    </td>
 					                    <td class="content">
-					                    	<!-- onclickUpdate(code, action, is_admin) -->
 					                    	<button type="button" onclick="onclickUpdate('join');" class="btn btn-primary btn-xs">편집</button>
 					                    </td>
 					                    <td class="content">
@@ -101,7 +85,6 @@ textarea {
 				               		</tr>      
 				               		<tr>
 					                    <input type="hidden" class="findid" name="code" value="findid" />
-					                    <input type="hidden" class="findid" name="code" value="findid_admin" />
 										<td class="content">아이디 찾기<br>[아이디 찾기시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="findid" name="is_send" />
@@ -123,7 +106,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="findpw" name="code" value="findpw" />
-					                    <input type="hidden" class="findpw" name="code" value="findpw_admin" />
 										<td class="content">임시비밀번호 발급알림<br>[비밀번호 찾기시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="findpw" name="is_send" />
@@ -145,7 +127,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="order" name="code" value="order" />
-					                    <input type="hidden" class="order" name="code" value="order_admin" />
 										<td class="content">주문접수<br>[무통장/카드 결제시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="order" name="is_send" />
@@ -172,7 +153,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="pay_done" name="code" value="pay_done" />
-					                    <input type="hidden" class="pay_done" name="code" value="pay_done_admin" />
 										<td class="content">입금확인<br>[무통장 입금 완료시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="pay_done" name="is_send" />
@@ -199,7 +179,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="delivery_ready" name="code" value="delivery_ready" />
-					                    <input type="hidden" class="delivery_ready" name="code" value="delivery_ready_admin" />
 										<td class="content">상품 배송 준비중<br>[주문상태 배송준비중으로 변경시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="delivery_ready" name="is_send" />
@@ -226,7 +205,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="delivery_ing" name="code" value="delivery_ing" />
-					                    <input type="hidden" class="delivery_ing" name="code" value="delivery_ing_admin" />
 										<td class="content">상품 배송중<br>[주문상태 배송중으로 변경시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="delivery_ing" name="is_send" />
@@ -253,7 +231,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="delivery_done" name="code" value="delivery_done" />
-					                    <input type="hidden" class="delivery_done" name="code" value="delivery_done_admin" />
 										<td class="content">상품 배송 완료<br>[주문상태 배송완료로 변경시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="delivery_done" name="is_send" />
@@ -280,7 +257,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="order_cancel" name="code" value="order_cancel" />
-					                    <input type="hidden" class="order_cancel" name="code" value="order_cancel_admin" />
 										<td class="content">주문취소<br>[주문 취소시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="order_cancel" name="is_send" />
@@ -307,7 +283,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="refund" name="code" value="refund" />
-					                    <input type="hidden" class="refund" name="code" value="refund_admin" />
 										<td class="content">환불완료<br>[주문상태 환불완료로 변경시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="refund" name="is_send" />
@@ -334,7 +309,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="point" name="code" value="point" />
-					                    <input type="hidden" class="point" name="code" value="point_admin" />
 										<td class="content">적립금 적립<br>[개별 적립금 적립시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="point" name="is_send" />
@@ -356,7 +330,6 @@ textarea {
 					                </tr>      
 					                <tr>
 					                    <input type="hidden" class="coupon" name="code" value="coupon" />
-					                    <input type="hidden" class="coupon" name="code" value="coupon_admin" />
 										<td class="content">쿠폰 지급<br>[개별 쿠폰 지급시]</td>
 					                    <td class="content">
 					                    	<input type="checkbox" class="coupon" name="is_send"/>
@@ -380,19 +353,17 @@ textarea {
 							</table>
 				            <br>
 						</form>
-
 		            	<div style="text-align:center;"><button type="button" onclick="register()" class="btn btn-primary">확인</button></div>
 	                </div><!-- /.box-body -->
 	            </div><!-- /.box -->
 	        </div><!-- /.col-xs-12 -->
 	    </div><!-- /.row -->
-	</section>
+	</section><!-- /.content -->
 
 	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width:1000px;">
 	        <div class="modal-content">
-	            <form name="formContent" id="formContent" method="post" action="${pageContext.request.contextPath}/admin/comm/email_modal" enctype="multipart/form-data">
-		            <input type="hidden" name="mode" id="mode" value="updateEmail">
+	            <form name="formContent" id="formContent" method="post" action="${pageContext.request.contextPath}/admin/comm/load/emailModal" enctype="multipart/form-data">
 		            <input type="hidden" name="action" id="action">
 		            <input type="hidden" name="locale" id="locale" value="ko">
 		            
@@ -458,58 +429,69 @@ textarea {
 	});
 	
 	CKEDITOR.config.allowedContent = true;
+
+	// cheditor 값 넣기
+	function setData(content){}
 			
-	// 체크박스 값 확인
+	// 체크박스 조회
 	$(function() {
-		var setTemplateId = [];
-		var setIsSend = [];
-		var setIsSendAdmin = [];		
-		
-		$("input[name='setTemplateId']").each(function() { 
-			setTemplateId.push($(this).val());
-		});
-		$("input[name='setIsSend']").each(function() { 
-			setIsSend.push($(this).val());
-		});
-		$("input[name='setIsSendAdmin']").each(function() { 
-			setIsSendAdmin.push($(this).val());
-		});
-		
-		// is_send, is_send_admin 값이 y일 때 checked 속성 부여
-		for(var i = 0; i < setTemplateId.length; i++) {
-			if(setIsSend[i] == "y") {
-				$("input[class='" + setTemplateId[i] + "'][name='is_send']").attr("checked", true);
+		$.ajax({
+			url : "${pageContext.request.contextPath }/admin/comm/load/emailAutoSendCheck",
+			method : "GET",
+			success : function(result) {
+				var set = result.emailSetting;
+				for(var i = 0; i < set.length; i++) {
+					if(set[i].isSend == "y") {
+						$("input[class='" + set[i].templateId + "'][name='is_send']").attr("checked", true);
+					}
+					if(set[i].isSendAdmin == "y") {
+						$("input[class='" + set[i].templateId + "'][name='is_send_admin']").attr("checked", true);
+					}
+				}
 			}
-			else if(setIsSendAdmin[i] == "y") {
-				$("input[class='" + setTemplateId[i] + "'][name='is_send_admin']").attr("checked", true);
-			}
-		}
+		});
 	});
 	
-	// 문구 편집 버튼 -> 저장 양식 불러오기
+	// 문구 편집 버튼
 	function onclickUpdate(action) {
-		// 모달 히든에 각각의 값 전달
-	    $('#action').val(action); 
-	    $('#modalContent').modal({backdrop:'static', show:true});
- 
-	    // 조회
-	    $.ajax({
-			url:"${pageContext.request.contextPath}/admin/comm/email_modal",
-			type:"GET",
-			contentType: "application/json; charset=utf-8",
-			data:{ templateId : action },
-			success: function(result){	
-				$("#title").val(result.title); 
-				objEditor.setData(result.content); 
-			},
-			error:function(textStatus, errorThrown){
-				console.log("발송 문구를 조회 할 수 없습니다.")
+		// 모달 열기
+		$("#action").val(action.concat("_mod")); 
+		$("#modalContent").modal({backdrop:"static", show:true});
+
+		// 저장문구 조회
+		$.ajax({
+			url : "${pageContext.request.contextPath }/admin/comm/load/savedEmail",
+			method : "GET",
+			data : { templateId : $("#action").val() },
+			success : function(result) {
+				var set = result.savedEmail;
+				$("#title").val(set.title); 
+				objEditor.setData(set.content); 
 			}
 		});
 	}
 	
-	// 변경 문구 저장 버튼 
-	function registerContent() { 
+	// 기존 양식 불러오기
+	function getDefaultTemplate() {
+		// 기본문구 조회
+		$.ajax({
+			url : "${pageContext.request.contextPath}/admin/comm/load/originEmail", 
+			type : "GET",
+			data : { templateId : $("#action").val() },
+			success : function(result){
+				var set = result.originEmail;
+				if(set.title.length > 0 && set.content.length > 0) { 
+					if(confirm("기본 문구로 적용하시겠습니까?")) {
+						$("#title").val(set.title); 
+						objEditor.setData(set.content);
+					}
+				}
+			}
+		});
+	}
+	
+	// 문구 저장 버튼
+	function registerContent() {
 		var templateId = $("#action").val();
 		var title = $("#title").val();
 		var content = objEditor.getData();
@@ -525,72 +507,35 @@ textarea {
 	    	return false;
 	    }
 	    
-	    // 전송할 data 
-	    var data = {
-	    	templateId : templateId,
+		var data = {
+			templateId : templateId,
 			title : title,
 			content : content
-	    };
-	    
-	    var jsonStr = JSON.stringify(data);
-
-	    $.ajax({
-			url: "${pageContext.request.contextPath}/admin/comm/email_modal",
-			method: "POST",
-			contentType: "application/json; charset=utf-8",
-			headers: {
-				"${_csrf.headerName}" : "${_csrf.token}"
-			},
-			data: jsonStr,
-			success: function(result) {
-				if(result > 0) {
+		};
+		var jsonStr = JSON.stringify(data);
+		
+		// 변경 저장
+		$.ajax({
+			url : "${pageContext.request.contextPath}/admin/comm/load/emailModalModify", 
+			method : "POST",
+			headers : {"${_csrf.headerName}" : "${_csrf.token}"},
+			contentType : "application/json;charset=utf-8",
+			data : jsonStr,
+			success : function(result){
+				var set = result.emailModalModify;
+				if(set > 0) {
 					alert("'" + category_txt(templateId) + "' 발송 문구를 수정했습니다.");
 					location.reload();
 				}
-			}, 
-			error:function(textStatus, errorThrown){
-				console.log("발송 문구를 수정할 수 없습니다.");
-			}
-	    });
-
-	}	
-
-	// 기존 양식 불러오기
-	function getDefaultTemplate() {
-		var templateId = $("#action").val();
-		
-		$.ajax({
-			url:"${pageContext.request.contextPath}/admin/comm/email_origin", 
-			type:"GET",
-			data:{ templateId : templateId },
-			contentType: "application/json; charset=utf-8",
-			success:function(result){
-				if(result.title.length > 0 && result.content.length > 0) { 
-					if(confirm("기본 문구로 적용하시겠습니까?")) {
-						$("#title").val(result.title); 
-						objEditor.setData(result.content);
-					}
-				}
-			},
-			error:function(textStatus, errorThrown){
-				console.log("기본 문구를 불러올 수 없습니다.");
 			}
 		});
-	}	
-	
+	}
+
 	// 전체 변경 확인 버튼
 	function register() { 
 		// 체크박스 값 설정
-		$("input:checkbox[name='is_send']").each(function() {
-        	if($(this).is(":checked")) { // 회원 자동 발송이 체크
-        		$(this).attr("value", "y");
-        	}
-        	else {
-        		$(this).attr("value", "n");
-        	}
-        });
-		$("input:checkbox[name='is_send_admin']").each(function() { 
-        	if($(this).is(":checked")) { // 관리자 자동 발송이 체크
+		$("input:checkbox[name='is_send'], input:checkbox[name='is_send_admin']").each(function() {
+        	if($(this).is(":checked")) { // 자동 발송이 체크
         		$(this).attr("value", "y");
         	}
         	else {
@@ -598,46 +543,41 @@ textarea {
         	}
         });
 		
-		// code, is_send 선언
+		// 수정 정보 담기
 		var code = []; 
-		var is_send = [];
+		var isSend = [];
 		
 		// 값 담기
-		$.each($("input[name='code']"), function(index, value) { 
-			code.push($(value).val());
+		$.each($("input[name='code']"), function() { 
+			code.push($(this).val());
 		});
-		$.each($("input[name='is_send'], input[name='is_send_admin']"), function(index, value) {
-			is_send.push($(value).val());
+		$.each($("input[name='is_send'], input[name='is_send_admin']"), function() {
+			isSend.push($(this).val()); 
 		});
 		
-		// 전송 data
-		var data = { code : code, is_send : is_send }
+		// 설정 저장
+		var data = { 
+			code : code, 
+			isSend : isSend 
+		};
 		var jsonStr = JSON.stringify(data);
-
-		// 자동발송 여부 저장하기
+		
 		$.ajax({
-			url: "${pageContext.request.contextPath}/admin/comm/email",
-			method: "POST",
-			headers: {
-				"${_csrf.headerName}" : "${_csrf.token}"
-			},
-			contentType: "application/json; charset=utf-8",
-			data: jsonStr,
-			success: function(result) {
-				if(result > 0) {
+			url : "${pageContext.request.contextPath}/admin/comm/load/emailSettingModify",
+			method : "POST",
+			headers : {"${_csrf.headerName}" : "${_csrf.token}"},
+			contentType : "application/json;charset=utf-8",
+			data : jsonStr,
+			success : function(result) {
+				var set = result.modify;
+				if(set == "success") {
 					alert("메일 설정이 수정되었습니다.");
+					location.reload();
 				}
-			},
-			error:function(textStatus, errorThrown){
-				console.log("메일 설정 수정에 실패했습니다.");
 			}
 		});
-		
-	}	
+	}
 	
-	// cheditor 값 넣기
-	function setData(content){}
-		
 	// alert code 값 치환
 	function category_txt(t_name){
 		var return_txt = "";

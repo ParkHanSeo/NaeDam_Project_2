@@ -18,12 +18,14 @@ pageContext.setAttribute("BR", "<br/>");
 <script>
 	function deleteChoiceItem(formNo){
 			
-			var itemArr = new Array();
+			var formArr = new Array();
+			var mode = "delete";
+			var part = "item";
 			
 			$("input[class='itemNo']:checked").each(function(){
-				itemArr.push($(this).val());
+				formArr.push($(this).val());
  			});
-			if(itemArr.length == 0){
+			if(formArr.length == 0){
 				alert("항목을 선택하셔야 합니다.");
 				return;
 			}
@@ -33,10 +35,12 @@ pageContext.setAttribute("BR", "<br/>");
 				
 			}else{
 	  		$.ajax({
-  			 	 url : "/admin/form/deleteChoiceItem?${_csrf.parameterName}=${_csrf.token}",
+  			 	 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
 	  		  	 type : "POST",
   		  	 	 data : { 
-  		  	 		itemArr : itemArr 
+  		  	 		formArr : formArr,
+  		  	 		mode,
+  		  	 		part
   		  	 	 },
     		 	 success : function(result){
     		 		
@@ -244,11 +248,11 @@ pageContext.setAttribute("BR", "<br/>");
 	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width: 600px;">
 	        <div class="modal-content">
-	            <form name="form_register" method="post" action="/admin/form/addItem?${_csrf.parameterName}=${_csrf.token}">
-		            <input type="hidden" name="mode" id="mode">
+	            <form name="form_register" method="post" action="/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}">
+		            <input type="hidden" name="mode" value="insert">
+					<input type="hidden" name="part" value="item">
 		            <input type="hidden" name="formNo" value="${formNo}">
-		            <input type="hidden" name="code">
-		            
+
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                <h4 class="modal-title" id="myModalLabelPortfolio">폼 문항 관리</h4>
@@ -351,8 +355,9 @@ pageContext.setAttribute("BR", "<br/>");
 	<div class="modal fade" id="modalContent2" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width: 600px;">
 	        <div class="modal-content">
-	            <form name="form_register2" method="post" action="/admin/form/updateItem?${_csrf.parameterName}=${_csrf.token}">
-		            <input type="hidden" name="mode" id="mode">
+	            <form name="form_register2" method="post" action="/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}">
+		            <input type="hidden" name="mode" value="update">
+					<input type="hidden" name="part" value="item">
 		            <input type="hidden" name="formNo" value="${formNo}">
 		            <input type="hidden" name="itemNo">
 		            
@@ -457,12 +462,12 @@ pageContext.setAttribute("BR", "<br/>");
 	<div class="modal fade" id="modalContentDesign" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width:90%">
 	        <div class="modal-content">
-	            <form name="form_html_design" method="post" action="/admin/form/updateFormDesign?${_csrf.parameterName}=${_csrf.token}">
-		            <input type="hidden" name="mode" id="mode" value="updateHtmlDesign">
+	            <form name="form_html_design" method="post" action="/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}">
+		            <input type="hidden" name="mode" id="mode" value="">
+		            <input type="hidden" name="part" value="item">
 		            <input type="hidden" name="formNo" value="${formNo}">
 		            <input type="hidden" name="design_type">
-		            <input type="hidden" name="code">
-		            <input type="hidden" name="html_design_list" 
+		            <input type="hidden" name="html_list" 
 		            	   value="<table class=&quot;basic-board-row&quot;>
 <tr>
 	<th>번호</th>
@@ -721,9 +726,8 @@ pageContext.setAttribute("BR", "<br/>");
 	    	form_register.label.focus(); 
 	    	return false;
 	    }
-	    form_register.target = "iframe_process";
-	    form_register.submit();
 	    alert("항목이 등록 되었습니다.");
+	    $("form[name='form_register']").submit();
 	}
 	
 	function register2(formNo) {
@@ -732,9 +736,8 @@ pageContext.setAttribute("BR", "<br/>");
 	    	form_register2.label.focus(); 
 	    	return false;
 	    }
-	    form_register2.target = "iframe_process";
-	    form_register2.submit();
 	    alert("항목이 수정 되었습니다.");
+	    $("form[name='form_register2']").submit();
 	}	
 	      	
 	// 폼 HTML 디자인 리스트 및 쓰기 버튼
@@ -757,11 +760,9 @@ pageContext.setAttribute("BR", "<br/>");
 	            console.log(data)
 	            if (design_type == "list") {
 	                $("#design_type_txt").text("리스트 폼"); // 폼 제목
-	                if(json_data.html_design_list == null){
-	                	var html = $("input[name='html_design_list']").val(); // 리스트 문항 목록
-	                }else if(json_data.html_design_list != null){
-	                	var html = json_data.html_design_list
-	                }
+					$("form[name='form_html_design']").find("input[name='mode']").val("updateDesignList");
+	                var html = json_data.html_design_list;
+	                //objEditor.setData(json_data.html_design_list);
 	                $("#displayCaptcha").hide();
 	                $("#displayAgree").hide();
 	                $("#displaySearch").show();
@@ -769,11 +770,9 @@ pageContext.setAttribute("BR", "<br/>");
 	            }
 	            else {
 	                $("#design_type_txt").text("쓰기 폼"); // 폼 제목
-	                if(json_data.html_design_write == null){
-	                	var html = $("input[name='html_design_write']").val();// 쓰기 문항 목록
-	                }else if(json_data.html_design_write != null){
-	                	var html = json_data.html_design_write
-	                }
+	                $("form[name='form_html_design']").find("input[name='mode']").val("updateDesignWrite");
+	                var html = json_data.html_design_write;
+	                //objEditor.setData(json_data.html_design_write);
 	                $("#displayCaptcha").show();
 	                $("#displayAgree").show();
 	                $("#displaySearch").hide();
@@ -799,7 +798,7 @@ pageContext.setAttribute("BR", "<br/>");
 	// 디폴트 폼 버튼 : 히든 list 또는 write 데이터 셋팅
 	function setTableForm() {
 	    var design_type = $("[name=design_type]").val();
-	    objEditor.setData($("[name=html_design_" + design_type + "]").val());
+	    objEditor.setData($("[name=html_" + design_type + "]").val());
 	}
 	
 	// 추가 문항 사용
@@ -825,23 +824,15 @@ pageContext.setAttribute("BR", "<br/>");
 	
 	// 폼 HTML 디자인 리스트 및 쓰기 확인 및 수정 버튼
 	function registerHtmlDesign() {
-		var form = document.form_html_design;
 		var html_design_value = parent.objEditor.getData();
-		if(html_design_value.length > 1) {
-			if($("[name=design_type]").val() == "write" && html_design_value.indexOf("[code:captcha]") < 0) { 
-				alert("보안코드 문항이 등록되지 않았습니다."); 
-				return; 
-			} 
-			if($("[name=design_type]").val() == "write" && html_design_value.indexOf("[code:agree]") < 0) { 
-				alert("보안코드 문항이 등록되지 않았습니다."); 
-				return; 
-			} 
-		}
+		var mode = $("form[name='form_html_design']").find("input[name='mode']").val();
 	    if(confirm("폼 HTML 디자인을 저장하시겠습니까?")) {
-			
-	    	form.target = 'iframe_process';
-			form.submit();
-			
+	    	if(mode == "updateDesignList"){
+	    		$("textarea[name='content']").attr('name','html_design_list');
+	    	}else if(mode == "updateDesignWrite"){
+	    		$("textarea[name='content']").attr('name','html_design_write');
+	    	}
+			$("form[name='form_html_design']").submit();
 		}
 	}
 	
