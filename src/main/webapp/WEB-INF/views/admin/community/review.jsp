@@ -7,7 +7,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!-- content-wrapper -->
 <div class="content-wrapper">
 	<section class="content-header">
 	    <h1>
@@ -105,7 +104,7 @@
 	            </div><!-- /.box -->
 	        </div><!-- /.col-xs-12 -->
 	    </div><!-- /.row -->
-	</section>
+	</section><!-- /.content -->
 	
 	<!-- 상세보기 버튼 클릭 시 모달 -->
 	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">

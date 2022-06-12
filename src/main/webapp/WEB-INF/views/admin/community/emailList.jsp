@@ -7,7 +7,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!-- content-wrapper -->
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -109,7 +108,7 @@
                 </div><!-- /.box -->
             </div><!-- /.col-xs-12 -->
         </div><!-- /.row -->
-    </section>
+    </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

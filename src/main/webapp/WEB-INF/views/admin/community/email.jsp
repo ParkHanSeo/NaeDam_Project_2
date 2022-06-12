@@ -7,15 +7,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!-- content-wrapper -->
-<div class="content-wrapper">
 <style>
-textarea {
-    width:180px;
-    height:100px;
-}
+	textarea {
+	    width:180px;
+	    height:100px;
+	}
 </style>
-
+<div class="content-wrapper">
 	<section class="content-header">
 	    <h1>
 	    	메일 설정

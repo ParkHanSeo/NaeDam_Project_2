@@ -8,15 +8,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<!-- content-wrapper -->
-<div class="content-wrapper">
 <style>
-textarea {
-    width:180px;
-    height:100px;
-    resize:none;
-}
+	textarea {
+	    width:180px;
+	    height:100px;
+	    resize:none;
+	}
 </style>
+<div class="content-wrapper">
 	<section class="content-header">
 	    <h1>
 	    SMS 설정

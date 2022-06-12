@@ -8,9 +8,15 @@
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 <jsp:param value="폼메일 관리" name="title"/>
 </jsp:include>
+
+<!--  
+<style>
+    .option_tab { display:inline-block; width:130px;}
+</style>
+-->
+
 <script>
 	$(function(){
-		
 		//form선택삭제
 		$("#deleteChoiceForm").on("click", function(){
 			
@@ -30,23 +36,21 @@
 				return;
 				
 			}else{
-	  		$.ajax({
-  			 	 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
-	  		  	 type : "POST",
-  		  	 	 data : { 
-  		  	 		formArr : formArr,
-  		  	 		mode,
-  		  	 		part
-  		  	 	 },
-    		 	 success : function(result){
-   					alert("해당 자료가 삭제 되었습니다.")
-   					location.href = "/admin/form/list";    		 		
-  		  	 	 }
-  		  	 	 
-	  		});		
+		  		$.ajax({
+	  			 	 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
+		  		  	 type : "POST",
+	  		  	 	 data : { 
+	  		  	 		formArr : formArr,
+	  		  	 		mode,
+	  		  	 		part
+	  		  	 	 },
+	    		 	 success : function(result){
+	   					alert("해당 자료가 삭제 되었습니다.")
+	   					location.href = "/admin/form/list";    		 		
+	  		  	 	 }
+		  		});		
 			}			
 		});
-		
 	});
 	
 	function formCopy(){
@@ -66,29 +70,23 @@
 			return;
 			
 		}else{
-  		$.ajax({
-			 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
-  		  	 type : "POST",
-	  	 	 data : { 
-	  	 		formArr : formArr,
-	  	 		mode,
-	  	 		part
-	  	 	 },
-		 	 success : function(result){
-				alert("해당 자료가 복제 되었습니다.")
-				location.href = "/admin/form/list";
-		 	 }	 
-  		});		
-
+	  		$.ajax({
+				 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
+	  		  	 type : "POST",
+		  	 	 data : { 
+		  	 		formArr : formArr,
+		  	 		mode,
+		  	 		part
+		  	 	 },
+			 	 success : function(result){
+					alert("해당 자료가 복제 되었습니다.")
+					location.href = "/admin/form/list";
+			 	 }	 
+	  		});		
 		}		
 	}
 </script>
-<!--  
-<style>
-    .option_tab { display:inline-block; width:130px;}
-</style>
--->
-<!-- content-wrapper -->
+
 <div class="content-wrapper">
 	<section class="content-header">
 	    <h1>폼메일 관리  <small>form list</small></h1>
@@ -105,27 +103,26 @@
 	            <div class="box">
 	                <div class="box-body">
 	                    <label style="margin-top:5px;">총 ${formCount} 건</label>
-	
 						<table class="table table-bordered table-hover">
-						<!-- 
-	                    <form name="form_list" method="post" action="?tpf=admin/form/process"></form>
-	                    -->
+							<!-- 
+		                    <form name="form_list" method="post" action="?tpf=admin/form/process"></form>
+		                    -->
 				            <input type="hidden" name="mode" id="mode">
 				            <thead>
 			                    <tr>
 			                        <td style="width:30px;">
 			                      		<div class="allCheck">
 											<input type="checkbox" name="allCheck" id="allCheck" /><label for="allCheck"></label>
-												<script>
-													$("#allCheck").click(function() {
-														var chk = $("#allCheck").prop("checked");
-														if (chk) {
-															$('.formNo').prop("checked", true);
-														} else {
-															$('.formNo').prop("checked", false);
-														}
-													});
-												</script>
+											<script>
+												$("#allCheck").click(function() {
+													var chk = $("#allCheck").prop("checked");
+													if (chk) {
+														$('.formNo').prop("checked", true);
+													} else {
+														$('.formNo').prop("checked", false);
+													}
+												});
+											</script>
 										</div>
 			                        </td>
 			                        <td style="width:60px;">NO</td>
@@ -141,39 +138,39 @@
 		      				<tbody>
 		      				  <c:set var="i" value="0"/>
 		      				  <c:forEach var="form" items="${list}" varStatus="status" >
-		      				  <c:set var="i" value="${ i+1 }" />
-		      					<tr>
-			                        <td>
-				                        <div>
-				                        	<input type="checkbox" class="formNo" name="formNo"  value="${form.formNo}" />
-				                        	<script>
-												$(".formNo").click(function() {
-													$("#allCheck").prop("checked", false);
-												});
-											</script>
-										</div>
-			                        </td>
-			                        <td>${i}</td>
-			                        <td align="left">${form.title}</td>
-			                        <td>
-			                          <c:if test="${form.is_captcha eq 'y'}">
-			                        	<i class="fa fa-check"></i>
-			                          </c:if>
-			                        </td>
-			                        <td>
-			                          <c:if test="${form.is_agree eq 'y'}">			                          
-			                        	<i class="fa fa-check"></i>
-			                          </c:if>
-			                        </td>
-			                        <td align="left">http://localhost:8080/admin/form/formPostList?formNo=${form.formNo}</td>
-			                        <td>${formPostCount[i-1]}</td>
-			                        <td>${form.formDate}</td>
-			                        <td>
-			                        	<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/form/formPostList?formNo=${form.formNo}'" class="btn btn-success btn-xs">바로가기</button>
-			                        	<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/form/itemList?formNo=${form.formNo}'" class="btn btn-warning btn-xs">문항관리</button>
-			                        	<button type="button" onclick="onclickUpdate(${form.formNo});" class="btn btn-primary btn-xs">상세보기</button>
-			                        </td>
-			                    </tr>
+			      				  <c:set var="i" value="${ i+1 }" />
+			      					<tr>
+				                        <td>
+					                        <div>
+					                        	<input type="checkbox" class="formNo" name="formNo"  value="${form.formNo}" />
+					                        	<script>
+													$(".formNo").click(function() {
+														$("#allCheck").prop("checked", false);
+													});
+												</script>
+											</div>
+				                        </td>
+				                        <td>${i}</td>
+				                        <td align="left">${form.title}</td>
+				                        <td>
+				                          <c:if test="${form.is_captcha eq 'y'}">
+				                        	<i class="fa fa-check"></i>
+				                          </c:if>
+				                        </td>
+				                        <td>
+				                          <c:if test="${form.is_agree eq 'y'}">			                          
+				                        	<i class="fa fa-check"></i>
+				                          </c:if>
+				                        </td>
+				                        <td align="left">http://localhost:8080/admin/form/formPostList?formNo=${form.formNo}</td>
+				                        <td>${formPostCount[i-1]}</td>
+				                        <td>${form.formDate}</td>
+				                        <td>
+				                        	<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/form/formPostList?formNo=${form.formNo}'" class="btn btn-success btn-xs">바로가기</button>
+				                        	<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/form/itemList?formNo=${form.formNo}'" class="btn btn-warning btn-xs">문항관리</button>
+				                        	<button type="button" onclick="onclickUpdate(${form.formNo});" class="btn btn-primary btn-xs">상세보기</button>
+				                        </td>
+				                    </tr>
 			                   </c:forEach>                      
 		                    </tbody>
 	                 	</table>
@@ -195,12 +192,10 @@
 		            <input type="hidden" name="mode" value="insert">
 		            <input type="hidden" name="part" value="form">
 		            <input type="hidden" name="locale" value="<br/><b>Notice</b>: Undefined variable: locale in <b>/home/demoshop/public_html/html/admin/form/manage.html</b> on line <b>85</b><br/>">
-		            
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                <h4 class="modal-title" id="myModalLabel">폼메일 생성</h4>
 		            </div><!-- /.modal-header -->
-		            
 		            <div class="modal-body">
 			            <div class="row" style="margin:0">
 			                <div class="col-xs-4">
@@ -210,7 +205,6 @@
 			                </div>
 			                <div class="col-xs-8" style="padding:0"></div>
 			            </div><!-- /.row -->
-			
 			            <table class="table table-bordered">
 							<tbody>
 								<tr>
@@ -225,12 +219,14 @@
 					                	<input type="text" name="receive_email" placeholder=", 구분" class="form-control input-sm">
 					                </td>
 					            </tr>
-					            <!--<tr>
+					            <!--
+					            <tr>
 					                <td class="menu">수신 휴대폰 번호</td>
 					                <td align="left">
 					                	<input type="text" name="receive_sms" placeholder=", 구분" class="form-control input-sm">
 					                </td>
-					            </tr>-->
+					            </tr>
+					            -->
 					            <tr>
 					                <td class="menu">보안코드</td>
 					                <td align="left">
@@ -247,7 +243,6 @@
 				            </tbody>
 			            </table><!-- /.table .table-bordered -->
 		            </div><!-- /.modal-body -->
-		            
 		            <div class="modal-footer">
 		            	<button type="button" onclick="register()" class="btn btn-primary">확인</button>
 		            </div><!-- /.modal-footer -->
@@ -255,6 +250,7 @@
 	        </div><!-- /.modal-content -->
 	    </div><!-- /.modal-dialog -->
 	</div><!-- /.modal .fade -->
+	
 	<!-- 폼 수정 모달 -->
 	<div class="modal fade" id="modalRegister2" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 	    <div class="modal-dialog" style="width:600px;">
@@ -264,12 +260,10 @@
 		            <input type="hidden" name="part" value="form">
 		            <input type="hidden" name="formNo">
 		            <input type="hidden" name="locale" value="<br/><b>Notice</b>: Undefined variable: locale in <b>/home/demoshop/public_html/html/admin/form/manage.html</b> on line <b>85</b><br/>">
-		            
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                <h4 class="modal-title" id="myModalLabel">폼메일 생성</h4>
 		            </div><!-- /.modal-header -->
-		            
 		            <div class="modal-body">
 			            <div class="row" style="margin:0">
 			                <div class="col-xs-4">
@@ -279,7 +273,6 @@
 			                </div>
 			                <div class="col-xs-8" style="padding:0"></div>
 			            </div><!-- /.row -->
-			
 			            <table class="table table-bordered">
 							<tbody>
 								<tr>
@@ -294,12 +287,14 @@
 					                	<input type="text" name="receive_email" placeholder=", 구분" class="form-control input-sm">
 					                </td>
 					            </tr>
-					            <!--<tr>
+					            <!--
+					            <tr>
 					                <td class="menu">수신 휴대폰 번호</td>
 					                <td align="left">
 					                	<input type="text" name="receive_sms" placeholder=", 구분" class="form-control input-sm">
 					                </td>
-					            </tr>-->
+					            </tr>
+					            -->
 					            <tr>
 					                <td class="menu">보안코드</td>
 					                <td align="left">
@@ -316,7 +311,6 @@
 				            </tbody>
 			            </table><!-- /.table .table-bordered -->
 		            </div><!-- /.modal-body -->
-		            
 		            <div class="modal-footer">
 		            	<button type="button" onclick="register2()" class="btn btn-primary">확인</button>
 		            </div><!-- /.modal-footer -->
@@ -327,7 +321,6 @@
 </div><!-- /.content-wrapper -->
 
 <script>
-
 	// 폼메일 생성 버튼
 	function onclickInsert(code) {
 	    $('#modalRegister').modal({backdrop:'static', show:true});
@@ -421,8 +414,7 @@
 	    alert("폼메일이 수정 되었습니다.");
 	    $("form[name='updateForm']").submit();
 	}	
-	
-	
+
 	/*
 	언어 설정
 	function setLocale(locale) {
@@ -446,7 +438,6 @@
 	    }
 	}
 	*/
-
 </script>
 
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

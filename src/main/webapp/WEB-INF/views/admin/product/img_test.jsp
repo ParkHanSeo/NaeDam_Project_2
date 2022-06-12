@@ -8,18 +8,18 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<!-- content-wrapper -->
+
 <div class="content-wrapper">
     <!-- 
        [ imgur API ]
        == 참고
-      https://marshallku.com/web/tips/imgur-api%EB%A1%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C%ED%95%98%EA%B8%B0
+       https://marshallku.com/web/tips/imgur-api%EB%A1%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C%ED%95%98%EA%B8%B0
        https://shlee0882.tistory.com/220
        https://apidocs.imgur.com/
        https://stackoverflow.com/questions/60809635/how-to-upload-an-image-to-imgbb-api-using-javascript-in-a-firefox-addon
 
       == 
-       Client ID : efc5bc0d8dd28e8
+      Client ID : efc5bc0d8dd28e8
       Client secret : 82019ad0a4f83c68d0f1cfcb84c091c7f9430362
       access token : 71da0e09f93e0101e62b99b774764574209fc9aa
       refresh token : c2e6a1d0de89fcaeb29e9c59facc99b420a30f6e

@@ -9,188 +9,163 @@
 	<jsp:param value="기간별 통계" name="title" />
 </jsp:include>
 
-
-
-<!-- content-wrapper -->
 <div class="content-wrapper">
 	<section class="content-header">
-	<h1>
-		기간별 매출 통계 <small>Sales Statistics by Period</small>
-	</h1>
-
-	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-		<li><a href="#">통계</a></li>
-		<li class="active">기간별 매출 통계</li>
-	</ol>
+		<h1>
+			기간별 매출 통계 
+			<small>Sales Statistics by Period</small>
+		</h1>
+		<ol class="breadcrumb">
+			<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+			<li><a href="#">통계</a></li>
+			<li class="active">기간별 매출 통계</li>
+		</ol>
 	</section>
 
 	<section class="content">
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="box">
-				<div class="box-body">
-
-					<form:form name="form_search" id="form_search" method="post" action="${pageContext.request.contextPath }/admin/statistics/period_process">
-						<div class="box-tools " style="margin-bottom: 5px;">
-							<table class="table table-bordered">
-								<tbody>
-									<tr>
-										<td class="menu">통계종류</td>
-										<td align="left"><input type="radio" name="statistics_type" id="statistics_type_1" value="date" checked /> <label for="statistics_type_1">일별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_2" value="month" onclick="location.href='${pageContext.request.contextPath}/admin/statistics/period_month';" /> <label for="statistics_type_2">월별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_3" value="year" onclick="location.href='${pageContext.request.contextPath}/admin/statistics/period_year';" /> <label for="statistics_type_3">연도별통계</label></td>
-									</tr>
-									<tr>
-										<td class="menu">기간 검색</td>
-										<td align="left"><input type="text" name="start_date" id="start_date" value="${startDateStr == null ? '' : startDateStr }" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" /> ~ <input type="text" name="end_date" id="end_date" value="${endDateStr == null ? '' : endDateStr }" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" />
-
-											<button type="button" onclick="setSearchDate('D0');" class="btn btn-primary btn-xs">오늘</button>
-											<button type="button" onclick="setSearchDate('D6');" class="btn btn-primary btn-xs">7일</button>
-											<button type="button" onclick="setSearchDate('D14');" class="btn btn-primary btn-xs">15일</button>
-											<button type="button" onclick="setSearchDate('M1');" class="btn btn-primary btn-xs">1개월</button>
-											<button type="button" onclick="setSearchDate('M2');" class="btn btn-primary btn-xs">3개월</button>
-											<button type="button" onclick="setSearchDate('M5');" class="btn btn-primary btn-xs">6개월</button></td>
-									</tr>
-								</tbody>
-								<tfoot>
-									<tr>
-										<td colspan="2" style="text-align: center;">
-											<button type="button" onclick="selectAction();" class="btn btn-danger btn-sm">
-												<i class="fa "></i>검색
-											</button>
-										</td>
-									</tr>
-								</tfoot>
-							</table>
-						</div>
-						<input type="hidden" name="dateLength" />
-					</form:form>
-					
-					<script>
-						var chart_data = new Array();
-						var dataRow = [];
-						dataRow = [ '일시', '매출금액', {
-							role : 'style'
-						} ];
-						chart_data.push(dataRow);
-					</script>
-					
-					<c:forEach var="r" items="${result }">
-						<c:set var="dateStr"><fmt:formatDate value="${r.paidAt}" pattern="yyyy-MM-dd" /></c:set>
-						<c:set var="tAmount">${r.totalAmount == null ? '0' : r.totalAmount - r.totalCancelAmount}</c:set>
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+					<div class="box-body">
+						<form:form name="form_search" id="form_search" method="post" action="${pageContext.request.contextPath }/admin/statistics/period_process">
+							<div class="box-tools " style="margin-bottom: 5px;">
+								<table class="table table-bordered">
+									<tbody>
+										<tr>
+											<td class="menu">통계종류</td>
+											<td align="left"><input type="radio" name="statistics_type" id="statistics_type_1" value="date" checked /> <label for="statistics_type_1">일별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_2" value="month" onclick="location.href='${pageContext.request.contextPath}/admin/statistics/periodProcess?type=M';" /> <label for="statistics_type_2">월별통계</label>&nbsp;&nbsp; <input type="radio" name="statistics_type" id="statistics_type_3" value="year" onclick="location.href='${pageContext.request.contextPath}/admin/statistics/periodProcess?type=Y';" /> <label for="statistics_type_3">연도별통계</label></td>
+										</tr>
+										<tr>
+											<td class="menu">기간 검색</td>
+											<td align="left">
+												<input type="text" name="start_date" id="start_date" value="${startDateStr == null ? '' : startDateStr }" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" /> ~ 
+												<input type="text" name="end_date" id="end_date" value="${endDateStr == null ? '' : endDateStr }" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" />
+												<button type="button" onclick="setSearchDate('D0');" class="btn btn-primary btn-xs">오늘</button>
+												<button type="button" onclick="setSearchDate('D6');" class="btn btn-primary btn-xs">7일</button>
+												<button type="button" onclick="setSearchDate('D14');" class="btn btn-primary btn-xs">15일</button>
+												<button type="button" onclick="setSearchDate('M1');" class="btn btn-primary btn-xs">1개월</button>
+												<button type="button" onclick="setSearchDate('M2');" class="btn btn-primary btn-xs">3개월</button>
+												<button type="button" onclick="setSearchDate('M5');" class="btn btn-primary btn-xs">6개월</button>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="2" style="text-align: center;">
+												<button type="button" onclick="selectAction();" class="btn btn-danger btn-sm">
+													<i class="fa "></i>검색
+												</button>
+											</td>
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+							<input type="hidden" name="dateLength" />
+						</form:form>
 						<script>
-							dataRow = ['${dateStr}', ${tAmount} , '#76A7FA' ];
+							var chart_data = new Array();
+							var dataRow = [];
+							dataRow = [ '일시', '매출금액', {
+								role : 'style'
+							} ];
 							chart_data.push(dataRow);
 						</script>
-					</c:forEach>
-					
-					
-					
-					<div id="chard_div" style="border: 1px solid #cdcdcd; width: 100%; margin-bottom: 10px;">
-						<div id="columnchart_values" style="width: 100%; height: 370px;"></div>
-					</div>
-
-					<table class="table table-bordered table-hover">
-						<colgroup>
-							<col width="8%">
-							<col width="*">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-							<col width="8%">
-						</colgroup>
-						<thead>
-							<tr>
-								<td rowspan="2">날짜</td>
-								<td rowspan="2">매출금액</td>
-								<td colspan="5">판매금액</td>
-								<td colspan="5 ">환불금액</td>
-							</tr>
-							<tr>
-								<td>상품판매가</td>
-								<td>배송비</td>
-								<td>쿠폰</td>
-								<td>포인트</td>
-								<td>총 결제금액</td>
-
-								<td>상품판매가</td>
-								<td>배송비</td>
-								<td>쿠폰</td>
-								<td>포인트</td>
-								<td>총 결제금액</td>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach var="r" items="${result }">
+						<c:forEach var="r" items="${result }">
+							<c:set var="dateStr"><fmt:formatDate value="${r.paidAt}" pattern="yyyy-MM-dd" /></c:set>
+							<c:set var="tAmount">${r.totalAmount == null ? '0' : r.totalAmount - r.totalCancelAmount}</c:set>
+							<script>
+								dataRow = ['${dateStr}', ${tAmount} , '#76A7FA' ];
+								chart_data.push(dataRow);
+							</script>
+						</c:forEach>
+						<div id="chard_div" style="border: 1px solid #cdcdcd; width: 100%; margin-bottom: 10px;">
+							<div id="columnchart_values" style="width: 100%; height: 370px;"></div>
+						</div>
+						<table class="table table-bordered table-hover">
+							<colgroup>
+								<col width="8%">
+								<col width="*">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+								<col width="8%">
+							</colgroup>
+							<thead>
 								<tr>
-									<td><fmt:formatDate value="${r.paidAt}" pattern="yyyy-MM-dd" /></td>
-									<td class="total1" align="right">${r.totalAmount == null ? '0' : r.totalAmount - r.totalCancelAmount }</td>
-									
-									<td class="total2" align="right">${r.totalSalePrice == null ? '0' : r.totalSalePrice + r.totalOptionCost }</td>
-									
-									<td class="total3" align="right">${r.totalDeliFee }</td>
-									
-									<td class="total4" align="right">${r.totalCouponAmount }</td>											
-
-									<td class="total5" align="right">${r.totalPointAmount }</td>
-									<td class="total6" align="right">${r.totalAmount == null ? '0' : r.totalAmount }</td>
-									
-									
-										
-										
-											<td class="total7" align="right">${r.totalSalePriceCancel == null ? '0' : r.totalSalePriceCancel + r.totalOptionCostCancel }</td>
-											<td class="total8" align="right">${r.totalDeliFeeCancel == null ? '0' : r.totalDeliFeeCancel }</td>
-											<td class="total9" align="right">${r.totalCouponAmountCancel == null ? '0' : r.totalCouponAmountCancel }</td>
-											
-											<td class="total10" align="right">${r.totalPointAmountCancel == null ? '0' : r.totalPointAmountCancel }</td>
-											<td class="total11" align="right">${r.totalCancelAmount == null ? '0' : r.totalCancelAmount }</td>
-																	
+									<td rowspan="2">날짜</td>
+									<td rowspan="2">매출금액</td>
+									<td colspan="5">판매금액</td>
+									<td colspan="5 ">환불금액</td>
 								</tr>
-							</c:forEach>							
-						</tbody>
-						<tfoot>
-							<tr>
-								<td>총 합계</td>
-								<td id="total1" align="right">0</td>
-								<td id="total2" align="right">0</td>
-								<td id="total3" align="right">0</td>
-								<td id="total4" align="right">0</td>
-								<td id="total5" align="right">0</td>
-								<td id="total6" align="right">0</td>
-								<td id="total7" align="right">0</td>
-								<td id="total8" align="right">0</td>
-								<td id="total9" align="right">0</td>
-								<td id="total10" align="right">0</td>
-								<td id="total11" align="right">0</td>
-							</tr>
-						</tfoot>
+								<tr>
+									<td>상품판매가</td>
+									<td>배송비</td>
+									<td>쿠폰</td>
+									<td>포인트</td>
+									<td>총 결제금액</td>
+	
+									<td>상품판매가</td>
+									<td>배송비</td>
+									<td>쿠폰</td>
+									<td>포인트</td>
+									<td>총 결제금액</td>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="r" items="${result }">
+									<tr>
+										<td><fmt:formatDate value="${r.paidAt}" pattern="yyyy-MM-dd" /></td>
+										<td class="total1" align="right">${r.totalAmount == null ? '0' : r.totalAmount - r.totalCancelAmount }</td>
+										<td class="total2" align="right">${r.totalSalePrice == null ? '0' : r.totalSalePrice + r.totalOptionCost }</td>
+										<td class="total3" align="right">${r.totalDeliFee }</td>
+										<td class="total4" align="right">${r.totalCouponAmount }</td>		
+										<td class="total5" align="right">${r.totalPointAmount }</td>
+										<td class="total6" align="right">${r.totalAmount == null ? '0' : r.totalAmount }</td>
+										<td class="total7" align="right">${r.totalSalePriceCancel == null ? '0' : r.totalSalePriceCancel + r.totalOptionCostCancel }</td>
+										<td class="total8" align="right">${r.totalDeliFeeCancel == null ? '0' : r.totalDeliFeeCancel }</td>
+										<td class="total9" align="right">${r.totalCouponAmountCancel == null ? '0' : r.totalCouponAmountCancel }</td>
+										<td class="total10" align="right">${r.totalPointAmountCancel == null ? '0' : r.totalPointAmountCancel }</td>
+										<td class="total11" align="right">${r.totalCancelAmount == null ? '0' : r.totalCancelAmount }</td>						
+									</tr>
+								</c:forEach>							
+							</tbody>
+							<tfoot>
+								<tr>
+									<td>총 합계</td>
+									<td id="total1" align="right">0</td>
+									<td id="total2" align="right">0</td>
+									<td id="total3" align="right">0</td>
+									<td id="total4" align="right">0</td>
+									<td id="total5" align="right">0</td>
+									<td id="total6" align="right">0</td>
+									<td id="total7" align="right">0</td>
+									<td id="total8" align="right">0</td>
+									<td id="total9" align="right">0</td>
+									<td id="total10" align="right">0</td>
+									<td id="total11" align="right">0</td>
+								</tr>
+							</tfoot>
+						</table><br />
+						<!-- 
+						<button type="button" onclick="downloadExcel();" class="btn btn-warning btn-sm"><i class="fa" aria-hidden="true"></i> Excel 다운로드</button>
+	                    <form name="form_download" method="post" action="?tpf=admin/order/process">
+	                        <input type="hidden" name="mode" value="downloadExcel">
+	                        <input type="hidden" name="search_data">
+	                    </form> 
+	                    -->
+					</div><!-- /.box-body -->
+				</div><!-- /.box -->
+			</div><!-- /.col-xs-12 -->
+		</div><!-- /.row --> 
+	</section><!-- /.content -->
+</div><!-- /.content-wrapper -->
 
-
-					</table>
-
-
-					<br />
-					<!-- <button type="button" onclick="downloadExcel();" class="btn btn-warning btn-sm"><i class="fa" aria-hidden="true"></i> Excel 다운로드</button>
-                    <form name="form_download" method="post" action="?tpf=admin/order/process">
-                        <input type="hidden" name="mode" value="downloadExcel">
-                        <input type="hidden" name="search_data">
-                    </form> -->
-				</div>
-				<!-- /.box-body -->
-			</div>
-			<!-- /.box -->
-		</div>
-		<!-- /.col-xs-12 -->
-	</div>
-	<!-- /.row --> </section>
-
-</div>
-<!-- /.content-wrapper -->
 <script>
 	function selectAction() {
 		if (sForm.start_date.value > sForm.end_date.value) {
@@ -207,6 +182,7 @@
 		$("[name=dateLength]").val(type);
 		
 	}
+	
 	/* 날짜 포맷팅 */
 	function dateStr(type){
 		var date = new Date();
@@ -285,19 +261,20 @@
 		google.charts.setOnLoadCallback(drawChart);
 	});
 	
-$(document).ready(function(){
-	for(var i = 1; i <= 11; i++){
-		var target = ".total"+ i;
-		var result = 0*1;
-		$.each($(target), (k, v)=>{
-			result += $(v).text()*1;
-		})
-		target = "#total" + i;
-		$(target).text(result);
-	}
-	
-});	
+	$(document).ready(function(){
+		for(var i = 1; i <= 11; i++){
+			var target = ".total"+ i;
+			var result = 0*1;
+			$.each($(target), (k, v)=>{
+				result += $(v).text()*1;
+			})
+			target = "#total" + i;
+			$(target).text(result);
+		}
+		
+	});	
 </script>
+
 <c:if test="${startDateStr == null }">
 	<script>
 		setSearchDate('D6');

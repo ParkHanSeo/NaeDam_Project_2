@@ -5,7 +5,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
+<head>
     <title>MIR9 SHOP</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,26 +27,26 @@
     <link rel="canonical" href="http://demoshop.mir9.kr/index.php?tpf=admin/menu/tree&amp;menu=category">
     <link rel="shortcut icon" href="/user/favicon">
     <!-- Global site tag (gtag.js) - Google Analytics -->
-<script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script><script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-142394166-1"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-142394166-1');
-
-function displayTree(code){
+	<script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script><script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-142394166-1"></script>
 	
-	var tree = document.getElementById("i_div"+code+"");
-	if(tree.style.display == 'none'){
-		tree.style.display = 'block';
-		$("img[name='j_img"+code+"']").attr("src", "${pageContext.request.contextPath}/resources/imgs/tree/plusbottom.gif")
-	}else{
-		tree.style.display = 'none';
-		$("img[name='j_img"+code+"']").attr("src", "${pageContext.request.contextPath}/resources/imgs/tree/minusbottom.gif")
-	}
-	
-}
-</script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'UA-142394166-1');
+		
+		function displayTree(code){
+			
+			var tree = document.getElementById("i_div"+code+"");
+			if(tree.style.display == 'none'){
+				tree.style.display = 'block';
+				$("img[name='j_img"+code+"']").attr("src", "${pageContext.request.contextPath}/resources/imgs/tree/plusbottom.gif")
+			}else{
+				tree.style.display = 'none';
+				$("img[name='j_img"+code+"']").attr("src", "${pageContext.request.contextPath}/resources/imgs/tree/minusbottom.gif")
+			}
+		}
+	</script>
 
     <!--[if lt IE 9]>
     <script type="text/javascript" src="/html/js/html5shiv.js"></script>
@@ -53,72 +54,71 @@ function displayTree(code){
     <![endif]-->
     
     <script src="//mir9.co.kr/resource/js/AdminLTE-2.4.2/bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    
+    <script src="//mir9.co.kr/resource/js/AdminLTE-2.4.2/bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
+    
+    <style>
+		table td {
+		    font-size:10pt;
+		    line-height:3.4mm;
+		    color:#656565;
+		}
+		a:link, a:visited, a:hover, a, active, a:focus {
+		    color:#656565;
+		    text-decoration:none;
+		}
+	</style>
+
+	<script language="JavaScript" src="${pageContext.request.contextPath }/resources/js/tree.js"></script>
+	<script>
+		var tree_tpl = {
+			'target'  : '_blank',	// name of the frame links will be opened in
+									// other possible values are: _blank, _parent, _search, _self and _top
+		
+			'icon_e'  : '${pageContext.request.contextPath}/resources/imgs/tree/empty.gif',	// empty image
+			'icon_l'  : '${pageContext.request.contextPath}/resources/imgs/tree/line.gif',	// vertical line
+		
+			'icon_32' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root leaf icon normal
+			'icon_36' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root leaf icon selected
+		
+			'icon_48' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon normal
+			'icon_52' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon selected
+			'icon_56' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon opened
+			'icon_60' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon selected
+		
+			'icon_16' : '${pageContext.request.contextPath}/resources/imgs/tree/folder.gif', // node icon normal
+			'icon_20' : '${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif', // node icon selected
+			'icon_24' : '${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif', // node icon opened
+			'icon_28' : '${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif', // node icon selected opened
+		
+			'icon_0'  : '${pageContext.request.contextPath}/resources/imgs/tree/page.gif', // leaf icon normal
+			'icon_4'  : '${pageContext.request.contextPath}/resources/imgs/tree/page.gif', // leaf icon selected
+		
+			'icon_2'  : '${pageContext.request.contextPath}/resources/imgs/tree/joinbottom.gif', // junction for leaf
+			'icon_3'  : '${pageContext.request.contextPath}/resources/imgs/tree/join.gif',       // junction for last leaf
+			'icon_18' : '${pageContext.request.contextPath}/resources/imgs/tree/plusbottom.gif', // junction for closed node
+			'icon_19' : '${pageContext.request.contextPath}/resources/imgs/tree/plus.gif',       // junctioin for last closed node
+			'icon_26' : '${pageContext.request.contextPath}/resources/imgs/tree/minusbottom.gif',// junction for opened node
+			'icon_27' : '${pageContext.request.contextPath}/resources/imgs/tree/minus.gif'       // junctioin for last opended node
+		};
+	</script>    
 </head>
 
 <body>
-<iframe name="iframe_process" width="0" height="0" frameborder="0" style="display:none;"></iframe>
+	<iframe name="iframe_process" width="0" height="0" frameborder="0" style="display:none;"></iframe>
 
-<script src="//mir9.co.kr/resource/js/AdminLTE-2.4.2/bower_components/jquery/dist/jquery.js" type="text/javascript"></script>
-<style>
-table td {
-    font-size:10pt;
-    line-height:3.4mm;
-    color:#656565;
-}
-a:link, a:visited, a:hover, a, active, a:focus {
-    color:#656565;
-    text-decoration:none;
-}
-</style>
-
-<script language="JavaScript" src="${pageContext.request.contextPath }/resources/js/tree.js"></script>
-<script>
-var tree_tpl = {
-	'target'  : '_blank',	// name of the frame links will be opened in
-							// other possible values are: _blank, _parent, _search, _self and _top
-
-	'icon_e'  : '${pageContext.request.contextPath}/resources/imgs/tree/empty.gif',	// empty image
-	'icon_l'  : '${pageContext.request.contextPath}/resources/imgs/tree/line.gif',	// vertical line
-
-	'icon_32' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root leaf icon normal
-	'icon_36' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root leaf icon selected
-
-	'icon_48' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon normal
-	'icon_52' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon selected
-	'icon_56' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon opened
-	'icon_60' : '${pageContext.request.contextPath}/resources/imgs/tree/base.gif',   // root icon selected
-
-	'icon_16' : '${pageContext.request.contextPath}/resources/imgs/tree/folder.gif', // node icon normal
-	'icon_20' : '${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif', // node icon selected
-	'icon_24' : '${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif', // node icon opened
-	'icon_28' : '${pageContext.request.contextPath}/resources/imgs/tree/folderopen.gif', // node icon selected opened
-
-	'icon_0'  : '${pageContext.request.contextPath}/resources/imgs/tree/page.gif', // leaf icon normal
-	'icon_4'  : '${pageContext.request.contextPath}/resources/imgs/tree/page.gif', // leaf icon selected
-
-	'icon_2'  : '${pageContext.request.contextPath}/resources/imgs/tree/joinbottom.gif', // junction for leaf
-	'icon_3'  : '${pageContext.request.contextPath}/resources/imgs/tree/join.gif',       // junction for last leaf
-	'icon_18' : '${pageContext.request.contextPath}/resources/imgs/tree/plusbottom.gif', // junction for closed node
-	'icon_19' : '${pageContext.request.contextPath}/resources/imgs/tree/plus.gif',       // junctioin for last closed node
-	'icon_26' : '${pageContext.request.contextPath}/resources/imgs/tree/minusbottom.gif',// junction for opened node
-	'icon_27' : '${pageContext.request.contextPath}/resources/imgs/tree/minus.gif'       // junctioin for last opended node
-};
-
-
-</script>
-
-<table cellpadding="0" cellspacing="0" border="0">
-	<tbody>
-		<tr>
-			<td nowrap="">
-				<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menuList');">
-					<img src="${pageContext.request.contextPath}/resources/imgs/tree/base.gif" border="0" align="absbottom" name="i_img0_0" class="t0im">Home
-				</a>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<c:forEach var="menu" items="${list}" varStatus="status">
+	<table cellpadding="0" cellspacing="0" border="0">
+		<tbody>
+			<tr>
+				<td nowrap="">
+					<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menuList');">
+						<img src="${pageContext.request.contextPath}/resources/imgs/tree/base.gif" border="0" align="absbottom" name="i_img0_0" class="t0im">Home
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<c:forEach var="menu" items="${list}" varStatus="status">
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tbody>
 				<input type="hidden" name="code" value="${menu.code}">
@@ -158,51 +158,38 @@ var tree_tpl = {
 				</c:if>
 			</tbody>
 		</table>
-<div id="i_div${menu.code}" style="display: block;">		
-		<c:forEach var="menu2" items="${list2}" varStatus="status2">
-		  <c:if test="${menu.originNo == menu2.originNo}">
-			<div id="i_div0_2" style="display: block;">
-				<table cellpadding="0" cellspacing="0" border="0">
-					<tbody>
-						<tr>
-							<c:if test="${!status.last}">
-								<td nowrap="">
-									<img src="${pageContext.request.contextPath}/resources/imgs/tree/line.gif" border="0" align="absbottom">
-									<img src="${pageContext.request.contextPath}/resources/imgs/tree/join.gif" border="0" align="absbottom">
+		<div id="i_div${menu.code}" style="display: block;">		
+			<c:forEach var="menu2" items="${list2}" varStatus="status2">
+			  	<c:if test="${menu.originNo == menu2.originNo}">
+				<div id="i_div0_2" style="display: block;">
+					<table cellpadding="0" cellspacing="0" border="0">
+						<tbody>
+							<tr>
+								<c:if test="${!status.last}">
+									<td nowrap="">
+										<img src="${pageContext.request.contextPath}/resources/imgs/tree/line.gif" border="0" align="absbottom">
+										<img src="${pageContext.request.contextPath}/resources/imgs/tree/join.gif" border="0" align="absbottom">
+											<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu2.code}&originNo=${menu2.originNo}&ord=${menu2.ord}');" >
+												<img src="${pageContext.request.contextPath}/resources/imgs/tree/page.gif" border="0" align="absbottom" name="i_img0_3" class="t0im">${menu2.title}
+											</a>
+									</td>
+								</c:if>
+								<c:if test="${status.last}">
+									<td nowrap="">
+										<img src="${pageContext.request.contextPath}/resources/imgs/tree/empty.gif" border="0" align="absbottom">
+										<img src="${pageContext.request.contextPath}/resources/imgs/tree/join.gif" border="0" align="absbottom">
 										<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu2.code}&originNo=${menu2.originNo}&ord=${menu2.ord}');" >
 											<img src="${pageContext.request.contextPath}/resources/imgs/tree/page.gif" border="0" align="absbottom" name="i_img0_3" class="t0im">${menu2.title}
 										</a>
-								</td>
-							</c:if>
-							<c:if test="${status.last}">
-								<td nowrap="">
-									<img src="${pageContext.request.contextPath}/resources/imgs/tree/empty.gif" border="0" align="absbottom">
-									<img src="${pageContext.request.contextPath}/resources/imgs/tree/join.gif" border="0" align="absbottom">
-										<a href="javascript:parent.list.location.replace('${pageContext.request.contextPath}/admin/menu/menu2?code=${menu2.code}&originNo=${menu2.originNo}&ord=${menu2.ord}');" >
-											<img src="${pageContext.request.contextPath}/resources/imgs/tree/page.gif" border="0" align="absbottom" name="i_img0_3" class="t0im">${menu2.title}
-										</a>
-								</td>
-							</c:if>							
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		  </c:if>
-		</c:forEach>
-	</div>
-</c:forEach>
+									</td>
+								</c:if>							
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			  	</c:if>
+			</c:forEach>
+		</div>
+	</c:forEach>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
