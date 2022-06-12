@@ -6,11 +6,12 @@
 <jsp:include page="/WEB-INF/views/admin/common/header.jsp">
 	<jsp:param value="주문 관리" name="title" />
 </jsp:include>
-<!-- content-wrapper -->
+
 <div class="content-wrapper">
 	<section class="content-header">
 		<h1>
-			주문 관리 <small>order list</small>
+			주문 관리 
+			<small>order list</small>
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -29,36 +30,45 @@
 								<tbody>
 									<tr>
 										<td class="menu">진행상태</td>
-										<td align="left"><select name="order_status" class="form-control input-sm" style="float: left; width: 130px; margin-right: 5px;">
-												<option value="">상태</option>
-												<c:forEach var="orderStatus" items="${orderStatusList }">
-													<option value="${orderStatus.orderStatusNo }">${orderStatus.statusName }</option>
-												</c:forEach>
-										</select></td>
+										<td align="left">
+											<select name="order_status" class="form-control input-sm" style="float: left; width: 130px; margin-right: 5px;">
+													<option value="">상태</option>
+													<c:forEach var="orderStatus" items="${orderStatusList }">
+														<option value="${orderStatus.orderStatusNo }">${orderStatus.statusName }</option>
+													</c:forEach>
+											</select>
+										</td>
 										<td class="menu">기간 검색</td>
-										<td align="left"><input type="text" name="start_date" id="start_date" value="" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" /> ~ <input type="text" name="end_date" id="end_date" value="" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" />
-
+										<td align="left">
+											<input type="text" name="start_date" id="start_date" value="" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" /> ~ 
+											<input type="text" name="end_date" id="end_date" value="" class="form-control input-sm txt_date1" style="width: 100px; display: inline-block;" />
 											<button type="button" onclick="setSearchDate('D0');" class="btn btn-primary btn-xs">오늘</button>
 											<button type="button" onclick="setSearchDate('D7');" class="btn btn-primary btn-xs">7일</button>
 											<button type="button" onclick="setSearchDate('D15');" class="btn btn-primary btn-xs">15일</button>
 											<button type="button" onclick="setSearchDate('M1');" class="btn btn-primary btn-xs">1개월</button>
 											<button type="button" onclick="setSearchDate('M3');" class="btn btn-primary btn-xs">3개월</button>
-											<button type="button" onclick="setSearchDate('M6');" class="btn btn-primary btn-xs">6개월</button></td>
+											<button type="button" onclick="setSearchDate('M6');" class="btn btn-primary btn-xs">6개월</button>
+										</td>
 									</tr>
 									<tr>
 										<td class="menu">결제방법</td>
-										<td align="left"><select name="payment_type" class="form-control input-sm" style="float: left; width: 130px; margin-right: 5px;">
+										<td align="left">
+											<select name="payment_type" class="form-control input-sm" style="float: left; width: 130px; margin-right: 5px;">
 												<option value="">결제방법</option>
 												<option value="cash">무통장</option>
 												<option value="card">신용카드</option>
-										</select></td>
+											</select>
+										</td>
 										<td class="menu">키워드</td>
-										<td align="left"><select name="field" class="form-control input-sm" style="float: left; padding-right: 0; width: 130px;">
+										<td align="left">
+											<select name="field" class="form-control input-sm" style="float: left; padding-right: 0; width: 130px;">
 												<option value="concat(last_name,first_name)">주문자 성명</option>
 												<option value="receiver">수취인 성명</option>
 												<option value="phone">휴대폰</option>
 												<option value="order_no">주문번호</option>
-										</select> <input type="text" name="keyword" id="keyword" value="" class="form-control input-sm" placeholder="주문검색" style="width: 50%; padding-left: 5px;" /></td>
+											</select> 
+											<input type="text" name="keyword" id="keyword" value="" class="form-control input-sm" placeholder="주문검색" style="width: 50%; padding-left: 5px;" />
+										</td>
 									</tr>
 								</tbody>
 								<tfoot>
@@ -72,7 +82,6 @@
 								</tfoot>
 							</table>
 						</form:form>
-
 						<label style="margin-top: 5px;">총 ${orderCnt } 건</label>
 						<form:form name="form_list" method="post" action="${pageContext.request.contextPath }/admin/order/delete">
 							<input type="hidden" name="mode" id="mode"> 
@@ -103,12 +112,12 @@
 										<td>${fn:substring(order.phone,0,3) }-${fn:substring(order.phone,3,7) }-${fn:substring(order.phone,7,13)}</td>
 										<td align="right" style="color: #ff0505; font-weight: bold"><fmt:formatNumber value="${order.amount }" pattern="#,###" /></td>
 										<td>${order.payMethod == null ? '무통장' :'카드'}</td>
-										<c:if test="${order.piStatus == 'ready' }">
-											<td>${order.piStatus == 'ready' ? ' - ':'' }</td>
-										</c:if>
-										<c:if test="${order.piStatus == 'paid' }">
-											<td><fmt:formatDate value="${order.paidAt}" pattern="yyyy-MM-dd" /> </td>
-										</c:if>
+											<c:if test="${order.piStatus == 'ready' }">
+												<td>${order.piStatus == 'ready' ? ' - ':'' }</td>
+											</c:if>
+											<c:if test="${order.piStatus == 'paid' }">
+												<td><fmt:formatDate value="${order.paidAt}" pattern="yyyy-MM-dd" /> </td>
+											</c:if>
 										<td style="font-weight: bold"><span id="order_status_name_${order.orderNo }">${order.piStatus == 'ready' ? '입금 대기' : order.piStatus == 'paid' ? order.statusName : '결제 완료'}</span></td>
 										<td><button type="button" onclick="onclick_update(${order.orderNo});" class="btn btn-primary btn-xs">보기</button></td>
 									</tr>
@@ -116,7 +125,6 @@
 							</table>
 						</form:form>
 						<br>
-
 						<button type="button" onclick="selectDelete();" class="btn btn-danger btn-sm">
 							<i class="fa fa-minus-square"></i> 선택삭제
 						</button>
@@ -128,28 +136,22 @@
 							<input type="hidden" name="search_data">
 							<input type="hidden" name="download_type" value="order"/>
 						</form>
-
 						<div style="text-align: right;">
 							<ul class="pagination" style="margin: 0;">
 								<li class="active"><a href="?tpf=admin/order/list&start_date=&end_date=&page=1">1</a></li>
 							</ul>
 						</div>
-					</div>
-					<!-- /.box-body -->
-				</div>
-				<!-- /.box -->
-			</div>
-			<!-- /.col-xs-12 -->
-		</div>
-		<!-- /.row -->
-	</section>
+					</div><!-- /.box-body -->
+				</div><!-- /.box -->
+			</div><!-- /.col-xs-12 -->
+		</div><!-- /.row -->
+	</section><!-- /.content -->
 
 	<div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<form name="form_register" method="post" action="?tpf=admin/order/process">
 					<input type="hidden" name="mode" id="mode" value="update_payment_status"> <input type="hidden" name="payment_code" id="payment_code">
-
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabelPortfolio">주문내역 상세 보기</h4>
@@ -161,7 +163,6 @@
 									<i class="fa fa-fw fa-info-circle"></i> 구매 내역
 								</p>
 							</h4>
-	
 							<span id="order_list_txt"></span>
 							<table class="table table-bordered">
 								<thead>
@@ -189,8 +190,7 @@
 									</tr>
 									<tr>
 										<td colspan="3" class="money">총 결제금액</td>
-										<td class="money"><span class="red_16_b"> <b><span id="p_totalPrice"></span></b>
-										</span></td>
+										<td class="money"><span class="red_16_b"> <b><span id="p_totalPrice"></span></b></span></td>
 									</tr>
 								</tbody>
 							</table>
@@ -240,7 +240,7 @@
 								</tr>
 							</table>
 						</div>
-
+						
 						<div style="display:inline-block; float:right; width: 60%;">
 							<h4>
 								<p class="text-light-blue">
@@ -266,35 +266,40 @@
 								</tr>
 								<tr>
 									<td class="menu">관리자 메모</td>
-									<td align="left"><span style="float: left"> <textarea name="memo" id="memo" class="form-control input-sm" rows="5" style="width: 200px; resize:none;"></textarea>
-									</span> <span style="padding: 20px 0 0 10px; float: left">
-											<button id="update_admin_memo" type="button" onclick="updateAdminMemo()" class="btn btn-primary btn-sm">
-												저장<br>하기
-											</button>
-									</span></td>
+									<td align="left">
+										<span style="float: left"> 
+											<textarea name="memo" id="memo" class="form-control input-sm" rows="5" style="width: 200px; resize:none;"></textarea>
+										</span> 
+										<span style="padding: 20px 0 0 10px; float: left">
+											<button id="update_admin_memo" type="button" onclick="updateAdminMemo()" class="btn btn-primary btn-sm">저장<br>하기</button>
+										</span>
+									</td>
 								</tr>
 								<tr>
 									<td class="menu">상태</td>
-									<td align="left"><span style="float: left"> <input type="text" name="delivery_code" id="delivery_code" class="form-control input-sm" style="float: left; margin-right: 2px; width: 100px;" placeholder="송장번호"> <select name="payment_status" id="payment_status" class="form-control input-sm" style="width: 90px; padding: 0;">
+									<td align="left">
+										<span style="float: left"> 
+											<input type="text" name="delivery_code" id="delivery_code" class="form-control input-sm" style="float: left; margin-right: 2px; width: 100px;" placeholder="송장번호"> 
+											<select name="payment_status" id="payment_status" class="form-control input-sm" style="width: 90px; padding: 0;">
 												<c:forEach var="status" items="${orderStatusList }">
 													<option value="${status.orderStatusNo }">${status.statusName }</option>
 												</c:forEach>
-										</select>
-									</span> <span style="padding-left: 10px; float: left">
+											</select>
+										</span> 
+										<span style="padding-left: 10px; float: left">
 											<button id="update_order_status" type="button" onclick="updateOrderStatus()" class="btn btn-primary btn-sm">저장하기</button>
-									</span></td>
+										</span>
+									</td>
 								</tr>
 							</table>
 						</div>
-
-					</div>
+					</div><!-- /.modal-body -->
 					<input type="hidden" id="doseosangan" value="null" />
 				</form>
-			</div>
-		</div>
-	</div>
-</div>
-<!-- /.content-wrapper -->
+	        </div><!-- /.modal-content -->
+	    </div><!-- /.modal-dialog -->
+	</div><!-- /.modal fade -->
+</div><!-- /.content-wrapper -->
 
 <!-- jsp 실행 즉시, 택배 실시간 조회하여 update한다. -->
 <c:forEach var="order" items="${orderList }">
@@ -353,13 +358,10 @@
 									$(target).text(data.orderStatusName);
 								},
 								error:console.log
-								
 							});
 				        }
 				   },1000);
-				
 			}
-
 		})();
 	</script>
 </c:forEach>
@@ -506,18 +508,14 @@
 						$("#update_order_status").attr('onclick', 'updateOrderStatus(' + data.orderDetail.orderNo +')')
 						$("#update_admin_memo").attr('onclick', 'updateAdminMemo(' + data.orderDetail.orderInfoNo + ')')
 						$(doseosangan).val('null');
-
-						
 					},
 					error: console.log
 				});
 		}, 500);
-
 	}
 	
 	<!-- 모달창 -> 상태 업데이트 -->
 	function updateOrderStatus(orderNo){
-		
 		var statusNo = $("#payment_status").val();
 		
 		$.ajax({
@@ -583,7 +581,6 @@
 		});  
 	}
 	
-	
 	function selectAction(){
 		if($("select[name=order_status]").val() == '' & $("select[name=payment_type]").val() == '' & $("input[name=keyword]").val() == '' & ($("input[name=start_date]").val() == '' & $("input[name=end_date]").val() == '')){
 			return false;
@@ -599,6 +596,7 @@
 
 		
 	}
+	
 	/* 날짜 포맷팅 */
 	function dateStr(type){
 		var date = new Date();
@@ -618,17 +616,13 @@
 		return dateString;
 	}
 	
-
-
-/* downloadExcel() --> 구현 후 common.js로 이동 */
+	/* downloadExcel() --> 구현 후 common.js로 이동 */
  
-        function downloadExcel() {
-            form_download.target = 'iframe_process';
-            form_download.search_data.value = $('#form_search').serialize();
-            form_download.submit();
-        }
-
-
+    function downloadExcel() {
+        form_download.target = 'iframe_process';
+        form_download.search_data.value = $('#form_search').serialize();
+        form_download.submit();
+    }
 </script>
 
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

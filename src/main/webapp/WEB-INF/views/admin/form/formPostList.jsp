@@ -9,7 +9,6 @@
 <jsp:param value="문의사항 관리" name="title"/>
 </jsp:include>
 
-<!-- content-wrapper -->
 <div class="content-wrapper" style="min-height: 595px;">
 	<section class="content-header">
 	    <h1>문의사항 관리<small>문의사항 list</small></h1>
@@ -25,16 +24,15 @@
 	            <div class="box">
 	                <div class="box-body">
 	                    <label style="margin-top:5px;">총 ${formPostListCount} 건</label>
-	
 	                    <table class="table table-bordered table-hover">
 		                    <form name="form_list" method="post" action="?tpf=admin/form/process"></form>
 				            <input type="hidden" name="mode" id="mode">
 				            <input type="hidden" name="form_code" value="1">
 		                    <thead>
-		                    <tr>
-		                        <td style="width:30px;">
-		                      		<div class="allCheck">
-										<input type="checkbox" name="allCheck" id="allCheck" /><label for="allCheck"></label>
+			                    <tr>
+			                        <td style="width:30px;">
+			                      		<div class="allCheck">
+											<input type="checkbox" name="allCheck" id="allCheck" /><label for="allCheck"></label>
 											<script>
 												$("#allCheck").click(function() {
 													var chk = $("#allCheck").prop("checked");
@@ -45,25 +43,25 @@
 													}
 												});
 											</script>
-									</div>
-		                        </td>
-		                        <td style="width:60px;">NO</td>
-		      				  <c:forEach var="item" items="${td}" varStatus="status" >
-		      					<td>${item.label}</td>   
-		      				  </c:forEach>
-		      				  	<td style="width:200px;">등록일</td>                           
-		                        <td style="width:80px;">
-		                            <i onclick="fncDown();" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i>
-		                            <i onclick="fncUp();" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer;"></i>
-		                        </td>
-		                        <td style="width:60px;">명령</td>
-		                    </tr>
+										</div>
+			                        </td>
+			                        <td style="width:60px;">NO</td>
+				      				<c:forEach var="item" items="${td}" varStatus="status" >
+				      					<td>${item.label}</td>   
+				      				</c:forEach>
+			      				  	<td style="width:200px;">등록일</td>                           
+			                        <td style="width:80px;">
+			                            <i onclick="fncDown();" class="fa fa-fw fa-arrow-circle-down cp" style="cursor:pointer;"></i>
+			                            <i onclick="fncUp();" class="fa fa-fw fa-arrow-circle-up cp" style="cursor:pointer;"></i>
+			                        </td>
+			                        <td style="width:60px;">명령</td>
+			                    </tr>
 		                    </thead>
 			      			<tbody>
 			      			  <c:set var="i" value="0"/>
 			      			  <c:set var="num" value="${number}"/>
 		      				  <c:forEach var="formPost" items="${fp}" varStatus="status" >
-		      				  <c:set var="i" value="${ i+1 }" />
+		      				  	<c:set var="i" value="${ i+1 }" />
 			      				<tr>
 			                        <td>
 				                        <div>
@@ -77,27 +75,28 @@
 			                        </td>
 			                        <td>${i}</td>
 			                        <c:set var="ex" value="${fn:split(formPost.itemData,'&')}"/>
-			                          <c:set var="j" value="0"/>
-			                          <c:set var="k" value="0"/>
-			                          <c:forEach var="exNum" items="${ex}" varStatus="g">
-			                           <c:if test="${j == num[k]}">
-			                        	<td style="text-align:left;">${ex[j]}</td>
-			                        	<c:set var="k" value="${ k+1 }" />
-			                           </c:if>	
-			                          	<c:set var="j" value="${ j+1 }" />			                        		
-			                          </c:forEach>
+			                        <c:set var="j" value="0"/>
+			                        <c:set var="k" value="0"/>
+			                        <c:forEach var="exNum" items="${ex}" varStatus="g">
+			                        	<c:if test="${j == num[k]}">
+			                        		<td style="text-align:left;">${ex[j]}</td>
+			                        		<c:set var="k" value="${ k+1 }" />
+			                        	</c:if>	
+			                        	<c:set var="j" value="${ j+1 }" />			                        		
+			                        </c:forEach>
 			                        <td>${formPost.date}</td>
 			                        <td><input type="radio" name="order_code" value="${formPost.formPostAsc}"></td>
 			                        <td><button type="button" onclick="onclickUpdate(${formPost.code});" class="btn btn-primary btn-xs">수정하기</button></td>
 			                    </tr> 
 			                  </c:forEach>   
 			                  <c:if test="${empty fp}">
-			                  	<tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>
+			                  	<tr>
+			                  		<td colspan="10"><br>등록된 자료가 없습니다.<br><br></td>
+			                  	</tr>
 			                  </c:if>
 		                    </tbody>
 	                    </table>
 	                    <br>
-	
 	                    <button type="button" onclick="deleteChoiceFormPost(${formNo});" class="btn btn-danger btn-sm"><i class="fa fa-minus-square"></i> 선택삭제</button>
 	                    <button type="button" onclick="onclickInsert();" class="btn btn-primary btn-sm"><i class="fa fa-plus-square"></i> 등록</button>
 	                    <button type="button" onclick="excelDownload();" class="btn btn-warning btn-sm"><i class="fa fa-file-excel-o"></i> Excel 다운로드</button>
@@ -158,12 +157,12 @@
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<select name="data${item.itemNo}" id="data${item.itemNo}" class="form-control input-sm">
-				                        			<option value="">선택하세요</option>
-				                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
-				                        				<option value="${exNum}">${exNum}</option>
-				                        			</c:forEach>
-				                        		</select>
+			                        		<select name="data${item.itemNo}" id="data${item.itemNo}" class="form-control input-sm">
+			                        			<option value="">선택하세요</option>
+			                        			<c:forEach var="exNum" items="${ex}" varStatus="g">
+			                        				<option value="${exNum}">${exNum}</option>
+			                        			</c:forEach>
+			                        		</select>
 				                          </c:if>			                        		
 			                        	</td>
 			                        </c:if>
@@ -171,12 +170,12 @@
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="radio" name="data${item.itemNo}" id="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
+			                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
+											  <p>
+						                        <input type="radio" name="data${item.itemNo}" id="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+						                        <label>${exNum}</label>
+						                      </p>		
+			                        		</c:forEach>
 				                          </c:if>			                        		
 			                        	</td>
 			                        </c:if>	
@@ -184,12 +183,12 @@
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="checkbox" name="data${item.itemNo}" id="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
+			                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
+											  <p>
+						                        <input type="checkbox" name="data${item.itemNo}" id="data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+						                        <label>${exNum}</label>
+						                      </p>		
+			                        		</c:forEach>
 				                          </c:if>			                        		
 			                        	</td>
 			                        </c:if>
@@ -208,7 +207,6 @@
 		                    </tbody>
 		            	</table>
 		            </div><!-- /.modal-body -->
-		            
 		            <div class="modal-footer">
 		            	<button type="button" onclick="registerForm(${formNo});" class="btn btn-primary">저장하기</button>
 		            </div><!-- /.modal-footer -->
@@ -224,12 +222,10 @@
 		            <input type="hidden" name="mode" id="mode" value="insertReply">
 		            <input type="hidden" name="formNo" id="formNo" value="${formNo}">
 		            <input type="hidden" name="code" id="code">
-		            
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                <h4 class="modal-title" id="myModalLabelPortfolio">정보 수정</h4>
 		            </div><!-- /.modal-header -->
-		            
 		            <div class="modal-body">
 		            	<h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 정보 수정</p></h4>
 		            	<table class="table table-bordered">
@@ -269,12 +265,12 @@
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="radio" name="data${item.itemNo}" id="2data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
+			                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
+											  <p>
+						                        <input type="radio" name="data${item.itemNo}" id="2data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+						                        <label>${exNum}</label>
+						                      </p>		
+			                        		</c:forEach>
 				                          </c:if>			                        		
 			                        	</td>
 			                        </c:if>	
@@ -282,12 +278,12 @@
 			                        	<td align="left">
 				                          <c:if test="${!empty item.input_example}">
 				                        	<c:set var="ex" value="${fn:split(item.input_example,'&')}"/>
-				                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
-												  <p>
-							                        <input type="checkbox" name="data${item.itemNo}" id="2data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
-							                        <label>${exNum}</label>
-							                      </p>		
-				                        		</c:forEach>
+			                        		<c:forEach var="exNum" items="${ex}" varStatus="g">
+											  <p>
+						                        <input type="checkbox" name="data${item.itemNo}" id="2data${item.itemNo}" value="${exNum}" style="font-size:0.8125rem;">
+						                        <label>${exNum}</label>
+						                      </p>		
+			                        		</c:forEach>
 				                          </c:if>			                        		
 			                        	</td>
 			                        </c:if>
@@ -301,12 +297,11 @@
 											<input type="file" id="${item.itemNo}" name="file[]" id="2data${item.itemNo}" style="width:80%; float:left;">
 										</td>
 									</c:if>
-			                    </tr>
+			                  	</tr>
 			                  </c:forEach>               
 		                    </tbody>
 		            	</table>
 		            </div><!-- /.modal-body -->
-		            
 		            <div class="modal-footer">
 		            	<button type="button" onclick="registerForm2();" class="btn btn-primary">저장하기</button>
 		            </div><!-- /.modal-footer -->
@@ -322,12 +317,10 @@
 	                <input type="hidden" name="mode" id="mode" value="copyContent">
 	                <input type="hidden" name="form_code" value="1">
 	                <input type="hidden" name="code" id="code">
-	                
 	                <div class="modal-header">
 	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 	                    <h4 class="modal-title" id="myModalLabelPortfolio">리스트 복사</h4>
 	                </div><!-- /.modal-header -->
-	                
 	                <div class="modal-body">
 	                    <h4><p class="text-light-blue"><i class="fa fa-fw fa-info-circle"></i> 리스트 <span id="board_sub_title">복사</span></p></h4>
 	                    <table class="table table-bordered">
@@ -343,7 +336,6 @@
 	                        </tbody>
 	                    </table>
 	                </div><!-- /.modal-body -->
-	                
 	                <div class="modal-footer">
 	                    <button type="button" onclick="fncformPostCopy()" class="btn btn-primary">확인</button>
 		            </div><!-- /.modal-footer -->
@@ -351,17 +343,14 @@
 	        </div><!-- /.modal-content -->
 	    </div><!-- /.modal-dialog -->
 	</div><!-- /.modal .fade -->
-
 	<form name="formFileDelete" method="post" action="?tpf=admin/form/process">
 		<input type="hidden" name="mode" id="mode" value="deleteFile">
 		<input type="hidden" name="code" id="code">
 	</form>
-
 <script src="//mir9.co.kr/resource/js/ckeditor4.7.2/ckeditor.js"></script>
 </div><!-- /.content-wrapper -->
 
 <script>
-	
 	var a = $("input[id='ckEditor']").val();
 	
 	if (window.CKEDITOR) {  // CKEDITOR loading 여부 체크 (Web 버젼에서만 사용)
@@ -395,6 +384,7 @@
 	        autoFormatOnStart: false,
 	    };
 	}
+	
 	if (window.CKEDITOR) {  // CKEDITOR loading 여부 체크 (Web 버젼에서만 사용)
 	    var objEditor19 = CKEDITOR.replace('content19', {
 	        height: 300,
@@ -426,18 +416,21 @@
 	        autoFormatOnStart: false,
 	    };
 	}	
+	
 	$.fn.modal.Constructor.prototype.enforceFocus = function () {   // bootstrap & ckEdiotr 소스 방지 코드
 	    modal_this = this
 	    $(document).on('focusin.modal', function (e) {
 	        if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
 	        }
 	    })
-	}		
+	}	
+	
 	function excelDownload() {  // Excel 다운로드
 	    form_download.target = 'iframe_process';
 	    form_download.search_data.value = $('#form_search :input').serialize();
 	    form_download.submit();
 	}
+	
     // 등록 버튼
     function onclickInsert() {
         $("#modalContent").modal({backdrop:"static", show:true});
@@ -446,7 +439,8 @@
         //formRegister.form_code.value = "1";
         formRegister.locale.value = "ko";
         $("[id^='displayFile']").css("display","none");
-    }	
+    }
+    
     // 수정 버튼
     function onclickInsert2() {
         $("#modalContent2").modal({backdrop:"static", show:true});
@@ -480,11 +474,10 @@
 		 	 success : function(result){
 					alert("항목이 등록 되었습니다.")
 					location.reload();    		 		
-		  	 }
-		  	 	 
+		  	 }	 	 
  		});	
-    	
     }
+    
     // 등록 모달 저장
     function registerForm2() {
     	var formArr = new Array();
@@ -509,9 +502,9 @@
 					alert("항목이 수정 되었습니다.")
 					location.reload();    		 		
 		  	 }
-		  	 	 
  		});
     }    
+    
     $(function(){
 	    /* datepicker */
 	    $('[id^=datepicker]').datepicker({
@@ -530,6 +523,7 @@
 	        dateFormat: 'yy-mm-dd'
 	    });
     })
+    
     // 모달 데이터 셋팅
     function setData(code) {
         $.ajax({
@@ -582,7 +576,6 @@
     function onclickUpdate(code) {
         $("#modalContent2").modal({backdrop:"static", show:true});
         formRegister2.reset();
-        
         setData(code);
     }    
     
@@ -613,7 +606,6 @@
 						$('#formPostCopy').append(display);
 					}
 				}
-				
 			}
 		})		
     	$("#modalCopyList").modal({backdrop:"static", show:true});
@@ -664,7 +656,6 @@
 	
 	//선택삭제
 	function deleteChoiceFormPost(formNo) {
-		
 		var formNo = ${formNo};
 		var formArr = new Array();
 		var mode = "delete";
@@ -682,24 +673,21 @@
 			return;
 			
 		}else{
-  		$.ajax({
-		 	 url : "/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}",
- 		  	 type : "POST",
-	  	 	 data : { 
-	  	 		formArr : formArr,
-	  	 		mode,
-	  	 		part,
-	  	 		formNo
-	  	 	 },
-	 		 success : function(result){
-	 			alert("해당 자료가 삭제 되었습니다.")
-				location.href = "/admin/form/formPostList?formNo="+formNo;
-	  	 	 }
-		  	 	 
-  		});		
-
+	  		$.ajax({
+			 	 url : "/admin/form/formProcess?${_csrf.parameterName}=${_csrf.token}",
+	 		  	 type : "POST",
+		  	 	 data : { 
+		  	 		formArr : formArr,
+		  	 		mode,
+		  	 		part,
+		  	 		formNo
+		  	 	 },
+		 		 success : function(result){
+		 			alert("해당 자료가 삭제 되었습니다.")
+					location.href = "/admin/form/formPostList?formNo="+formNo;
+		  	 	 }	 
+	  		});		
 		}		
-		
 	};
 	
 	//선택 삭제
@@ -720,21 +708,19 @@
 			return;
 			
 		}else{
-  		$.ajax({
-		 	 url : "/admin/form/deleteChoiceFormPost?${_csrf.parameterName}=${_csrf.token}",
- 		  	 type : "POST",
-	  	 	 data : { 
-	  	 	 formPostArr : formPostArr 
-	  	 	 },
-	 		 success : function(result){
-	 		
-	  	 	 }
-		  	 	 
-  		});		
+	  		$.ajax({
+			 	 url : "/admin/form/deleteChoiceFormPost?${_csrf.parameterName}=${_csrf.token}",
+	 		  	 type : "POST",
+		  	 	 data : { 
+		  	 	 formPostArr : formPostArr 
+		  	 	 },
+		 		 success : function(result){
+		 		
+		  	 	 }
+	  		});		
 			alert("해당 자료가 삭제 되었습니다.")
 			location.href = "/admin/form/formPostList?formNo="+formNo;
 		}		
-		
 	};
 
 	const paging = (cPage) => {
@@ -818,8 +804,7 @@
 	 		});				
 		}
 	}	
-	
-      
+
     /* 
     datepicker 
     $('[id^=datepicker]').datepicker({

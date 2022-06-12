@@ -17,39 +17,38 @@ pageContext.setAttribute("BR", "<br/>");
 </jsp:include>
 <script>
 	function deleteChoiceItem(formNo){
+		var formArr = new Array();
+		var mode = "delete";
+		var part = "item";
+		
+		$("input[class='itemNo']:checked").each(function(){
+			formArr.push($(this).val());
+			});
+		if(formArr.length == 0){
+			alert("항목을 선택하셔야 합니다.");
+			return;
+		}
+		if(!confirm("해당 자료를 정말 삭제 하시겠습니까?")){
+			alert("취소 되었습니다.");
+			return;
 			
-			var formArr = new Array();
-			var mode = "delete";
-			var part = "item";
-			
-			$("input[class='itemNo']:checked").each(function(){
-				formArr.push($(this).val());
- 			});
-			if(formArr.length == 0){
-				alert("항목을 선택하셔야 합니다.");
-				return;
-			}
-			if(!confirm("해당 자료를 정말 삭제 하시겠습니까?")){
-				alert("취소 되었습니다.");
-				return;
-				
-			}else{
+		}else{
 	  		$.ajax({
-  			 	 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
+	 			 	 url : "/admin/form/json/formProcess?${_csrf.parameterName}=${_csrf.token}",
 	  		  	 type : "POST",
-  		  	 	 data : { 
-  		  	 		formArr : formArr,
-  		  	 		mode,
-  		  	 		part
-  		  	 	 },
-    		 	 success : function(result){
-    		 		
-  		  	 	 }
-  		  	 	 
+	 		  	 	 data : { 
+	 		  	 		formArr : formArr,
+	 		  	 		mode,
+	 		  	 		part
+	 		  	 	 },
+	   		 	 success : function(result){
+	   		 		
+	 		  	 	 }
+	 		  	 	 
 	  		});		
-				alert("해당 자료가 삭제 되었습니다.")
-				location.href = "/admin/form/itemList?formNo="+formNo+"";
-			}			
+			alert("해당 자료가 삭제 되었습니다.")
+			location.href = "/admin/form/itemList?formNo="+formNo+"";
+		}			
 	}
 	
 	function fncUp(){
@@ -129,11 +128,8 @@ pageContext.setAttribute("BR", "<br/>");
 	 		});				
 		}
 	}	
-	
-	
-
 </script>
-<!-- content-wrapper -->
+
 <div class="content-wrapper" style="min-height: 645px;">
 	<section class="content-header">
 	    <h1>폼 문항 관리<small>research detail</small></h1>
@@ -160,16 +156,16 @@ pageContext.setAttribute("BR", "<br/>");
 			                        <td style="width:30px;">
 			                      		<div class="allCheck">
 											<input type="checkbox" name="allCheck" id="allCheck" /><label for="allCheck"></label>
-												<script>
-													$("#allCheck").click(function() {
-														var chk = $("#allCheck").prop("checked");
-														if (chk) {
-															$('.itemNo').prop("checked", true);
-														} else {
-															$('.itemNo').prop("checked", false);
-														}
-													});
-												</script>
+											<script>
+												$("#allCheck").click(function() {
+													var chk = $("#allCheck").prop("checked");
+													if (chk) {
+														$('.itemNo').prop("checked", true);
+													} else {
+														$('.itemNo').prop("checked", false);
+													}
+												});
+											</script>
 										</div>
 			                        </td>
 			                        <td style="width:80px; color:red;"><b>문항 번호</b></td>
@@ -189,7 +185,7 @@ pageContext.setAttribute("BR", "<br/>");
 		      				<tbody>
 		      				  <c:set var="i" value="0"/>
 		      				  <c:forEach var="item" items="${list}" varStatus="status" >
-		      				  <c:set var="i" value="${ i+1 }" />		      				  
+		      				  	<c:set var="i" value="${ i+1 }" />		      				  
 			      				<tr>
 			                        <td>
 				                        <div>
@@ -224,7 +220,9 @@ pageContext.setAttribute("BR", "<br/>");
 			                    </tr> 
 			                  </c:forEach>
 			                  <c:if test="${empty list}">
-			                  	<tr><td colspan="10"><br>등록된 자료가 없습니다.<br><br></td></tr>
+			                  	<tr>
+			                  		<td colspan="10"><br>등록된 자료가 없습니다.<br><br></td>
+			                  	</tr>
 			                  </c:if>			                       
 		                    </tbody>
 		               	</table>
@@ -252,12 +250,10 @@ pageContext.setAttribute("BR", "<br/>");
 		            <input type="hidden" name="mode" value="insert">
 					<input type="hidden" name="part" value="item">
 		            <input type="hidden" name="formNo" value="${formNo}">
-
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                <h4 class="modal-title" id="myModalLabelPortfolio">폼 문항 관리</h4>
 		            </div><!-- /.modal-header -->
-		            
 		            <div class="modal-body">
 			            <div class="row" style="margin:0">
 			                <div class="col-xs-4">
@@ -265,7 +261,6 @@ pageContext.setAttribute("BR", "<br/>");
 			                </div>
 			                <div class="col-xs-8" style="padding:0"></div>
 			            </div><!-- /.row -->
-		
 			            <table class="table table-bordered">
 				            <tbody>
 					            <tr>
@@ -341,7 +336,6 @@ pageContext.setAttribute("BR", "<br/>");
 				            </tbody>
 			            </table>
 		            </div><!-- /.modal-body -->
-		            
 		            <div class="modal-footer">
 		            	<!--<button type="button" onclick="" class="btn btn-danger">삭제</button>-->
 		            	<button type="button" onclick="register(${formNo})" class="btn btn-primary">확인/수정</button>
@@ -360,12 +354,10 @@ pageContext.setAttribute("BR", "<br/>");
 					<input type="hidden" name="part" value="item">
 		            <input type="hidden" name="formNo" value="${formNo}">
 		            <input type="hidden" name="itemNo">
-		            
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                <h4 class="modal-title" id="myModalLabelPortfolio">폼 문항 관리</h4>
 		            </div><!-- /.modal-header -->
-		            
 		            <div class="modal-body">
 			            <div class="row" style="margin:0">
 			                <div class="col-xs-4">
@@ -373,7 +365,6 @@ pageContext.setAttribute("BR", "<br/>");
 			                </div>
 			                <div class="col-xs-8" style="padding:0"></div>
 			            </div><!-- /.row -->
-		
 			            <table class="table table-bordered">
 				            <tbody>
 					            <tr>
@@ -449,7 +440,6 @@ pageContext.setAttribute("BR", "<br/>");
 				            </tbody>
 			            </table>
 		            </div><!-- /.modal-body -->
-		            
 		            <div class="modal-footer">
 		            	<!--<button type="button" onclick="" class="btn btn-danger">삭제</button>-->
 		            	<button type="button" onclick="register2(${formNo})" class="btn btn-primary">확인/수정</button>
@@ -469,42 +459,50 @@ pageContext.setAttribute("BR", "<br/>");
 		            <input type="hidden" name="design_type">
 		            <input type="hidden" name="html_list" 
 		            	   value="<table class=&quot;basic-board-row&quot;>
-<tr>
-	<th>번호</th>
-<c:forEach var="item" items="${list}" varStatus="status" >	<th>${item.label}</th>
-</c:forEach></tr>
-<for>
-<tr><c:forEach var="item" items="${list}" varStatus="status" >
-	<td>[no]</td>
-	<td>[itemNo:${item.itemNo}]</td></c:forEach>
-</tr>
-</for>
-</table>">
-<input type="hidden" name="html_design_write" value="
-<table class=&quot;basic-board-row&quot;>
-<colgroup>
-   <col width=&quot;220&quot; />
-   <col width=&quot;*&quot; />
-</colgroup>
-<c:forEach var="item" items="${list}" varStatus="status" ><tr>
-   <th>${item.label}</th>
-   <td>[itemNo:${item.itemNo}]</td>
-</tr></c:forEach>
-<c:if test="${form.is_captcha eq 'y'}"><tr>
-   <th>보안코드</th>
-   <td>[code:captcha]</td>
-</tr></c:if>
-<c:if test="${form.is_agree eq 'y'}"><tr>
-   <th>개인정보 수집·이용 동의</th>
-   <td>[code:agree]</td>
-</tr></c:if></table>">
-
-								
+									  <tr>
+										  <th>번호</th>
+										  <c:forEach var="item" items="${list}" varStatus="status" >	
+											  <th>${item.label}</th>
+										  </c:forEach>
+									  </tr>
+									  <for>
+										  <tr>
+										  	  <c:forEach var="item" items="${list}" varStatus="status" >
+											  	  <td>[no]</td>
+											  	  <td>[itemNo:${item.itemNo}]</td>
+											  </c:forEach>
+										  </tr>
+									  </for>
+								  </table>">
+					<input type="hidden" name="html_design_write" 
+						   value="<table class=&quot;basic-board-row&quot;>
+									<colgroup>
+									   <col width=&quot;220&quot; />
+									   <col width=&quot;*&quot; />
+									</colgroup>
+									<c:forEach var="item" items="${list}" varStatus="status" >
+										<tr>
+									   		<th>${item.label}</th>
+									   		<td>[itemNo:${item.itemNo}]</td>
+										</tr>
+									</c:forEach>
+									<c:if test="${form.is_captcha eq 'y'}">
+										<tr>
+									   		<th>보안코드</th>
+									   		<td>[code:captcha]</td>
+										</tr>
+									</c:if>
+									<c:if test="${form.is_agree eq 'y'}">
+										<tr>
+									   		<th>개인정보 수집·이용 동의</th>
+									   		<td>[code:agree]</td>
+										</tr>
+									</c:if>
+								</table>">
 		            <div class="modal-header">
 		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 		                <h4 class="modal-title" id="myModalLabelPortfolio">폼 HTML 디자인 관리</h4>
 		            </div><!-- /.modal-header -->
-		            
 		            <div class="modal-body">
 						<table class="table table-bordered">
 							<colgroup>
@@ -545,20 +543,20 @@ pageContext.setAttribute("BR", "<br/>");
 							                            <td class="left">[itemNo:${item.itemNo}]</td>
 							                        </tr>
 						                        </c:forEach>
-						                      <c:if test="${form.is_captcha eq 'y'}">
-						                        <tr id="displayCaptcha">
-						                            <td class="left" style="color:#ff0000;font-wighth:bode;">보안코드</td>
-						                            <td class="left">-</td>
-						                            <td class="left">[code:captcha]</td>
-						                        </tr>
-						                      </c:if>
-						                      <c:if test="${form.is_agree eq 'y'}">
-						                        <tr id="displayAgree">
-						                            <td class="left" style="color:#ff0000;font-wighth:bode;">개인정보수집</td>
-						                            <td class="left">-</td>
-						                            <td class="left">[code:agree]</td>
-						                        </tr>
-						                      </c:if>
+						                      	<c:if test="${form.is_captcha eq 'y'}">
+							                        <tr id="displayCaptcha">
+							                            <td class="left" style="color:#ff0000;font-wighth:bode;">보안코드</td>
+							                            <td class="left">-</td>
+							                            <td class="left">[code:captcha]</td>
+							                        </tr>
+						                      	</c:if>
+							                 	<c:if test="${form.is_agree eq 'y'}">
+							                        <tr id="displayAgree">
+							                            <td class="left" style="color:#ff0000;font-wighth:bode;">개인정보수집</td>
+							                            <td class="left">-</td>
+							                            <td class="left">[code:agree]</td>
+							                        </tr>
+							                 	</c:if>
 						                        <tr id="displaySearch">
 						                            <td class="left" style="font-wighth:bode;">검색폼</td>
 						                            <td class="left">-</td>
@@ -577,7 +575,6 @@ pageContext.setAttribute("BR", "<br/>");
 							</tbody>
 						</table><!-- /.table table-bordered -->
 		            </div><!-- /.modal-body -->
-		            
 		            <div class="modal-footer">
 						<button type="button" onclick="registerHtmlDesign()" class="btn btn-primary">확인/수정</button>
 		            </div><!-- /.modal-footer -->
@@ -585,12 +582,10 @@ pageContext.setAttribute("BR", "<br/>");
 	        </div><!-- /.modal-content -->
 	    </div><!-- /.modal-dialog -->
 	</div><!-- /.modal .fade -->
-
 <script src="//mir9.co.kr/resource/js/ckeditor4.7.2/ckeditor.js"></script>
 </div><!-- /.content-wrapper -->
 
 <script>
-	
 	// 모달 체크에디터
 	if (window.CKEDITOR) {  // CKEDITOR loading 여부 체크 (Web 버젼에서만 사용)
 	    var objEditor = CKEDITOR.replace("content-editor", {
@@ -845,7 +840,6 @@ pageContext.setAttribute("BR", "<br/>");
 	    setData($("[name=code]").val());
 	}
 	*/	
-	
 </script>
 
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>

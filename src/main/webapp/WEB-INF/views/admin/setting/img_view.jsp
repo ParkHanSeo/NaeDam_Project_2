@@ -5,20 +5,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>  
 
-
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
 <head>
-<title>사진보기</title>
-<script>
-	window.resizeTo(550, 350);
-</script>
+	<title>사진보기</title>
+	<script>
+		window.resizeTo(550, 350);
+	</script>
 </head>
 <body leftmargin=0 topmargin=0>
-
-		<br style="font-size: 5pt"> 
-		<a href=javascript:window.close();>
-			<img src="${url }" border=0>
-		</a>
-
+	<br style="font-size: 5pt"> 
+	<a href=javascript:window.close();>
+		<img src="${url }" border=0>
+	</a>
 </body>
 </html>

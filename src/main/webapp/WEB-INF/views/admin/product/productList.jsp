@@ -29,15 +29,11 @@
                   <div class="col-xs-9" style="padding: 0 5px 0 0;">
                      <iframe name="list" id="iframe_list" src="${pageContext.request.contextPath }/admin/product/list_sub" width="100%" height="794"></iframe>
                   </div>
-               </div>
-               <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-         </div>
-         <!-- /.col-xs-12 -->
-      </div>
-      <!-- /.row -->
-   </section>
+               </div><!-- /.box-body -->
+            </div><!-- /.box -->
+         </div><!-- /.col-xs-12 -->
+      </div><!-- /.row -->
+   </section><!-- /.content -->
 
    <div class="modal fade" id="modalContent" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
       <div class="modal-dialog" style="width: 800px;">
@@ -51,7 +47,6 @@
                   <h4 class="modal-title" id="myModalLabelPortfolio">상품 등록</h4>
                </div>
                <div class="modal-body">
-
                   <h4 class="text-light-blue">
                         <i class="fa fa-fw fa-info-circle"></i> 상품 등록
                   </h4>
@@ -73,13 +68,11 @@
                         <td align="left"><input type="text" name="list_title" class="form-control input-sm" /></td>
                      </tr>
                      <tr>
-                        <td class="menu">소비자 가격 <span class="text-light-blue"></span> (원)
-                        </td>
+                        <td class="menu">소비자 가격 <span class="text-light-blue"></span> (원)</td>
                         <td align="left"><input type="text" name="consumer_price" onkeyup="this.value=displayComma(checkAmountNum(this.value))" class="form-control input-sm" /></td>
                      </tr>
                      <tr>
-                        <td class="menu">판매 가격 <span class="text-light-blue"><i class="fa fa-check"></i></span> (원)
-                        </td>
+                        <td class="menu">판매 가격 <span class="text-light-blue"><i class="fa fa-check"></i></span> (원)</td>
                         <td align="left"><input type="text" name="sale_price" onkeyup="this.value=displayComma(checkAmountNum(this.value))" class="form-control input-sm" /></td>
                      </tr>
                      <tr>
@@ -95,25 +88,25 @@
                               </button>
                            </p> <br>
                            <div id="list_option">
-                           <input type="hidden" name="option_no" value="0"/>
-                              <table class="table table-bordered table-hover">
-                                 <colgroup>
-                                    <col width="25%" />
-                                    <col width="25%" />
-                                    <col width="25%" />
-                                    <col width="*" />
-                                 </colgroup>
-                                 <thead>
-                                    <tr>
-                                       <td>옵션명</td>
-                                       <td>옵션값</td>
-                                       <td>추가금액</td>
-                                       <td>수정/삭제</td>
-                                    </tr>
-                                 </thead>
-                                 <tbody id="option_list">
-                                 </tbody>
-                              </table>
+								<input type="hidden" name="option_no" value="0"/>
+	                            <table class="table table-bordered table-hover">
+	                            	<colgroup>
+	                                    <col width="25%" />
+	                                    <col width="25%" />
+	                                    <col width="25%" />
+	                                    <col width="*" />
+	                                 </colgroup>
+	                                 <thead>
+	                                    <tr>
+	                                       <td>옵션명</td>
+	                                       <td>옵션값</td>
+	                                       <td>추가금액</td>
+	                                       <td>수정/삭제</td>
+	                                    </tr>
+	                                 </thead>
+	                                 <tbody id="option_list">
+	                                 </tbody>
+	                            </table>
                            </div>
                         </td>
                      </tr>
@@ -138,7 +131,6 @@
                            <input type="hidden" id="url_file2" name="url_file" />
                            <input type="hidden" id="no_file2" name="no_file" />
                         </td>
-                           
                      </tr>
                      <tr>
                         <td class="menu">제품 이미지(상세)</td>
@@ -157,13 +149,17 @@
                         <td class="menu">내용 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
                         <td><textarea name="content" id="content" rows="10" cols="80"></textarea></td>
                      </tr>
-                     <!-- <tr>
-                <td class="menu">메인표출 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-                <td>
-                <select name="is_main" id="is_main" class="form-control input-sm" style="width:100px;">
-      <option value="y">보임</option>      <option value="n">숨김</option>                </select>
-                </td>
-            </tr> -->
+                     <!-- 
+	                 <tr>
+	                	<td class="menu">메인표출 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
+	                	<td>
+	                		<select name="is_main" id="is_main" class="form-control input-sm" style="width:100px;">
+	      						<option value="y">보임</option>      
+	      						<option value="n">숨김</option>                
+	      					</select>
+	                	</td>
+	            	 </tr> 
+	            	 -->
                      <tr>
                         <td class="menu">BEST / NEW / EVENT</td>
                         <td align="left"><input type="checkbox" id="is_best" name="is_best" value='Y'>BEST&nbsp;&nbsp; <input type="checkbox" id="is_new" name="is_new" value='Y'>NEW&nbsp;&nbsp; <input type="checkbox" id="is_event" name="is_event" value='Y'>EVENT</td>
@@ -172,24 +168,24 @@
                         <td class="menu">품절 처리</td>
                         <td align="left"><input type="checkbox" id="is_soldout" name="is_soldout" value='Y'>품절</td>
                      </tr>
-
                      <tr>
                         <td class="menu">상태 <span class="text-light-blue"><i class="fa fa-check"></i></span></td>
-                        <td><select name="status" id="status" class="form-control input-sm" style="width: 100px;">
+                        <td>
+                        	<select name="status" id="status" class="form-control input-sm" style="width: 100px;">
                               <option value="Y">보임</option>
                               <option value="N">숨김</option>
-                        </select></td>
+                        	</select>
+                        </td>
                      </tr>
                   </table>
-
-               </div>
+               </div><!-- /.modal-body -->
                <div class="modal-footer">
                   <button type="button" onclick="register();" class="btn btn-primary">저장하기</button>
                </div>
             </form>
-         </div>
-      </div>
-   </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal fade -->
 
    <div class="modal fade" id="modalCopyProduct" tabindex="-2" role="dialog" aria-labelledby="myModal" aria-hidden="true">
       <div class="modal-dialog" style="width: 400px;">
@@ -201,7 +197,6 @@
                   <h4 class="modal-title" id="myModalLabelPortfolio">제품 관리</h4>
                </div>
                <div class="modal-body">
-
                   <h4 class="text-light-blue">
                         <i class="fa fa-fw fa-info-circle"></i> 제품 <span id="board_sub_title">이전</span>
                   </h4>
@@ -209,26 +204,27 @@
                      <tbody>
                         <tr>
                            <td class="menu">언어</td>
-                           <td align="left"><select name="product_locale" id="product_locale" class="form-control input-sm">
-                                 <option value="">선택</option>
-                                 <option value="ko">한국어</option>
-                                 <option value="en">ENG</option>
-                                 <option value="zh">中国</option>
-                                 <option value="vn">Tiếng việt</option>
-                           </select></td>
+                           <td align="left">
+	                           <select name="product_locale" id="product_locale" class="form-control input-sm">
+	                                 <option value="">선택</option>
+	                                 <option value="ko">한국어</option>
+	                                 <option value="en">ENG</option>
+	                                 <option value="zh">中国</option>
+	                                 <option value="vn">Tiếng việt</option>
+	                           </select>
+                           </td>
                         </tr>
                      </tbody>
                   </table>
-               </div>
-
+               </div><!-- /.modal-body -->
                <div class="modal-footer">
                   <button type="button" onclick="registerCopyProduct()" class="btn btn-primary">확인</button>
                   &nbsp;&nbsp;&nbsp;
-               </div>
+               </div><!-- /.modal-footer -->
             </form>
-         </div>
-      </div>
-   </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal fade -->
 
    <div class="modal fade" id="modalContent2" tabindex="-3" role="dialog" aria-labelledby="myModal" aria-hidden="true">
       <div class="modal-dialog" style="width: 800px; height: 700px;">
@@ -255,56 +251,52 @@
                </div>
                <iframe name="modal_iframe" id="modal_iframe" src="" width="100%" height="600px" style="border: 1px solid #cccccc"></iframe>
             </div>
-         </div>
-      </div>
-   </div>
-
-   <script src="https://mir9.co.kr/resource/js/ckeditor4.7.2/ckeditor.js"></script>
-
-</div>
-<!-- /.content-wrapper -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal fade -->
+<script src="https://mir9.co.kr/resource/js/ckeditor4.7.2/ckeditor.js"></script>
+</div><!-- /.content-wrapper -->
 
 <script>
-
-// 파일 변경 시 업로드 후 url 받아오기
-$("input[type=file]").change(function(e){
-   console.log($(e.target))
-   console.log($(e.target).attr('name'))
-   var target = "#url_" + $(e.target).attr('name');
-   // 이미지 업로드
-   var file = e.target;
-   //var imgPreview = document.getElementById("imgPreview");
-   var form = new FormData();
-   form.append("image", file.files[0]);
-
-   var settings = {
-     "url": "https://api.imgbb.com/1/upload?key=f84bfb11eb3ee5eedb859de8b49fdff1",
-     "method": "POST",
-     "timeout": 0,
-     "processData": false,
-     "mimeType": "multipart/form-data",
-     "contentType": false,
-     "data": form
-   };
-   
-   // 이미지 업로드 -> 확인
-   $.ajax(settings).done(function (response) {
-     // console.log("response" + response);
-     
-     var imgbb = JSON.parse(response);
-     // console.log("imgbb : " + imgbb);
-     
-     // 이미지 조회 및 다운로드
-     var url = imgbb.data.thumb.url;
-     $(target).val(url);
-
-     //imgPreview.src = url; // imgbb url
-     //imgPreview.name = name;
-     //$("#deleteUrl").attr("value", delUrl);
-
-   });
-   
-});
+	// 파일 변경 시 업로드 후 url 받아오기
+	$("input[type=file]").change(function(e){
+	   console.log($(e.target))
+	   console.log($(e.target).attr('name'))
+	   var target = "#url_" + $(e.target).attr('name');
+	   // 이미지 업로드
+	   var file = e.target;
+	   //var imgPreview = document.getElementById("imgPreview");
+	   var form = new FormData();
+	   form.append("image", file.files[0]);
+	
+	   var settings = {
+	     "url": "https://api.imgbb.com/1/upload?key=f84bfb11eb3ee5eedb859de8b49fdff1",
+	     "method": "POST",
+	     "timeout": 0,
+	     "processData": false,
+	     "mimeType": "multipart/form-data",
+	     "contentType": false,
+	     "data": form
+	   };
+	   
+	   // 이미지 업로드 -> 확인
+	   $.ajax(settings).done(function (response) {
+	     // console.log("response" + response);
+	     
+	     var imgbb = JSON.parse(response);
+	     // console.log("imgbb : " + imgbb);
+	     
+	     // 이미지 조회 및 다운로드
+	     var url = imgbb.data.thumb.url;
+	     $(target).val(url);
+	
+	     //imgPreview.src = url; // imgbb url
+	     //imgPreview.name = name;
+	     //$("#deleteUrl").attr("value", delUrl);
+	
+	   });
+	   
+	});
 
    function insertOption(optionNo, optionValueNo, option_name, option_value, option_price, is_necessary) {
        var check_necessary = '';
@@ -345,9 +337,6 @@ $("input[type=file]").change(function(e){
       
          $('#option_list').append(create_txt);
       }
-   
-
-      
    }
    
    function getCategory(cteNo){
@@ -414,6 +403,7 @@ $("input[type=file]").change(function(e){
       }
 
    }
+   
    function modifyOption(optionNo) {
       optionTabChange('1', '${pageContext.request.contextPath}/admin/option/option_manager?optionNo='+optionNo);
       var url = '${pageContext.request.contextPath}/admin/option/option_manager?optionNo='+optionNo
@@ -484,12 +474,10 @@ $("input[type=file]").change(function(e){
       $(document.formCopyProduct).submit();
    }
    
-    function optionManager() {
-      optionTabChange('1', '${pageContext.request.contextPath}/admin/option/option_manager?optionNo=0');
-      $('#modalContent2').modal({backdrop:'static', show:true});
-    }
-   
-   
+   function optionManager() {
+     optionTabChange('1', '${pageContext.request.contextPath}/admin/option/option_manager?optionNo=0');
+     $('#modalContent2').modal({backdrop:'static', show:true});
+   }
 </script>
 
 <jsp:include page="/WEB-INF/views/admin/common/footer.jsp"></jsp:include>
